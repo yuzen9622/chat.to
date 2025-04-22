@@ -1,0 +1,33 @@
+import { supabase } from "@/app/lib/supabasedb";
+import { NextRequest, NextResponse } from "next/server";
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const { users_id, room_id } = await req.json();
+
+    const roomMembers = users_id.map((uid: string) => ({
+      room_id: room_id,
+      user_id: uid,
+    }));
+    const { data, error } = await supabase
+      .from("room_members")
+      .insert(roomMembers)
+      .select("*")
+      .limit(1)
+      .single();
+    const { data: roomData, error: roomError } = await supabase
+      .from("room_members")
+      .select("rooms(*,room_members(*))")
+      .eq("room_id", data.room_id)
+      .limit(1)
+      .single();
+    if (error || roomError) {
+      return NextResponse.json({ error, roomError }, { status: 500 });
+    }
+
+    return NextResponse.json(roomData, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ error }, { status: 500 });
+  }
+};

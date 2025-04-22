@@ -1,0 +1,35 @@
+import { getRoomById } from "@/app/lib/server";
+
+import { redirect } from "next/navigation";
+import ChatRoomWrapper from "@/app/components/ChatWrapper";
+import { MessageInterface, RoomInterface } from "@/app/lib/type";
+
+import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+export async function generateMetadata() {
+  const data = await getSession();
+  if (!data) return {};
+
+  return {
+    title: `chat.to．聊天室`,
+  };
+}
+export default async function Page({ params }: { params: { roomId: string } }) {
+  const { roomId } = await params;
+  const data = await getServerSession(authOptions);
+  if (!data) return redirect("/chat");
+  const { room, messages } = (await getRoomById(roomId, data.userId!)) as {
+    room: RoomInterface;
+    messages: MessageInterface[];
+  };
+
+  if (!room) return redirect("/chat");
+
+  return (
+    <div className="flex flex-row flex-1 m-2 overflow-y-hidden transition-all rounded-md max-h-dvh ">
+      <ChatRoomWrapper room={room} messages={messages} roomId={roomId} />
+    </div>
+  );
+}

@@ -1,0 +1,20 @@
+import { supabase } from "@/app/lib/supabasedb";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+  try {
+    const { sender_id, receiver_id } = await request.json();
+    const { data, error } = await supabase
+      .from("friends_requests")
+      .insert([{ receiver_id, sender_id, status: "pending" }])
+      .select("*")
+      .limit(1)
+      .single();
+    if (error) return NextResponse.json({ error }, { status: 500 });
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(error, { status: 500 });
+  }
+}
