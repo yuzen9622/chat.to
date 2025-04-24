@@ -202,7 +202,7 @@ function CreateRoomModal({
                 await channel.publish("room_action", {
                   action: "create",
                   newRoom: newRoom,
-                  newRoomMember: [...roomMembers, userId],
+                  newRoomMembers: [...roomMembers, userId],
                 });
               }
 
@@ -240,7 +240,7 @@ function CreateRoomModal({
                       )}
                     >
                       {roomMembers.includes(friend.id) && (
-                        <div className="absolute z-20 p-1 bg-blue-500 rounded-full right-2 animate-in zoom-in-0">
+                        <div className="absolute z-20 p-1 bg-blue-500 rounded-full -right-1 animate-in zoom-in-0">
                           <Check size={15} />
                         </div>
                       )}

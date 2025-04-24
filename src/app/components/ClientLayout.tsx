@@ -13,8 +13,6 @@ import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import NotifyBar from "./NotifyBar";
 import {
-  FriendInterface,
-  friendStatus,
   MessageInterface,
   RoomMemberInterface,
   UserInterface,
@@ -167,7 +165,10 @@ export default function ClientLayout({
       if (!userId) return;
 
       setRoom((prev) => {
-        if (!prev.some((roomInfo) => roomInfo.id === newRoom.id)) {
+        if (
+          !prev.some((roomInfo) => roomInfo.id === newRoom.id) &&
+          newRoomMembers.includes(userId)
+        ) {
           return [...prev, newRoom];
         }
         return prev;
@@ -241,7 +242,7 @@ export default function ClientLayout({
         setFriendRequest((prev) => {
           const isExsist = prev.some((request) => request.id === data.id);
           if (isExsist) {
-            return prev;
+            return prev.map((fr) => (fr.id === data.id ? data : fr));
           }
           return [...prev, data];
         });
@@ -279,6 +280,7 @@ export default function ClientLayout({
   }, [presenceData, setOnlineUsers]);
 
   const isChatRoom = pathname.includes("/chat/");
+  console.log(pathname);
   return (
     <div className="flex flex-col-reverse h-full overflow-hidden sm:flex-row">
       <NotifyBar />
@@ -288,7 +290,7 @@ export default function ClientLayout({
           isChatRoom && "hidden sm:block"
         )}
       >
-        <SideBar />
+        {!pathname.includes("/auth") && <SideBar />}
       </div>
       {children}
     </div>

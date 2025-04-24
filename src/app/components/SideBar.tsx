@@ -28,14 +28,14 @@ export default function SideBar() {
   return (
     <div
       className={twMerge(
-        " p-2 sm:h-full sm:pr-0  z-50 sm:absolute lg:sticky  bg-white sm:w-[300] sm:min-w-[300] transition-all border-r",
+        " p-2 sm:h-full sm:pr-0  z-50 sm:absolute lg:sticky   sm:w-[300] sm:min-w-[300] transition-all border-r dark:border-none",
         !sidebarOpen && "sm:-translate-x-full sm:absolute p-0   sm:min-w-0"
       )}
       ref={sidebarRef}
     >
-      <nav className="flex flex-row items-center w-full h-full overflow-auto rounded-lg sm:flex-col dark:bg-white/5">
-        <div className="box-border items-center justify-around hidden w-full p-4 h-fit sm:flex">
-          <span className="inline-flex items-center space-x-2 text-3xl text-blue-400">
+      <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white sm:flex-col dark:bg-white/5 rounded-r-md backdrop-blur-3xl">
+        <div className="box-border items-center justify-between hidden w-full p-4 h-fit sm:flex">
+          <span className="inline-flex items-center px-2 space-x-2 text-3xl text-blue-400">
             <Image
               src="/chat.png"
               className=" w-9 h-9"

@@ -8,7 +8,7 @@ export default function ThirdPartLogin() {
       <div className="flex items-center justify-center w-full h-full p-2 space-x-2">
         <button
           onClick={() => signIn("google")}
-          className="flex items-center justify-center w-full p-2 text-sm font-semibold border-2 rounded-lg border-stone-700 text-stone-800 dark:hover:bg-blue-800"
+          className="flex items-center justify-center w-full p-2 text-sm font-semibold border-2 rounded-lg dark:bg-white border-stone-700 text-stone-800 "
         >
           <Google /> 使用 Google 登入
         </button>

@@ -34,7 +34,7 @@ export default function ChatHeader() {
   }, [currentChat, currentUser, userId]);
   if (!currentChat) return null;
   return (
-    <header className="box-border sticky top-0 flex items-center justify-between w-full p-2 backdrop-blur-3xl bg-white/50 ">
+    <header className="box-border sticky top-0 flex items-center justify-between w-full p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
       <span className="flex items-center sm:ml-2 w-fit">
         <Link href={"/chat"} className=" sm:hidden">
           <ChevronLeft
@@ -43,7 +43,7 @@ export default function ChatHeader() {
           />
         </Link>
         <button
-          className={twMerge("mr-2 ", sidebarOpen && "hidden")}
+          className={twMerge("mr-2 max-sm:hidden", sidebarOpen && "hidden")}
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           <AlignLeft className="dark:text-white text-stone-800" size={25} />
@@ -53,7 +53,7 @@ export default function ChatHeader() {
           onTouchEnd={() => setChatInfoOpen(true)}
           type="button"
         >
-          <BadgeAvatar room={currentChat!} width={40} height={40} />
+          <BadgeAvatar room={currentChat} width={40} height={40} />
         </button>
 
         <span

@@ -3,7 +3,7 @@ import { FriendRequestInterface, friendStatus } from "../lib/type";
 import { useUserProfile } from "@/hook/hooks";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
-import { responseFriendRequest } from "../lib/util";
+import { cancelFriendRequest, responseFriendRequest } from "../lib/util";
 import { twMerge } from "tailwind-merge";
 import CircularProgress from "@mui/material/CircularProgress";
 export default function RequestButton({
@@ -60,7 +60,7 @@ export default function RequestButton({
                 </button>
                 <button
                   onClick={() => handleClick(friend.id, "accepted")}
-                  className="px-2 py-1 mx-1 font-bold rounded-md whitespace-nowrap bg-white/10"
+                  className="px-2 py-1 mx-1 font-bold bg-gray-200 rounded-md whitespace-nowrap dark:bg-white/10"
                 >
                   接受
                 </button>
@@ -73,7 +73,10 @@ export default function RequestButton({
                 你發送給 {receiver.name} 的朋友邀請
               </span>
               <span className="flex flex-nowrap">
-                <button className="px-2 py-1 mx-1 font-bold bg-red-500 rounded-md whitespace-nowrap hover:bg-red-400 ">
+                <button
+                  onClick={() => cancelFriendRequest(friend)}
+                  className="px-2 py-1 mx-1 font-bold text-white bg-red-500 rounded-md whitespace-nowrap hover:bg-red-400 "
+                >
                   取消發送
                 </button>
               </span>

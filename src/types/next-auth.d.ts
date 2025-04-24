@@ -6,9 +6,6 @@ declare module "next-auth" {
     // A JWT which can be used as Authorization header with supabase-js for RLS.
     supabaseAccessToken?: string;
     userId?: string;
-    user: {
-      // The user's postal address
-      address: string;
-    } & DefaultSession["user"];
+    user: {} & DefaultSession["user"];
   }
 }

@@ -4,14 +4,12 @@ import { redirect } from "next/navigation";
 import ChatRoomWrapper from "@/app/components/ChatWrapper";
 import { MessageInterface, RoomInterface } from "@/app/lib/type";
 
-import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function generateMetadata() {
-  const data = await getSession();
+  const data = await getServerSession(authOptions);
   if (!data) return {};
-
   return {
     title: `chat.to．聊天室`,
   };

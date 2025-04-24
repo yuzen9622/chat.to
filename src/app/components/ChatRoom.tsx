@@ -20,7 +20,8 @@ import { supabase } from "../lib/supabasedb";
 import { useSession } from "next-auth/react";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
-  const { currentMessage, setCurrentMessage, currentChat } = useChatStore();
+  const { currentMessage, setCurrentMessage, currentChat, reply } =
+    useChatStore();
   const { room } = useAblyStore();
   const [page, setPage] = useState(1);
   const messagesRef = useRef<Record<string, HTMLDivElement | null>>({});
@@ -162,7 +163,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     return () => {
       observer.disconnect();
     };
-  }, [messageEnd.current, scrollToBottom, currentMessage]);
+  }, [messageEnd.current, scrollToBottom, currentMessage, reply]);
 
   useEffect(() => {
     if (containerEnd.current && shouldScroll) {
@@ -234,7 +235,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 }
               }}
               ref={mainRef}
-              className="flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y"
+              className="flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none"
             >
               {Object.entries(groupedMessages).map(([date, messages]) => (
                 <div key={date} className="flex flex-col items-center ">
@@ -266,7 +267,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
               {downBtnAppear && (
                 <button
                   onClick={scrollToBottom}
-                  className="sticky z-10 p-1 my-1 text-sm bg-gray-100 rounded-md shadow-md right-9 text-stone-700 bottom-2 w-fit dark:bg-white/10 backdrop-blur-2xl"
+                  className="sticky z-10 p-1 my-1 text-sm bg-gray-100 rounded-md shadow-md right-9 text-stone-700 bottom-2 w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl"
                 >
                   <ChevronDown />
                 </button>

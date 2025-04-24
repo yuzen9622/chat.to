@@ -1,5 +1,10 @@
 "use client";
-import { MessageInterface, MetaData, RoomInterface } from "./type";
+import {
+  FriendRequestInterface,
+  MessageInterface,
+  MetaData,
+  RoomInterface,
+} from "./type";
 import { useChatStore } from "../store/ChatStore";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -279,6 +284,54 @@ export const fetchFriendRequests = async (userId: string) => {
     });
     const data = await response.json();
     return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const queryFriend = async (query: string, userId: string) => {
+  try {
+    if (!query) return null;
+    const response = await fetch("/api/friends/q", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        userId,
+        query,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const cancelFriendRequest = async (
+  friendRequest: FriendRequestInterface
+) => {
+  try {
+    const { channel } = useAblyStore.getState();
+    const response = await fetch("/api/friends/request/cancel", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: friendRequest.id }),
+    });
+    const data = await response.json();
+    if (data.success && channel) {
+      await channel.publish("friend_action", {
+        action: "request",
+        data: { ...friendRequest, status: "canceled" },
+      });
+      return true;
+    }
+    return false;
   } catch (error) {
     console.log(error);
     throw error;

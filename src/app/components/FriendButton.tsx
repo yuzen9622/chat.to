@@ -68,7 +68,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
       <div className="inline-flex">
         <button
           onClick={handleClick}
-          className="p-1 mx-2 font-bold text-white transition-colors bg-blue-600 rounded-md dark:bg-white/10 hover:bg-white/20"
+          className="p-1 mx-2 font-bold text-white transition-colors bg-blue-500 rounded-md dark:bg-white/10 hover:bg-blue-600 active:bg-blue-300"
         >
           發送訊息
         </button>

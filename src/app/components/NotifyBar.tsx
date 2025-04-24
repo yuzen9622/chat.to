@@ -58,7 +58,7 @@ export default function NotifyBar() {
                 <p className="text-base">
                   {room && room.room_type === "group"
                     ? room.room_name
-                    : sendUser?.username}
+                    : sendUser?.name}
                 </p>
                 <p className="text-xs text-gray-500/70 dark:text-white/70">
                   {moment(newNotify.data.created_at).calendar()}
@@ -68,7 +68,7 @@ export default function NotifyBar() {
                 {room &&
                   room.room_type === "group" &&
                   sendUser &&
-                  sendUser.username + "："}
+                  sendUser.name + "："}
 
                 {replyText(newNotify.data)}
               </p>

@@ -11,7 +11,7 @@ import { getFileIcon, joinRoom } from "../lib/util";
 import { twMerge } from "tailwind-merge";
 import { CldImage, CldVideoPlayer } from "next-cloudinary";
 import Image from "next/image";
-import { CircularProgress, Modal, Skeleton } from "@mui/material";
+import { CircularProgress, Modal } from "@mui/material";
 import { useAuthStore } from "../store/AuthStore";
 import { useSession } from "next-auth/react";
 
@@ -39,35 +39,52 @@ export default function ChatInfo() {
   const handleFileType = useCallback((fileType: string) => {
     setFilterType(fileType);
   }, []);
-  useEffect(() => {
-    const filter = async () => {
-      setFilterMessages([]);
-      try {
-        setIsLoading(true);
-        const res = await fetch("/api/messages/meta", {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            metaType: filterType,
-            roomId: currentChat?.id,
-          }),
+
+  const getMetaMessages = useCallback(async () => {
+    setFilterMessages([]);
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/messages/meta", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          metaType: filterType,
+          roomId: currentChat?.id,
+        }),
+      });
+      if (res.ok) {
+        const data: MessageInterface[] = await res.json();
+        const filterData = data.filter((msg) => {
+          if (messageType(msg.meta_data!) === "audio") return null;
+          return msg;
         });
-        if (res.ok) {
-          const data: MessageInterface[] = await res.json();
-          const filterData = data.filter((msg) => {
-            if (messageType(msg.meta_data!) === "audio") return null;
-            return msg;
-          });
-          setFilterMessages(filterData);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
+        setFilterMessages(filterData);
       }
-    };
-    filter();
-  }, [filterType, currentMessage, currentChat]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filterType, currentChat]);
+
+  const handleFilter = useCallback(() => {
+    if (!currentMessage || currentMessage.length === 0) return;
+    const filterData = currentMessage.filter((msg) => {
+      if (messageType(msg.meta_data!) !== "audio" && msg.type === filterType)
+        return msg;
+      return null;
+    });
+    setFilterMessages(filterData);
+  }, [currentMessage, filterType]);
+
+  useEffect(() => {
+    getMetaMessages();
+  }, [getMetaMessages]);
+
+  useEffect(() => {
+    handleFilter();
+  }, [handleFilter]);
+
   useEffect(() => {
     if (!currentChat) return;
     const recipentId = currentChat.room_members.find(
@@ -95,6 +112,13 @@ export default function ChatInfo() {
     },
     []
   );
+
+  useEffect(() => {
+    if (friends) {
+      setRoomMembers(() => friends.map((f) => f.id));
+    }
+  }, [friends]);
+
   const handleRoomMember = useCallback(
     (userId: string) => {
       if (roomMembers.includes(userId)) {
@@ -218,12 +242,6 @@ export default function ChatInfo() {
                 <div className="flex flex-col items-center w-full max-w-full gap-2 overflow-auto">
                   {friends &&
                     friends.map((friend) => {
-                      if (
-                        currentChat.room_members.some(
-                          (m) => m.user_id === friend.id
-                        )
-                      )
-                        return null;
                       return (
                         <button
                           key={friend.id}
@@ -332,7 +350,6 @@ export default function ChatInfo() {
               </button>
             </span>
             <div className="flex-1 overflow-hidden ">
-              {" "}
               {filterMessages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   {isLoading && <CircularProgress />}
@@ -385,9 +402,6 @@ export default function ChatInfo() {
                             ></video>
                           );
                         }
-                        return (
-                          <Skeleton key={msg.id} width={100} height={100} />
-                        );
                       })}
                     </div>
                   )}
@@ -431,13 +445,7 @@ export default function ChatInfo() {
                             </button>
                           );
                         }
-                        return (
-                          <Skeleton
-                            key={msg.id}
-                            height={100}
-                            className="w-full "
-                          />
-                        );
+                        return null;
                       })}
                     </div>
                   )}

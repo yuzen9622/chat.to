@@ -4,9 +4,10 @@ export type MetaData = {
   url: string;
   size: number;
 };
-export type friendStatus = "accepted" | "declined" | "pending";
+export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
 export type MessageType = "text" | "media" | "file" | "url";
+
 export interface TypingInterface {
   userId: string;
   typing: boolean;
@@ -32,16 +33,18 @@ export interface MessageInterface {
   sender: string;
   room: string;
   created_at: string;
-  status: "send" | "pending" | "failed" | "deleting";
+  status: MessageStatus;
   is_read: Array<string>;
   type: MessageType;
 }
+
 export interface UserInterface {
   id: string;
   name: string;
   email: string;
   image: string;
 }
+
 export interface RoomMemberInterface {
   id?: string;
   room_id: string;

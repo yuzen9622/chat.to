@@ -1,11 +1,18 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
-import jwt from "jsonwebtoken";
+// import { supabase } from "@/app/lib/supabasedb";
+import bcrypt from "bcryptjs";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_SECRET_ROLE_KEY!
+);
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET!,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || "",
@@ -15,35 +22,111 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_ID || "",
       clientSecret: process.env.GOOGLE_SECRET || "",
     }),
+    CredentialProvider({
+      name: "credentials",
+      id: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const { email, password }: { email: string; password: string } =
+          credentials!;
+        if (!email || !password) {
+          throw new Error("請輸入必填欄位");
+        }
+        const { data: user, error } = await supabase
+          .from("users")
+          .select("*")
+          .limit(1)
+          .eq("email", email)
+          .eq("provider", "credentials")
+          .maybeSingle();
+        console.log(user);
+        if (error || !user) {
+          throw new Error("帳戶或密碼錯誤");
+        }
+
+        if (user.password) {
+          const isValid = await bcrypt.compare(password, user.password);
+          if (!isValid) {
+            throw new Error("帳戶或密碼錯誤");
+          }
+        }
+        return {
+          id: user.id,
+          email: user.email,
+          image: user.image,
+          name: user.name,
+        };
+      },
+    }),
   ],
 
   pages: {
     signIn: "/auth/login",
   },
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    secret: process.env.NEXT_SECRET_ROLE_KEY ?? "",
-  }),
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    async signIn({ account }) {
-      if (account?.provider === "github" || account?.provider === "google") {
+    async signIn({ user, account }) {
+      console.log(account, user);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", user.email)
+        .eq("provider", account?.provider)
+        .limit(1)
+        .maybeSingle();
+      if (error) {
+        return false;
+      }
+
+      if (
+        !data &&
+        (account?.provider === "google" || account?.provider === "github")
+      ) {
+        const { data: thirdPartUser } = await supabase
+          .from("users")
+          .insert([
+            {
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              provider: account?.provider,
+            },
+          ])
+          .select("*")
+          .limit(1)
+          .maybeSingle();
+        user.id = thirdPartUser.id;
+        return true;
+      } else if (data) {
+        user.id = data.id;
         return true;
       }
 
-      return true;
+      return false;
     },
-    async session({ session, user }) {
-      const signingSecret = process.env.SUPABASE_JWT_SECRET;
-      if (signingSecret) {
-        const payload = {
-          aud: "authenticated",
-          exp: Math.floor(new Date(session.expires).getTime() / 1000),
-          sub: user.id,
-          email: user.email,
-          role: "authenticated",
+    jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id ?? token.sub;
+        token.email = user.email;
+        token.picture = user.image;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.userId = token.sub;
+        session.user = {
+          email: token.email,
+          name: token.name,
+          image: token.picture,
         };
-        session.userId = user.id;
-        session.supabaseAccessToken = jwt.sign(payload, signingSecret);
       }
       return session;
     },

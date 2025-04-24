@@ -23,9 +23,7 @@ export const useAbly = () => {
   const [ablyClient, setAblyClient] = useState<Ably.Realtime | null>(null);
   const { data: session } = useSession();
   const userId = session?.userId;
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
+
   useEffect(() => {
     if (userId && !ablyClient) {
       const client = getAblyClient(userId);

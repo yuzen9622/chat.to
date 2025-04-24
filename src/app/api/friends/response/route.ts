@@ -1,5 +1,4 @@
 import { supabase } from "@/app/lib/supabasedb";
-import { FriendRequestInterface } from "@/app/lib/type";
 
 import { NextRequest, NextResponse } from "next/server";
 

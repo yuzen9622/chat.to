@@ -76,9 +76,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (!state.friendRequests) return state;
       if (typeof requestOrFn === "function") {
         const newFriendRequest = requestOrFn(state.friendRequests);
+        const filterFriendRequest = newFriendRequest.filter(
+          (fr) => fr.status === "pending"
+        );
         return {
           ...state,
-          friendRequests: newFriendRequest,
+          friendRequests: filterFriendRequest,
         };
       }
 

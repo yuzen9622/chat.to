@@ -4,7 +4,8 @@ import { twMerge } from "tailwind-merge";
 import { useAblyStore } from "../store/AblyStore";
 import { RoomInterface } from "../lib/type";
 import { Skeleton } from "@mui/material";
-
+import groupAvatar from "../../../public/group-of-people.png";
+import defaultAvatar from "../../../public/user.png";
 import { useUserProfile } from "@/hook/hooks";
 import { useSession } from "next-auth/react";
 
@@ -55,7 +56,7 @@ export default function BadgeAvatar({
         {room?.room_type === "personal" && userProfile && (
           <Image
             className="border-2 border-transparent rounded-full bg-white/10 aspect-square"
-            src={userProfile?.image}
+            src={userProfile?.image || defaultAvatar}
             width={width}
             height={height}
             alt={userProfile.name}
@@ -74,13 +75,13 @@ export default function BadgeAvatar({
           <Image
             className={twMerge(
               "object-cover border-2 border-transparent rounded-full  aspect-square",
-              width && `w-[${width}px]`,
-              height && `h-[${height}px]`
+              width && `max-w-[${width}px]`,
+              height && `max-h-[${height}px]`
             )}
-            src="/group-of-people.png"
+            src={groupAvatar}
             width={width}
             height={height}
-            alt={"group-avatar"}
+            alt={"group-avatar-default"}
           />
         )}
         {room?.room_type === "group" && room.room_img && (
@@ -93,13 +94,13 @@ export default function BadgeAvatar({
             src={room.room_img}
             width={width}
             height={height}
-            alt={"group-avatar"}
+            alt={room.room_name}
           />
         )}
         {!room && userProfile && (
           <Image
             className="object-cover border-2 border-transparent rounded-full bg-white/5"
-            src={userProfile.image}
+            src={userProfile?.image || defaultAvatar}
             width={width}
             height={height}
             alt={"group-avatar"}

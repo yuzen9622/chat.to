@@ -1,13 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "./components/ClientLayout";
-import ChatProvider from "./components/provider/ChatProvider";
 import { getServerSession } from "next-auth";
 import { twMerge } from "tailwind-merge";
 
 import SessionProvider from "./components/provider/SessionProvider";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import NextAuthProvider from "./components/provider/NextAuthProvider";
 
 export const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +39,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" className="max-h-dvh ">
+    <html lang="en" className="max-h-dvh dark ">
       <body
         className={twMerge(
           " bg-white dark:bg-neutral-900  h-dvh max-h-dvh overflow-y-hidden  [&::-webkit-scrollbar]:w-2   [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
@@ -49,13 +48,7 @@ export default async function RootLayout({
         )}
       >
         <SessionProvider session={session}>
-          {!session ? (
-            <>{children}</>
-          ) : (
-            <ChatProvider>
-              <ClientLayout>{children}</ClientLayout>
-            </ChatProvider>
-          )}
+          <NextAuthProvider>{children}</NextAuthProvider>
         </SessionProvider>
       </body>
     </html>
