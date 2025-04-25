@@ -174,7 +174,7 @@ export const editUserMessage = async (message: MessageInterface) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(message),
+      body: JSON.stringify({ id: message.id, text: message.text }),
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -195,7 +195,7 @@ export const createRoom = async (
   room_img?: File
 ) => {
   try {
-    const room_url = await uploadFile(room_img!);
+    const room_img_url: string = await uploadFile(room_img!);
 
     const response = await fetch("/api/rooms/create/", {
       method: "POST",
@@ -207,7 +207,7 @@ export const createRoom = async (
         userId,
         room_type: room_type || "personal",
         room_members,
-        room_img: room_url || null,
+        room_img: room_img_url || null,
       }),
     });
 

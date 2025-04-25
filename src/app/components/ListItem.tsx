@@ -14,6 +14,7 @@ export default function ListItem({
   className?: string;
 } & LinkProps) {
   const path = usePathname();
+
   const isActive = () => {
     if (href === "/") return path === "/";
     if (href === "/chat") return path.startsWith("/chat");

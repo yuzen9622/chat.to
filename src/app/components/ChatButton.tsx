@@ -89,7 +89,7 @@ export default function ChatButton({
           </span>
         </div>
         {roomNotify > 0 && (
-          <span className=" flex-shrink-0 h-5 min-w-5 px-1.5 flex items-center text-white dark:text-stone-800 justify-center rounded-full bg-blue-500 text-sm">
+          <span className=" flex-shrink-0 h-5 min-w-5 px-1.5 flex items-center text-white justify-center rounded-full bg-blue-500 text-sm">
             {roomNotify > 4 ? "4+" : roomNotify}
           </span>
         )}

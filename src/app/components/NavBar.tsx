@@ -6,12 +6,11 @@ import { twMerge } from "tailwind-merge";
 export default function NavBar() {
   const { setSidebarOpen, sidebarOpen } = useChatStore();
   return (
-    <div className="box-border flex items-center w-full p-2 h-fit lg:hidden">
+    <div className="box-border flex items-center w-full p-2 h-fit lg:hidden max-sm:hidden ">
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className={twMerge(
-          "p-1 text-3xl rounded-lg text-stone-700 active:dark:bg-gray-600",
-          sidebarOpen && "hidden"
+          "p-1 text-3xl rounded-lg text-stone-700 active:dark:bg-gray-600"
         )}
       >
         <AlignLeft />

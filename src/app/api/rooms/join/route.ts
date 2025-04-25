@@ -9,20 +9,21 @@ export const POST = async (req: NextRequest) => {
       room_id: room_id,
       user_id: uid,
     }));
+
     const { data, error } = await supabase
       .from("room_members")
       .insert(roomMembers)
       .select("*")
       .limit(1)
       .single();
-    const { data: roomData, error: roomError } = await supabase
+    const { data: roomData, error: roomsError } = await supabase
       .from("room_members")
       .select("rooms(*,room_members(*))")
       .eq("room_id", data.room_id)
       .limit(1)
       .single();
-    if (error || roomError) {
-      return NextResponse.json({ error, roomError }, { status: 500 });
+    if (error || roomsError) {
+      return NextResponse.json({ error, roomsError }, { status: 500 });
     }
 
     return NextResponse.json(roomData, { status: 200 });

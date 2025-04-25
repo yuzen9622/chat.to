@@ -43,7 +43,7 @@ export default function ChatHeader() {
           />
         </Link>
         <button
-          className={twMerge("mr-2 max-sm:hidden", sidebarOpen && "hidden")}
+          className={twMerge("mr-2 lg:hidden max-sm:hidden")}
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           <AlignLeft className="dark:text-white text-stone-800" size={25} />

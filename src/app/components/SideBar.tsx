@@ -33,7 +33,7 @@ export default function SideBar() {
       )}
       ref={sidebarRef}
     >
-      <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white sm:flex-col dark:bg-white/5 rounded-r-md backdrop-blur-3xl">
+      <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white sm:flex-col dark:bg-stone-800/90 rounded-r-md backdrop-blur-3xl">
         <div className="box-border items-center justify-between hidden w-full p-4 h-fit sm:flex">
           <span className="inline-flex items-center px-2 space-x-2 text-3xl text-blue-400">
             <Image

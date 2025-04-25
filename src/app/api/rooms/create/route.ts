@@ -1,5 +1,4 @@
 import { supabase } from "@/app/lib/supabasedb";
-import { UserInterface } from "@/app/lib/type";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 cloudinary.config({

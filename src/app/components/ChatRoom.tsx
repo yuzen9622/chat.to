@@ -239,7 +239,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
             >
               {Object.entries(groupedMessages).map(([date, messages]) => (
                 <div key={date} className="flex flex-col items-center ">
-                  <span className="sticky top-0 z-10 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-2xl">
+                  <span className="sticky top-0 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-2xl">
                     {date}
                   </span>
 

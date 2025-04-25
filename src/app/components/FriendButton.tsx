@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { UserInterface } from "../lib/type";
+import { RoomInterface, UserInterface } from "../lib/type";
 import { useChatStore } from "../store/ChatStore";
 import { createRoom } from "../lib/util";
 
@@ -27,9 +27,19 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
         room.room_type === "personal"
     );
     if (!friendRoom) {
-      const newRoom = await createRoom(userId!, "", [friend.id], "personal");
+      const newRoom: RoomInterface = await createRoom(
+        userId!,
+        "",
+        [friend.id],
+        "personal"
+      );
+      const roomMembers = newRoom.room_members.map((rm) => rm.user_id);
 
-      channel.publish("room_action", { action: "create", newRoom });
+      channel.publish("room_action", {
+        action: "create",
+        newRoom,
+        newRoomMembers: roomMembers,
+      });
       router.push(`/chat/${newRoom.id}`);
     } else {
       router.push(`/chat/${friendRoom.id}`);

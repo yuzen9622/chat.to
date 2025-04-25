@@ -500,6 +500,7 @@ export default function InputBar({
                 autoFocusSearch={false}
                 theme={Theme.DARK}
                 emojiStyle={EmojiStyle.NATIVE}
+                
                 onEmojiClick={(e) => setMessageText((prev) => prev + e.emoji)}
               />
             </div>
