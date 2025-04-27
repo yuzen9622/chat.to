@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import ThirdPartLogin from "@/app/components/ThirdPartLogin";
 import Link from "next/link";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { redirect, useRouter } from "next/navigation";
 
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { status } = useSession();
 
   useEffect(() => {
     const getAuthSession = async () => {
@@ -37,7 +38,7 @@ export default function LoginPage() {
         password: loginForm.password,
       });
       if (res && res.ok) {
-        router.push("/");
+        redirect("/");
       }
 
       if (res && res.error) {
@@ -45,7 +46,7 @@ export default function LoginPage() {
       }
       setIsLoading(false);
     },
-    [loginForm, router]
+    [loginForm]
   );
 
   return (
@@ -94,7 +95,7 @@ export default function LoginPage() {
                 isLoading && "bg-blue-400"
               )}
             >
-              {isLoading ? "登入中..." : "登入"}
+              {isLoading || status === "loading" ? "登入中..." : "登入"}
             </button>
           </span>
         </form>

@@ -4,6 +4,7 @@ import {
   MessageInterface,
   MetaData,
   RoomInterface,
+  UserInterface,
 } from "./type";
 import { useChatStore } from "../store/ChatStore";
 import { useEffect, useState } from "react";
@@ -522,4 +523,19 @@ export const getFileIcon = (mimeType: string) => {
   };
 
   return fileIcons[mimeType as keyof typeof fileIcons] || fileIcons.default;
+};
+
+export const fetchFriendNote = async (friends: UserInterface[]) => {
+  try {
+    const userIds = friends.map((f) => f.id);
+    const response = await fetch("/api/note", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: userIds }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };

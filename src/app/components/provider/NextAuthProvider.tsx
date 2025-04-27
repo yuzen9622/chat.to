@@ -12,7 +12,7 @@ export default function NextAuthProvider({
   const session = useSession();
   return (
     <>
-      {session.status === "unauthenticated" || session.status === "loading" ? (
+      {session.status === "unauthenticated" ? (
         <>{children}</>
       ) : (
         <ChatProvider>

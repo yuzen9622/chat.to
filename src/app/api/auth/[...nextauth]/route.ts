@@ -6,6 +6,7 @@ import type { NextAuthOptions } from "next-auth";
 // import { supabase } from "@/app/lib/supabasedb";
 import bcrypt from "bcryptjs";
 import { createClient } from "@supabase/supabase-js";
+import { NoteInterface } from "@/app/lib/type";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -53,12 +54,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("帳戶或密碼錯誤");
           }
         }
-        return {
-          id: user.id,
-          email: user.email,
-          image: user.image,
-          name: user.name,
-        };
+        return user;
       },
     }),
   ],
@@ -71,8 +67,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log(account, user);
-
       const { data, error } = await supabase
         .from("users")
         .select("*")
@@ -80,6 +74,7 @@ export const authOptions: NextAuthOptions = {
         .eq("provider", account?.provider)
         .limit(1)
         .maybeSingle();
+
       if (error) {
         return false;
       }
@@ -101,21 +96,49 @@ export const authOptions: NextAuthOptions = {
           .select("*")
           .limit(1)
           .maybeSingle();
+        const { data: note } = await supabase
+          .from("user_note")
+          .select("*")
+          .eq("user_id", thirdPartUser.id);
+        if (note) {
+          user.note = note[0];
+        }
+
         user.id = thirdPartUser.id;
+        user.provider = account?.provider;
         return true;
       } else if (data) {
+        const { data: note } = await supabase
+          .from("user_note")
+          .select("*")
+          .eq("user_id", data.id);
+        console.log(note);
+        if (note) {
+          user.note = note[0];
+        }
         user.id = data.id;
+        user.provider = data.provider;
         return true;
       }
 
       return false;
     },
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         token.sub = user.id ?? token.sub;
         token.email = user.email;
         token.picture = user.image;
         token.name = user.name;
+        token.note = user.note as NoteInterface;
+        token.provider = user.provider;
+      }
+      if (trigger === "update" && session) {
+        token.sub = session.id ?? token.sub;
+        token.email = session.email;
+        token.picture = session.image;
+        token.name = session.name;
+        token.note = session.note as NoteInterface;
+        token.provider = session.provider;
       }
       return token;
     },
@@ -123,9 +146,12 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.userId = token.sub;
         session.user = {
-          email: token.email,
-          name: token.name,
-          image: token.picture,
+          id: token.sub!,
+          email: token.email!,
+          name: token.name!,
+          image: token.picture!,
+          provider: token.provider,
+          note: token.note,
         };
       }
       return session;

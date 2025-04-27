@@ -12,10 +12,11 @@ import NotifyBar from "./NotifyBar";
 import { useSession } from "next-auth/react";
 import {
   useFriendListner,
+  useNoteListner,
   useNotifyListner,
   useRoomActionListner,
 } from "@/hook/hooks";
-import NavBar from "./NavBar";
+
 moment.locale("zh-tw");
 export default function ClientLayout({
   children,
@@ -54,6 +55,7 @@ export default function ClientLayout({
   useFriendListner(channel);
   useRoomActionListner(channel);
   useNotifyListner(channel);
+  useNoteListner(channel);
 
   const { presenceData } = usePresenceListener("chatta-chat-channel");
   useEffect(() => {

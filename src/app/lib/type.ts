@@ -7,6 +7,7 @@ export type MetaData = {
 export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
 export type MessageType = "text" | "media" | "file" | "url";
+export type ProviderType = "google" | "github" | "credenitals";
 
 export interface TypingInterface {
   userId: string;
@@ -37,12 +38,21 @@ export interface MessageInterface {
   is_read: Array<string>;
   type: MessageType;
 }
-
+export interface NoteInterface {
+  id: number;
+  text: string;
+  user_id: string;
+  created_at: Date;
+  public: boolean;
+  updated_at: string;
+}
 export interface UserInterface {
   id: string;
   name: string;
   email: string;
   image: string;
+  note?: NoteInterface;
+  provider: ProviderType;
 }
 
 export interface RoomMemberInterface {

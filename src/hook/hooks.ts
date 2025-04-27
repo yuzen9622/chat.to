@@ -1,5 +1,5 @@
 import { supabase } from "@/app/lib/supabasedb";
-import { MessageInterface, UserInterface } from "@/app/lib/type";
+import { MessageInterface, NoteInterface, UserInterface } from "@/app/lib/type";
 import { roomSort } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useChatStore } from "@/app/store/ChatStore";
@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, useMemo } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
 import { RoomMemberInterface } from "@/app/lib/type";
+import { channel } from "diagnostics_channel";
 
 export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();
@@ -48,7 +49,7 @@ export const useLastMessage = (roomId: string) => {
 
 export const useRoomNotify = (roomId: string) => {
   const { notify, currentChat } = useChatStore();
-  const { user } = useAuthStore();
+  const user = useSession().data?.user;
 
   const roomNotify = useMemo(
     () =>
@@ -320,4 +321,27 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
     rooms,
     setNewNotify,
   ]);
+};
+
+export const useNoteListner = (channel: RealtimeChannel) => {
+  const { setFriendNote, friends } = useAuthStore();
+  useEffect(() => {
+    const handleNote = (message: InboundMessage) => {
+      const { note }: { note: NoteInterface } = message.data;
+      console.log(note);
+      if (friends?.some((f) => f.id === note.user_id)) {
+        setFriendNote((prev) => {
+          if (!prev.some((n) => n.id === note.id)) {
+            return [note, ...prev];
+          }
+          return prev.map((n) => (n.id === note.id ? note : n));
+        });
+      }
+    };
+    channel.subscribe("note_action", handleNote);
+
+    return () => {
+      channel.unsubscribe("note_action");
+    };
+  }, [channel, setFriendNote, friends]);
 };

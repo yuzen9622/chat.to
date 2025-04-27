@@ -43,7 +43,7 @@ export default function NotifyBar() {
         <Snackbar
           open={open}
           autoHideDuration={5000}
-          className="p-2 rounded-md cursor-pointer bg-stone-800/10 min-w-72 sm:max-w-72 dark:bg-stone-900/70 backdrop-blur-xl max-sm:w-auto"
+          className="p-2 rounded-md cursor-pointer bg-stone-800/10 min-w-72 sm:max-w-72 dark:bg-stone-900/70 backdrop-blur-2xl max-sm:w-auto"
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           onClick={handleClick}
           onClose={() => {

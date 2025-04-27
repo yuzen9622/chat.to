@@ -11,12 +11,11 @@ export default function ChatProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { status, data } = useSession();
+  const { status } = useSession();
 
   const client = useAbly();
 
-  if (!data && status === "unauthenticated") return <>{children}</>;
-  if (status === "loading" || !client) {
+  if (status === "unauthenticated" || !client) {
     return (
       <div className="flex items-center justify-center w-full h-dvh">
         <CircularProgress />

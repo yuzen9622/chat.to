@@ -6,7 +6,7 @@ import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
 import { RoomInterface } from "../lib/type";
 import { useLastMessage, useRoomNotify } from "@/hook/hooks";
-import { useAuthStore } from "../store/AuthStore";
+
 import { messageType, TimeAgo } from "../lib/util";
 
 import { twMerge } from "tailwind-merge";
@@ -21,7 +21,7 @@ export default function ChatButton({
   const pathname = usePathname();
   const lastMessage = useLastMessage(room.id);
   const roomNotify = useRoomNotify(room.id);
-  const { user } = useAuthStore();
+  const user = useSession().data?.user;
   const isActive = pathname === `/chat/${room.id}`;
   const { currentUser } = useChatStore();
   //const [recipentUser, setRecipentUser] = useState<UserInterface | null>(null);

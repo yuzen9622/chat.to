@@ -7,8 +7,12 @@ export default withAuth(
   async function middleware(req: NextRequest) {
     const url = req.nextUrl;
     const isLoginPage = url.pathname === "/auth/login";
-    const token = await getToken({ req });
 
+    const token = await getToken({ req });
+    console.log(url.pathname);
+    if (url.pathname.startsWith("/api") && !token) {
+      return NextResponse.json({ error: "Unauthcation" }, { status: 401 });
+    }
     if (isLoginPage && token) {
       console.log(url.pathname, token);
       return NextResponse.redirect(new URL("/", req.url));
@@ -25,5 +29,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/chat/:path*", "/", "/friend"],
+  matcher: ["/chat/:path*", "/", "/friend", "/api/:path*"],
 };

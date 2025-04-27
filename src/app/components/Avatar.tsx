@@ -23,9 +23,7 @@ export default function BadgeAvatar({
   const { onlineUsers } = useAblyStore();
   const userId = useSession()?.data?.userId;
   const userProfile = useUserProfile(
-    room?.room_members.find((user) => user.user_id !== userId)?.user_id ||
-      user ||
-      userId!
+    room?.room_members.find((user) => user.user_id !== userId)?.user_id || user
   );
 
   if (!userProfile && room?.room_type === "personal")
@@ -40,7 +38,7 @@ export default function BadgeAvatar({
     );
 
   return (
-    <div className="relative ">
+    <div className="relative w-fit h-fit">
       <div
         className={twMerge(
           onlineUsers.some(
