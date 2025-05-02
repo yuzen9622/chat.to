@@ -1,3 +1,4 @@
+"use client";
 import { CircularProgress, Modal } from "@mui/material";
 import { X } from "lucide-react";
 import React, { ChangeEvent, useCallback, useRef, useState } from "react";

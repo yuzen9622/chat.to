@@ -1,12 +1,16 @@
 import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { getToken } from "next-auth/jwt";
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 export async function POST(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token)
+    return NextResponse.json({ error: "No authication" }, { status: 401 });
   try {
     const { id } = await request.json();
     console.log(id);

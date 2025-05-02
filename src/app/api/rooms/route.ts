@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { supabase } from "@/app/lib/supabasedb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 export async function GET() {
   const session = await getServerSession(authOptions);
 
@@ -20,6 +21,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token)
+    return NextResponse.json({ error: "No authication" }, { status: 401 });
   const { room_name } = await request.json();
 
   const { data, error } = await supabase.from("rooms").insert([{ room_name }]);

@@ -1,9 +1,14 @@
 import { supabase } from "@/app/lib/supabasedb";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
+  const token = await getToken({ req: req });
+
   try {
     const { users_id, room_id } = await req.json();
+    if (!token || users_id.includes(token.sub))
+      return NextResponse.json({ error: "No authication" }, { status: 401 });
 
     const roomMembers = users_id.map((uid: string) => ({
       room_id: room_id,

@@ -31,8 +31,8 @@ export default function BadgeAvatar({
       <Skeleton
         animation="wave"
         sx={{ bgcolor: "grey.900" }}
-        width={width}
-        height={height}
+        width={width || 45}
+        height={height || 45}
         variant="circular"
       />
     );
@@ -97,7 +97,10 @@ export default function BadgeAvatar({
         )}
         {!room && userProfile && (
           <Image
-            className="object-cover border-2 border-transparent rounded-full bg-white/5"
+            className={twMerge(
+              "object-cover border-2 border-transparent rounded-full dark:bg-white/5 ",
+              `min-w-[${width}px] min-h-[${height}px]`
+            )}
             src={userProfile?.image || defaultAvatar}
             width={width}
             height={height}

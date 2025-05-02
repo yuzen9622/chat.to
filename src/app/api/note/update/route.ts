@@ -1,7 +1,11 @@
 import { supabase } from "@/app/lib/supabasedb";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  const token = await getToken({ req: req });
+  if (!token)
+    return NextResponse.json({ error: "No authication" }, { status: 401 });
   const { text, user_id, is_public } = await req.json();
   try {
     const { data, error } = await supabase

@@ -17,16 +17,21 @@ export async function generateMetadata() {
 export default async function Page({ params }: { params: { roomId: string } }) {
   const { roomId } = await params;
   const data = await getServerSession(authOptions);
+
   if (!data) return redirect("/chat");
   const { room, messages } = (await getRoomById(roomId, data.userId!)) as {
     room: RoomInterface;
     messages: MessageInterface[];
   };
 
-  if (!room) return redirect("/chat");
+  if (
+    !room ||
+    room.room_members.some((rm) => rm.user_id === data.userId && rm.is_deleted)
+  )
+    return redirect("/chat");
 
   return (
-    <div className="flex flex-row flex-1 m-2 overflow-y-hidden transition-all rounded-md max-h-dvh ">
+    <div className="flex flex-row flex-1 m-2 overflow-y-hidden transition-all rounded-md max-h-dvh">
       <ChatRoomWrapper room={room} messages={messages} roomId={roomId} />
     </div>
   );

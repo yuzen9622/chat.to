@@ -10,7 +10,7 @@ export default function NavBar() {
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className={twMerge(
-          "p-1 text-3xl rounded-lg text-stone-700 active:dark:bg-gray-600"
+          "p-1 text-3xl rounded-lg text-stone-700 dark:text-white active:dark:bg-gray-600"
         )}
       >
         <AlignLeft />

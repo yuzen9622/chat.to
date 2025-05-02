@@ -1,16 +1,18 @@
 import { NextResponse, NextRequest } from "next/server";
 import { supabase } from "@/app/lib/supabasedb";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getServerSession(authOptions);
+    const token = await getToken({ req: request });
+    if (!token)
+      return NextResponse.json({ error: "No authcation" }, { status: 401 });
+    const { userId } = await request.json();
 
     const { data, error } = await supabase
       .from("users")
-      .select("*")
-      .eq("id", user?.userId);
+      .select("id,image,name")
+      .in("id", userId);
 
     if (error) {
       console.error(error);

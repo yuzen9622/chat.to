@@ -8,11 +8,12 @@ export const getRoomById = async (roomId: string, userId: string) => {
       .eq("user_id", userId)
       .eq("room_id", roomId)
       .limit(1);
+
     if (error || !data) {
       console.error("Room not found or user is not a member:", error);
       return { room: null, messages: [] };
     }
-
+    console.log(data);
     const { data: msgData, error: msgError } = await supabase
       .from("messages")
       .select("*")
@@ -26,6 +27,7 @@ export const getRoomById = async (roomId: string, userId: string) => {
       return { room: data[0].rooms[0], messages: [] };
     }
     msgData.reverse();
+
     return { room: data[0].rooms, messages: msgData };
   } catch (error) {
     console.log(error);

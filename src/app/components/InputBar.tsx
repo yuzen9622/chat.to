@@ -398,7 +398,7 @@ export default function InputBar({
       }}
       className="w-full"
     >
-      <div className="sticky bottom-0 px-2 py-1 m-2 rounded bg-white/10">
+      <div className="sticky bottom-0 px-2 py-1 m-2 rounded bg-white/10 backdrop-blur-3xl">
         {reply && (
           <div className="border-l-[3px] px-2  border-blue-600 bg-white/5 rounded-e-sm shadow-md  ">
             <div className="flex justify-between font-semibold dark:text-white ">
@@ -500,7 +500,6 @@ export default function InputBar({
                 autoFocusSearch={false}
                 theme={Theme.DARK}
                 emojiStyle={EmojiStyle.NATIVE}
-                
                 onEmojiClick={(e) => setMessageText((prev) => prev + e.emoji)}
               />
             </div>

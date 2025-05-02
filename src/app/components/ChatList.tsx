@@ -379,9 +379,7 @@ export default function ChatList() {
         setIsLoading(true);
         const roomsData: RoomInterface[] = await fetchUserRooms();
         const inRooms = roomsData.filter((r) =>
-          r.room_members.some(
-            (m) => m.user_id === userId && m.is_deleted === false
-          )
+          r.room_members.some((m) => m.user_id === userId)
         );
         if (roomsData.length > 0) {
           setRoom(() => inRooms);
@@ -414,7 +412,9 @@ export default function ChatList() {
 
       {!isLoading ? (
         rooms.length > 0 &&
-        rooms.map((room) => <ChatButton key={room.id} room={room} />)
+        rooms.map((room) => {
+          return <ChatButton key={room.id} room={room} />;
+        })
       ) : (
         <LoadingList />
       )}

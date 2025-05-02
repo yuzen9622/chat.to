@@ -6,18 +6,16 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req: req });
   if (!token)
     return NextResponse.json({ error: "No authication" }, { status: 401 });
-  const { ids } = await req.json();
+  const { id, name, email } = await req.json();
   try {
-    console.log(ids);
-    const { data, error } = await supabase
-      .from("user_note")
-      .select("*")
-      .in("user_id", ids)
-      .order("created_at");
+    const { error } = await supabase
+      .from("users")
+      .update({ email, name })
+      .eq("id", id);
     if (error) {
-      return NextResponse.json({ error }, { status: 500 });
+      return NextResponse.json({ error }, { status: 401 });
     }
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json({}, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }

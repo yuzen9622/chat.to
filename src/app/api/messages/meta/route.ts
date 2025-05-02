@@ -1,7 +1,11 @@
 import { supabase } from "@/app/lib/supabasedb";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token)
+    return NextResponse.json({ error: "No authication" }, { status: 401 });
   const { metaType, roomId } = await request.json();
   try {
     if (!metaType || !roomId) throw new Error("No meta type.");

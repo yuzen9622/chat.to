@@ -18,6 +18,9 @@ import moment from "moment";
 import { ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabasedb";
 import { useSession } from "next-auth/react";
+import { twMerge } from "tailwind-merge";
+
+import { useRoomUser } from "@/hook/hooks";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const { currentMessage, setCurrentMessage, currentChat, reply } =
@@ -33,7 +36,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   const [shouldScroll, setShouldScroll] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
+  const userMap = useRoomUser();
   const [downBtnAppear, setDownBtnAppear] = useState(false);
+
   const groupedMessages = useMemo(() => {
     return Object.groupBy(currentMessage, ({ created_at }) => {
       if (
@@ -78,6 +83,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         return concatMsg;
       });
     }
+    setIsLoading(false);
   }, [page, roomId, setCurrentMessage, currentMessage, isLoading]);
 
   // const isNearBottom = useCallback(() => {
@@ -163,14 +169,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     return () => {
       observer.disconnect();
     };
-  }, [messageEnd.current, scrollToBottom, currentMessage, reply]);
+  }, [scrollToBottom, currentMessage, reply, target]);
 
   useEffect(() => {
     if (containerEnd.current && shouldScroll) {
       scrollToBottom();
       setShouldScroll(false);
     }
-  }, [scrollToBottom, currentChat, shouldScroll]);
+  }, [scrollToBottom, currentChat, shouldScroll, userMap]);
 
   useEffect(() => {
     if (!room) return;
@@ -224,9 +230,10 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all rounded-md max-h-dvh ">
+        <div className="flex flex-col flex-1 overflow-y-hidden transition-all rounded-md max-h-dvh  bg-[url('/金汐ㄌ.png')] bg-cover bg-center bg-no-repeat">
           <div className="box-border relative flex flex-col flex-1 overflow-hidden max-h-dvh ">
             <ChatHeader />
+
             <main
               onScroll={() => {
                 if (!mainRef.current) return;
@@ -235,45 +242,51 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 }
               }}
               ref={mainRef}
-              className="flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none"
+              className={twMerge(
+                " relative flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none "
+              )}
             >
-              {Object.entries(groupedMessages).map(([date, messages]) => (
-                <div key={date} className="flex flex-col items-center ">
-                  <span className="sticky top-0 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-2xl">
-                    {date}
-                  </span>
+              {userMap &&
+                Object.entries(groupedMessages).map(([date, messages]) => (
+                  <div key={date} className="flex flex-col items-center ">
+                    <span className="sticky top-0 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-2xl">
+                      {date}
+                    </span>
 
-                  {messages &&
-                    messages.map((msg) => (
-                      <Message
-                        key={msg.id}
-                        scrollFn={scrollToMessage}
-                        ref={(ref) => {
-                          if (msg.id) {
-                            messagesRef.current[msg.id] = ref;
-                          }
-                          if (
-                            currentMessage[currentMessage.length - 1].id ===
-                            msg.id
-                          ) {
-                            messageEnd.current = ref;
-                          }
-                        }}
-                        message={msg}
-                      />
-                    ))}
-                </div>
-              ))}
+                    {messages &&
+                      messages.map((msg) => (
+                        <Message
+                          key={msg.id}
+                          scrollFn={scrollToMessage}
+                          user={userMap[msg.sender]}
+                          ref={(ref) => {
+                            if (msg.id) {
+                              messagesRef.current[msg.id] = ref;
+                            }
+                            if (
+                              currentMessage[currentMessage.length - 1].id ===
+                              msg.id
+                            ) {
+                              messageEnd.current = ref;
+                            }
+                          }}
+                          message={msg}
+                        />
+                      ))}
+                  </div>
+                ))}
               {downBtnAppear && (
                 <button
                   onClick={scrollToBottom}
-                  className="sticky z-10 p-1 my-1 text-sm bg-gray-100 rounded-md shadow-md right-9 text-stone-700 bottom-2 w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl"
+                  className={twMerge(
+                    "fixed z-10 p-1 my-1 text-sm bottom-20 bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl",
+                    reply && "sticky bottom-0"
+                  )}
                 >
                   <ChevronDown />
                 </button>
               )}
-
-              <div ref={containerEnd}></div>
+              {userMap && <div ref={containerEnd}></div>}
             </main>
 
             <InputBar containerEnd={containerEnd} />

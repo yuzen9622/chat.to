@@ -11,6 +11,7 @@ import { useAuthStore } from "../store/AuthStore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
+
 export default function FriendButton({ friend }: { friend: UserInterface }) {
   const { rooms } = useChatStore();
   const { setFriends } = useAuthStore();
@@ -42,6 +43,32 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
       });
       router.push(`/chat/${newRoom.id}`);
     } else {
+      if (
+        friendRoom.room_members.some(
+          (rm) => rm.user_id === userId && rm.is_deleted
+        )
+      ) {
+        friendRoom.room_members = friendRoom.room_members.map((rm) => {
+          if (rm.user_id === userId) {
+            return { ...rm, is_deleted: false };
+          }
+          return rm;
+        });
+        const res = await fetch("/api/rooms/join_delete", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, roomId: friendRoom.id }),
+        });
+        const data = await res.json();
+        if (data.error) {
+          console.log(data.error);
+          return;
+        }
+        await channel.publish("room_action", {
+          action: "edit",
+          newRoom: friendRoom,
+        });
+      }
       router.push(`/chat/${friendRoom.id}`);
     }
   }, [rooms, router, userId, friend, channel]);

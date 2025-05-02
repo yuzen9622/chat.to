@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import { RoomInterface } from "../lib/type";
 import { useLastMessage, useRoomNotify } from "@/hook/hooks";
 
-import { messageType, TimeAgo } from "../lib/util";
-
+import { messageType } from "../lib/util";
+import { TimeAgo } from "./TimeAgo";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 import { useChatStore } from "../store/ChatStore";
@@ -20,6 +20,7 @@ export default function ChatButton({
 }: { room: RoomInterface } & ButtonProps) {
   const pathname = usePathname();
   const lastMessage = useLastMessage(room.id);
+
   const roomNotify = useRoomNotify(room.id);
   const user = useSession().data?.user;
   const isActive = pathname === `/chat/${room.id}`;
@@ -47,6 +48,9 @@ export default function ChatButton({
   const displayName = useMemo(() => {
     return room.room_name === "" ? recipentUser?.name : room.room_name;
   }, [room.room_name, recipentUser?.name]);
+
+  if (room.room_members.find((rm) => rm.user_id === userId && rm.is_deleted))
+    return null;
 
   return (
     <Link

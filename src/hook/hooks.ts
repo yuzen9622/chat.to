@@ -1,13 +1,13 @@
+"use client";
 import { supabase } from "@/app/lib/supabasedb";
 import { MessageInterface, NoteInterface, UserInterface } from "@/app/lib/type";
-import { roomSort } from "@/app/lib/util";
+import { getAllUserById, roomSort } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useMemo } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
 import { RoomMemberInterface } from "@/app/lib/type";
-import { channel } from "diagnostics_channel";
 
 export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();
@@ -66,6 +66,43 @@ export const useRoomNotify = (roomId: string) => {
   return roomNotify.length;
 };
 
+export const useRoomUser = () => {
+  const [users, setUsers] = useState<Record<
+    string,
+    { id: string; name: string; image: string }
+  > | null>(null);
+  const { currentMessage, setCurrentUsers, currentUser } = useChatStore();
+  useEffect(() => {
+    const userSet = [...new Set(currentMessage.map((msg) => msg.sender))];
+    const catchedUser = currentUser.reduce((result, cu) => {
+      if (userSet.includes(cu.id)) {
+        result[cu.id] = cu;
+      }
+      return result;
+    }, {} as Record<string, { id: string; name: string; image: string }>);
+    setUsers(catchedUser);
+  }, [currentUser, currentMessage]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const userSet = [...new Set(currentMessage.map((msg) => msg.sender))];
+      const { data } = await supabase
+        .from("users")
+        .select("id,image,name")
+        .in("id", userSet);
+      if (!data) return;
+      const map = data.reduce((result, ru) => {
+        result[ru.id] = ru;
+        setCurrentUsers(ru);
+        return result;
+      }, {} as Record<string, { id: string; name: string; image: string }>);
+      setUsers(map);
+    };
+    fetchUsers();
+  }, [currentMessage, setCurrentUsers]);
+  return users;
+};
+
 export const useUserProfile = (userId: string | undefined) => {
   const [user, setUser] = useState<UserInterface | null>(null);
   const {
@@ -84,21 +121,18 @@ export const useUserProfile = (userId: string | undefined) => {
       setUser(cachedUser);
       return;
     }
+
     const fetchUser = async () => {
       try {
         addOnboardingUser(userId);
-        const { data, error } = await supabase
+
+        const { data } = await supabase
           .from("users")
-          .select("*")
-          .eq("id", userId)
-          .limit(1)
-          .single();
-        if (error) {
-          console.log(error);
-        }
+          .select("id,image,name")
+          .eq("id", userId);
         if (data) {
-          setCurrentUsers(data);
-          setUser(data);
+          setCurrentUsers(data[0]);
+          setUser(data[0]);
         }
       } catch (error) {
         console.log(error);
@@ -209,13 +243,25 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
         });
       });
     };
-
+    const handleEdit = (message: InboundMessage) => {
+      const { newRoom } = message.data;
+      setRoom((prev) => {
+        return prev.map((r) => {
+          if (r.id === newRoom.id) {
+            return newRoom;
+          }
+          return r;
+        });
+      });
+    };
     const handleRoomAction = (message: InboundMessage) => {
       const { action } = message.data;
       if (action === "join") {
         handleJoin(message);
       } else if (action === "create") {
         handleCreate(message);
+      } else if (action === "edit") {
+        handleEdit(message);
       }
     };
     channel.subscribe("room_action", handleRoomAction);
@@ -242,7 +288,15 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
         action,
         newMessage,
       }: { action: string; newMessage: MessageInterface } = message.data;
-      if (!rooms.some((r) => r.id === newMessage.room)) return;
+      if (
+        !rooms.some((r) => r.id === newMessage.room) ||
+        rooms.some((r) =>
+          r.room_members.some((rm) => rm.user_id === userId && rm.is_deleted)
+        )
+      ) {
+        return;
+      }
+
       newMessage.status = "send";
       const lastMessage = lastMessages[newMessage.room];
       if (action === "send") {

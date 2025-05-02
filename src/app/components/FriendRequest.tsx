@@ -6,17 +6,18 @@ import FriendSearch from "./FriendSearch";
 import { useAuthStore } from "../store/AuthStore";
 import { Skeleton } from "@mui/material";
 import { fetchFriendRequests } from "../lib/util";
+import { useSession } from "next-auth/react";
 export default function FriendRequest() {
-  const { friendRequests, setFriendRequest, user } = useAuthStore();
-
+  const { friendRequests, setFriendRequest } = useAuthStore();
+  const userId = useSession().data?.userId;
   useEffect(() => {
     const getFrinedRequests = async () => {
-      if (!user) return;
-      const data = await fetchFriendRequests(user.id);
+      if (!userId) return;
+      const data = await fetchFriendRequests(userId);
       setFriendRequest(() => data);
     };
     getFrinedRequests();
-  }, [user, setFriendRequest]);
+  }, [userId, setFriendRequest]);
   return (
     <div className="relative w-full mx-1 dark:text-white">
       <FriendSearch />

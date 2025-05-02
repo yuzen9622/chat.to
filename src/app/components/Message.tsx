@@ -220,7 +220,7 @@ function SettingBar({
   );
 }
 
-function MessageTextFormat({
+export function MessageTextFormat({
   metaData,
   text,
   sender,
@@ -437,21 +437,28 @@ function SendMessage({
 }: {
   message: MessageInterface;
   scrollFn: (messageId: string) => void;
+  user: { id: string; name: string; image: string };
 }) {
   const userId = useSession()?.data?.userId;
   const [isOpen, setIsOpen] = useState(false);
   const [replyMessage, setReplyMessage] = useState<MessageInterface | null>(
     null
   );
-  const { setEdit, setReply } = useChatStore();
+  const { setEdit, setReply, currentMessage } = useChatStore();
   useEffect(() => {
     const getReply = async () => {
       if (!message.reply) return;
+      const hasMessageFind = currentMessage.find(
+        (msg) => msg.id === message.reply
+      );
+      if (hasMessageFind) {
+        setReplyMessage(hasMessageFind);
+      }
       const replyMsg = await getReplyMessage(message.reply);
       setReplyMessage(replyMsg);
     };
     getReply();
-  }, [message]);
+  }, [message, currentMessage]);
 
   const replyUser = useUserProfile(replyMessage?.sender);
   const user = useUserProfile(message.sender);
@@ -465,7 +472,7 @@ function SendMessage({
         )}
       >
         {user?.id !== userId && (
-          <span className="text-xs dark:text-white/80 ">{user?.username}</span>
+          <span className="text-xs dark:text-white/80 ">{user?.name}</span>
         )}
 
         {message.reply && (
@@ -477,7 +484,7 @@ function SendMessage({
               if (replyMessage) scrollFn(replyMessage.id!);
             }}
             className={twMerge(
-              "p-2 rounded-lg bg-stone-900/10 dark:bg-white/5 w-fit mb-1 cursor-pointer ",
+              "p-2 rounded-lg bg-stone-900/10 dark:bg-white/5 text-white w-fit mb-1 cursor-pointer ",
               replyUser?.id === userId && "bg-blue-600/50 text-white"
             )}
           >
@@ -494,12 +501,11 @@ function SendMessage({
                 />
               )}
 
-              <p className="text-sm dark:text-white">{replyUser?.username}</p>
+              <p className="text-sm dark:text-white">{replyUser?.name}</p>
             </div>
             <span className="flex items-center justify-between ">
               <p className="break-all whitespace-pre-wrap ">
                 {replyMessage && replyText(replyMessage)}
-                {!replyMessage && "已刪除訊息"}
               </p>
               {replyMessage && (
                 <>
@@ -537,7 +543,7 @@ function SendMessage({
             className={twMerge(
               "p-2 bg-blue-500 rounded-lg text-white h-fit  w-fit max-w-full flex items-center  transition-all  ",
               message.sender !== userId &&
-                "dark:bg-white/20 bg-gray-400/20 text-stone-700 dark:text-white ",
+                "dark:bg-neutral-700/70 backdrop-blur-3xl bg-gray-400/20 text-stone-700 dark:text-white ",
               message.status === "pending" && "bg-blue-500/70  ",
               message.meta_data && "bg-transparent p-0",
               message.meta_data &&
@@ -610,11 +616,14 @@ function ErrorMessage({ message }: { message: MessageInterface }) {
 
 const Message = forwardRef<
   HTMLDivElement,
-  { message: MessageInterface; scrollFn: (messageId: string) => void }
->(({ message, scrollFn }, ref) => {
+  {
+    message: MessageInterface;
+    scrollFn: (messageId: string) => void;
+    user: { id: string; name: string; image: string };
+  }
+>(({ message, scrollFn, user }, ref) => {
   const userId = useSession()?.data?.userId;
 
-  const user = useUserProfile(message.sender);
   return (
     <div
       className={twMerge(
@@ -641,7 +650,7 @@ const Message = forwardRef<
         />
 
         {message.status !== "failed" && (
-          <SendMessage scrollFn={scrollFn} message={message} />
+          <SendMessage scrollFn={scrollFn} message={message} user={user} />
         )}
         {message.status === "failed" && <ErrorMessage message={message} />}
       </div>

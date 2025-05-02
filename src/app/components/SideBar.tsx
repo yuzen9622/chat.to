@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AlignLeft } from "lucide-react";
 import BarList from "./BarList";
@@ -10,12 +10,17 @@ import { useChatStore } from "../store/ChatStore";
 export default function SideBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { sidebarOpen, setSidebarOpen } = useChatStore();
+  const [isRwd, setIsRwd] = useState(false);
   useEffect(() => {
     console.log(document.body);
     const observer = new ResizeObserver((el) => {
       el.forEach((e) => {
         if (e.contentRect.width >= 1024 && !sidebarOpen) {
           setSidebarOpen(true);
+          setIsRwd(false);
+        } else if (e.contentRect.width < 1024 && sidebarOpen && !isRwd) {
+          setSidebarOpen(false);
+          setIsRwd(true);
         }
       });
     });
@@ -23,13 +28,13 @@ export default function SideBar() {
     return () => {
       observer.unobserve(document.body);
     };
-  }, [setSidebarOpen, sidebarOpen]);
+  }, [setSidebarOpen, sidebarOpen, isRwd]);
 
   return (
     <div
       className={twMerge(
         " p-2 sm:h-full sm:pr-0  z-50 sm:absolute lg:sticky   sm:w-[300] sm:min-w-[300] transition-all border-r dark:border-none",
-        !sidebarOpen && "sm:-translate-x-full sm:absolute p-0   sm:min-w-0"
+        !sidebarOpen && "sm:-translate-x-full sm:absolute    sm:min-w-0"
       )}
       ref={sidebarRef}
     >

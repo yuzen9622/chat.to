@@ -1,4 +1,3 @@
-"use client";
 import {
   FriendRequestInterface,
   MessageInterface,
@@ -7,8 +6,7 @@ import {
   UserInterface,
 } from "./type";
 import { useChatStore } from "../store/ChatStore";
-import { useEffect, useState } from "react";
-import moment from "moment";
+
 import { useAuthStore } from "../store/AuthStore";
 import { useAblyStore } from "../store/AblyStore";
 import {
@@ -22,20 +20,22 @@ import {
   FileImage,
 } from "lucide-react";
 
-export function TimeAgo({ date }: { date: string }) {
-  const [timeAgo, setTimeAgo] = useState(moment(date).fromNow(false));
-
-  useEffect(() => {
-    setTimeAgo(moment(date).fromNow(false));
-    const timer = setInterval(() => {
-      setTimeAgo(moment(date).fromNow(false));
-    }, 60000); // 每分鐘更新一次
-
-    return () => clearInterval(timer);
-  }, [date]);
-
-  return timeAgo;
-}
+export const getAllUserById = async (userIds: string[]) => {
+  try {
+    const res = await fetch("/api/users", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: userIds }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw data.error;
+    }
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const fetchUserRooms = async () => {
   try {
@@ -250,9 +250,36 @@ export const joinRoom = async (room_id: string, users_id: Array<string>) => {
   }
 };
 
+export const deleteRoom = async (
+  room_id: string,
+  user_id: string,
+  room_type: string
+) => {
+  try {
+    const res = await fetch("/api/rooms/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        room_id,
+        room_type,
+      }),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      throw new Error("Delete room failed");
+    }
+    return data.success;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const fetchUserFriends = async (userId: string) => {
   try {
-    const response = await fetch("/api/friends", {
+    const response = await fetch(`http://localhost:3000/api/friends`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -439,7 +466,7 @@ export const replyText = (reply: MessageInterface) => {
   if (!reply) return "";
   if (messageType(reply.meta_data!) === "audio") return "語音";
   if (messageType(reply.meta_data!) === "image") return "圖片";
-  if (messageType(reply.meta_data!) === "file") return "檔案";
+  if (messageType(reply.meta_data!) === "file") return reply.text;
   if (messageType(reply.meta_data!) === "video") return "影片";
   return reply.text;
 };
@@ -528,7 +555,7 @@ export const getFileIcon = (mimeType: string) => {
 export const fetchFriendNote = async (friends: UserInterface[]) => {
   try {
     const userIds = friends.map((f) => f.id);
-    const response = await fetch("/api/note", {
+    const response = await fetch("http://localhost:3000/api/note", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ids: userIds }),

@@ -1,9 +1,10 @@
+"use client";
 import React from "react";
 import { NoteInterface } from "../lib/type";
 import { MessagesSquare } from "lucide-react";
 import BadgeAvatar from "./Avatar";
 import { useUserProfile } from "@/hook/hooks";
-import { TimeAgo } from "@/app/lib/util";
+import { TimeAgo } from "./TimeAgo";
 export default function NoteCard({ note }: { note: NoteInterface }) {
   const user = useUserProfile(note.user_id);
   return (

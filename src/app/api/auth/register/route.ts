@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const { error } = await supabase.from("users").insert([
       {
         email,
-        image,
+        image: image.url,
         name,
         password: await bcrypt.hash(password, 10),
       },

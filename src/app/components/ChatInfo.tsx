@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 
 import { useChatStore } from "../store/ChatStore";
 import { useAblyStore } from "../store/AblyStore";
-import { MessageInterface, MetaData, UserInterface } from "../lib/type";
-import { messageType, formatSize } from "../lib/util";
+import { MessageInterface, MetaData } from "../lib/type";
+import { messageType, formatSize, deleteRoom } from "../lib/util";
 import { UserPlus, LogOut, Download, X, LucideIcon } from "lucide-react";
 import BadgeAvatar from "./Avatar";
 import { getFileIcon, joinRoom } from "../lib/util";
@@ -14,17 +14,14 @@ import Image from "next/image";
 import { CircularProgress, Modal } from "@mui/material";
 import { useAuthStore } from "../store/AuthStore";
 import { useSession } from "next-auth/react";
+import { useUserProfile } from "@/hook/hooks";
+import { useRouter } from "next/navigation";
 
 export default function ChatInfo() {
-  const {
-    currentChat,
-    currentUser,
-    currentMessage,
-    chatInfoOpen,
-    setChatInfoOpen,
-  } = useChatStore();
+  const { currentChat, currentMessage, chatInfoOpen, setChatInfoOpen, rooms } =
+    useChatStore();
   const { onlineUsers, channel, roomId } = useAblyStore();
-  const [recipentUser, setRecipentUser] = useState<UserInterface | null>(null);
+
   const [filterMessages, setFilterMessages] = useState<MessageInterface[]>([]);
   const [filterType, setFilterType] = useState("file");
   const [metaPreview, setMetaPreview] = useState(false);
@@ -36,6 +33,16 @@ export default function ChatInfo() {
   const { friends } = useAuthStore();
   const [joinOpen, setJoinOpen] = useState(false);
   const userId = useSession()?.data?.userId;
+  const recipent = useMemo(() => {
+    if (!currentChat) return null;
+    const member = currentChat.room_members.find(
+      (id) => id.user_id !== userId!
+    );
+    return member;
+  }, [currentChat, userId]);
+  const router = useRouter();
+  const recipentUser = useUserProfile(recipent?.user_id);
+
   const handleFileType = useCallback((fileType: string) => {
     setFilterType(fileType);
   }, []);
@@ -85,16 +92,6 @@ export default function ChatInfo() {
     handleFilter();
   }, [handleFilter]);
 
-  useEffect(() => {
-    if (!currentChat) return;
-    const recipentId = currentChat.room_members.find(
-      (id) => id.user_id !== userId!
-    );
-    const recipent =
-      currentUser.find((user) => user.id === recipentId?.user_id) || null;
-    setRecipentUser(recipent);
-  }, [currentChat, currentUser, userId]);
-
   const handleDownload = useCallback(
     async (metaData: MetaData, text: string) => {
       try {
@@ -131,6 +128,22 @@ export default function ChatInfo() {
     },
     [roomMembers]
   );
+
+  const handleDelete = useCallback(async () => {
+    const newRoom = rooms.find((r) => r.id === currentChat?.id);
+    if (newRoom && userId && channel) {
+      newRoom.room_members = newRoom.room_members.map((rm) => {
+        if (rm.user_id === userId) {
+          return { ...rm, is_deleted: true };
+        }
+        return rm;
+      });
+      channel?.publish("room_action", { action: "edit", newRoom });
+      await deleteRoom(newRoom.id, userId!, newRoom.room_type);
+
+      router.push("/chat");
+    }
+  }, [userId, rooms, currentChat, channel, router]);
 
   const handleJoin = useCallback(async () => {
     try {
@@ -314,6 +327,7 @@ export default function ChatInfo() {
               <button
                 title="刪除"
                 className="p-1 rounded-md dark:text-white hover:bg-white/10"
+                onClick={handleDelete}
               >
                 <LogOut />
               </button>

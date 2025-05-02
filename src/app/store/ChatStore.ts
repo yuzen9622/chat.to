@@ -193,7 +193,12 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((state) => {
       const isExist = state.currentUser.some((user) => user.id === newUser.id);
       if (isExist) {
-        return state;
+        return {
+          ...state,
+          currentUser: state.currentUser.map((u) =>
+            u.id === newUser.id ? newUser : u
+          ),
+        };
       }
       return {
         ...state,
@@ -208,20 +213,22 @@ export const useChatStore = create<ChatStore>((set) => ({
         const n = newLastMsgOrFn(state.lastMessages);
         return { ...state, lastMessages: n };
       }
-      state.lastMessages[newLastMsgOrFn.room] = newLastMsgOrFn;
+      const newLastMessages = { ...state.lastMessages };
+      newLastMessages[newLastMsgOrFn.room] = newLastMsgOrFn;
       const room = state.rooms.find((r) => r.id === newLastMsgOrFn.room);
+
       if (room) {
+        console.log(newLastMsgOrFn);
         room.created_at = newLastMsgOrFn.created_at;
         const newRooms = state.rooms.map((r) => (r.id === room.id ? room : r));
         const sortRooms = newRooms.sort(
           (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
-        console.log("sortRooms", sortRooms);
         return {
           ...state,
           rooms: sortRooms,
-          lastMessages: { ...state.lastMessages },
+          lastMessages: newLastMessages,
         };
       }
       return {

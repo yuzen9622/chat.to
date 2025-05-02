@@ -4,14 +4,20 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import ThirdPartLogin from "@/app/components/ThirdPartLogin";
 import Link from "next/link";
+import { uploadFile } from "@/app/lib/util";
 
 export default function RegisterPage() {
   const [registerForm, setRegister] = useState<{
     email: string;
     password: string;
-    image: string;
+    image: { file: File | null; url: string };
     name: string;
-  }>({ email: "", password: "", image: "", name: "" });
+  }>({
+    email: "",
+    password: "",
+    image: { file: null, url: "" },
+    name: "",
+  });
   const [error, setError] = useState("");
 
   const validForm = useCallback(() => {
@@ -37,10 +43,14 @@ export default function RegisterPage() {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!validForm()) return;
+      const avatar_url = await uploadFile(registerForm.image.file!);
       const res = await fetch("/api/auth/register", {
         headers: { "Content-Type": "application/json" },
         method: "post",
-        body: JSON.stringify(registerForm),
+        body: JSON.stringify({
+          ...registerForm,
+          image: { ...registerForm.image, url: avatar_url.url },
+        }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
@@ -52,6 +62,21 @@ export default function RegisterPage() {
     },
     [validForm, registerForm]
   );
+
+  const handleAvatar = useCallback(async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.click();
+    input.addEventListener("change", () => {
+      if (input.files) {
+        const file = input.files[0];
+        const url = URL.createObjectURL(file);
+        setRegister((prev) => ({ ...prev, image: { file, url } }));
+      }
+    });
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center h-dvh w-dvw dark:text-white">
       <Image alt="icon" width={200} height={100} src={"/icon.png"} />
@@ -60,6 +85,16 @@ export default function RegisterPage() {
           歡迎加入
         </h1>
         <form onSubmit={handleLogin} className="flex flex-col gap-2">
+          <span className="flex justify-center w-full">
+            <Image
+              className="rounded-full w-36 h-36 "
+              onClick={() => handleAvatar()}
+              src={registerForm.image.url || "/user.png"}
+              width={150}
+              height={150}
+              alt="avatar"
+            />
+          </span>
           <span className="w-full">
             <label htmlFor="name">用戶名</label>
             <input
