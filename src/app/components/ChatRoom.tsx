@@ -230,7 +230,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all rounded-md max-h-dvh  bg-[url('/金汐ㄌ.png')] bg-cover bg-center bg-no-repeat">
+        <div className="flex flex-col flex-1 overflow-y-hidden transition-all  max-h-dvh  bg-[url('/金汐.png')] bg-cover bg-center bg-no-repeat">
           <div className="box-border relative flex flex-col flex-1 overflow-hidden max-h-dvh ">
             <ChatHeader />
 
@@ -246,35 +246,41 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 " relative flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none "
               )}
             >
-              {userMap &&
-                Object.entries(groupedMessages).map(([date, messages]) => (
-                  <div key={date} className="flex flex-col items-center ">
-                    <span className="sticky top-0 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-2xl">
-                      {date}
-                    </span>
+              {Object.entries(groupedMessages).map(([date, messages]) => (
+                <React.Fragment key={date}>
+                  {userMap && (
+                    <div key={date} className="flex flex-col items-center ">
+                      <span
+                        key={date}
+                        className="sticky top-0 z-10 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-3xl"
+                      >
+                        {date}
+                      </span>
 
-                    {messages &&
-                      messages.map((msg) => (
-                        <Message
-                          key={msg.id}
-                          scrollFn={scrollToMessage}
-                          user={userMap[msg.sender]}
-                          ref={(ref) => {
-                            if (msg.id) {
-                              messagesRef.current[msg.id] = ref;
-                            }
-                            if (
-                              currentMessage[currentMessage.length - 1].id ===
-                              msg.id
-                            ) {
-                              messageEnd.current = ref;
-                            }
-                          }}
-                          message={msg}
-                        />
-                      ))}
-                  </div>
-                ))}
+                      {messages &&
+                        messages.map((msg) => (
+                          <Message
+                            key={msg.id}
+                            scrollFn={scrollToMessage}
+                            user={userMap[msg.sender]}
+                            ref={(ref) => {
+                              if (msg.id) {
+                                messagesRef.current[msg.id] = ref;
+                              }
+                              if (
+                                currentMessage[currentMessage.length - 1].id ===
+                                msg.id
+                              ) {
+                                messageEnd.current = ref;
+                              }
+                            }}
+                            message={msg}
+                          />
+                        ))}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
               {downBtnAppear && (
                 <button
                   onClick={scrollToBottom}

@@ -484,7 +484,7 @@ function SendMessage({
               if (replyMessage) scrollFn(replyMessage.id!);
             }}
             className={twMerge(
-              "p-2 rounded-lg bg-stone-900/10 dark:bg-white/5 text-white w-fit mb-1 cursor-pointer ",
+              "p-2 rounded-lg bg-stone-900/10 dark:bg-white/5 text-white w-fit mb-1 cursor-pointer  backdrop-blur-2xl ",
               replyUser?.id === userId && "bg-blue-600/50 text-white"
             )}
           >
@@ -506,6 +506,7 @@ function SendMessage({
             <span className="flex items-center justify-between ">
               <p className="break-all whitespace-pre-wrap ">
                 {replyMessage && replyText(replyMessage)}
+                {!replyMessage && "已回復訊息"}
               </p>
               {replyMessage && (
                 <>

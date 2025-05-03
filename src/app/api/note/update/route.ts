@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json(error, { status: 500 });
     }
-    console.log(data);
+
     if (data && data.length === 0) {
       const { data: newData } = await supabase
         .from("user_note")
@@ -32,7 +32,6 @@ export async function POST(req: NextRequest) {
       .select("*")
       .single();
 
-    console.log(updateData);
     return NextResponse.json(updateData, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });

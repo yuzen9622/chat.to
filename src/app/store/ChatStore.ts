@@ -218,7 +218,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       const room = state.rooms.find((r) => r.id === newLastMsgOrFn.room);
 
       if (room) {
-        console.log(newLastMsgOrFn);
         room.created_at = newLastMsgOrFn.created_at;
         const newRooms = state.rooms.map((r) => (r.id === room.id ? room : r));
         const sortRooms = newRooms.sort(

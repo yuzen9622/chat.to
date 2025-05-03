@@ -5,7 +5,7 @@ import ThirdPartLogin from "@/app/components/ThirdPartLogin";
 import Link from "next/link";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [loginForm, setLoginForm] = useState<{
@@ -15,13 +15,14 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
   const { status } = useSession();
 
   useEffect(() => {
     const getAuthSession = async () => {
       const sessoin = await getSession();
       if (sessoin) {
-        redirect("/");
+        router.push("/");
       }
     };
     getAuthSession();
@@ -30,23 +31,29 @@ export default function LoginPage() {
   const handleLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setError("");
-      setIsLoading(true);
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: loginForm.email,
-        password: loginForm.password,
-      });
-      if (res && res.ok) {
-        redirect("/");
-      }
+      try {
+        setError("");
+        setIsLoading(true);
+        const res = await signIn("credentials", {
+          redirect: false,
+          email: loginForm.email,
+          password: loginForm.password,
+        });
+        console.log(res);
+        if (res && res.ok) {
+          router.push("/");
+        }
 
-      if (res && res.error) {
-        setError(res.error);
+        if (res && res.error) {
+          setError(res.error);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
-    [loginForm]
+    [loginForm, router]
   );
 
   return (

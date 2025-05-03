@@ -1,7 +1,12 @@
 "use client";
 import { supabase } from "@/app/lib/supabasedb";
-import { MessageInterface, NoteInterface, UserInterface } from "@/app/lib/type";
-import { getAllUserById, roomSort } from "@/app/lib/util";
+import {
+  MessageInterface,
+  NoteInterface,
+  RoomInterface,
+  UserInterface,
+} from "@/app/lib/type";
+import { roomSort } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useSession } from "next-auth/react";
@@ -14,12 +19,15 @@ export const useLastMessage = (roomId: string) => {
 
   const [lastMessageFromDB, setLastMessageFromDB] =
     useState<MessageInterface | null>(null);
+  const [isFetch, setIsFetch] = useState(false);
   const cachedMessage = useMemo(() => {
     return lastMessages[roomId];
   }, [lastMessages, roomId]);
 
   useEffect(() => {
+    let ignore = false;
     const fetchLastMessage = async () => {
+      if (ignore) return;
       const { data, error } = await supabase
         .from("messages")
         .select("*")
@@ -28,7 +36,7 @@ export const useLastMessage = (roomId: string) => {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-
+      setIsFetch(true);
       if (error) {
         setLastMessageFromDB(null);
         console.log("Error fetching last message:", error);
@@ -38,12 +46,16 @@ export const useLastMessage = (roomId: string) => {
       setLastMessages(data);
     };
 
-    if (!cachedMessage || cachedMessage.status === "failed") {
+    if (!cachedMessage || cachedMessage.status === "failed" || !isFetch) {
       fetchLastMessage();
     }
+    return () => {
+      ignore = true;
+    };
+  }, [cachedMessage, setLastMessages, roomId, isFetch]);
+  useEffect(() => {
     roomSort();
-  }, [cachedMessage, setLastMessages, lastMessages, roomId]);
-
+  }, [lastMessages]);
   return cachedMessage || lastMessageFromDB;
 };
 
@@ -71,26 +83,31 @@ export const useRoomUser = () => {
     string,
     { id: string; name: string; image: string }
   > | null>(null);
-  const { currentMessage, setCurrentUsers, currentUser } = useChatStore();
+  const { currentMessage, setCurrentUsers, currentUser, currentChat } =
+    useChatStore();
   useEffect(() => {
-    const userSet = [...new Set(currentMessage.map((msg) => msg.sender))];
+    const userSet = currentChat?.room_members.map((rm) => rm.user_id);
+    if (!userSet) return;
     const catchedUser = currentUser.reduce((result, cu) => {
       if (userSet.includes(cu.id)) {
         result[cu.id] = cu;
       }
       return result;
     }, {} as Record<string, { id: string; name: string; image: string }>);
-    setUsers(catchedUser);
-  }, [currentUser, currentMessage]);
+    if (catchedUser) {
+      setUsers(catchedUser);
+    }
+  }, [currentUser, currentChat]);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const userSet = [...new Set(currentMessage.map((msg) => msg.sender))];
+      const userSet = currentChat?.room_members.map((rm) => rm.user_id);
+      if (!userSet) return;
       const { data } = await supabase
         .from("users")
         .select("id,image,name")
         .in("id", userSet);
-      if (!data) return;
+      if (!data || data.length == 0) return;
       const map = data.reduce((result, ru) => {
         result[ru.id] = ru;
         setCurrentUsers(ru);
@@ -98,8 +115,10 @@ export const useRoomUser = () => {
       }, {} as Record<string, { id: string; name: string; image: string }>);
       setUsers(map);
     };
-    fetchUsers();
-  }, [currentMessage, setCurrentUsers]);
+    if (!users) {
+      fetchUsers();
+    }
+  }, [currentMessage, setCurrentUsers, users, currentChat]);
   return users;
 };
 
@@ -217,13 +236,14 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
       });
     };
     const handleJoin = (message: InboundMessage) => {
-      const { newRoom } = message.data;
+      const { newRoom }: { newRoom: RoomInterface } = message.data;
       if (!userId) return;
       if (
         !newRoom ||
         !newRoom.room_members.some(
           (m: RoomMemberInterface) => m.user_id === userId
-        )
+        ) ||
+        newRoom.room_type === "personal"
       )
         return;
 
@@ -244,7 +264,7 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
       });
     };
     const handleEdit = (message: InboundMessage) => {
-      const { newRoom } = message.data;
+      const { newRoom }: { newRoom: RoomInterface } = message.data;
       setRoom((prev) => {
         return prev.map((r) => {
           if (r.id === newRoom.id) {

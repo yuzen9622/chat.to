@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No authication" }, { status: 401 });
   const { ids } = await req.json();
   try {
-    console.log(ids);
     const { data, error } = await supabase
       .from("user_note")
       .select("*")

@@ -239,13 +239,16 @@ function CreateRoomModal({
                         " relative flex flex-col items-center text-white max-w-20 min-w-fit "
                       )}
                     >
-                      {roomMembers.includes(friend.id) && (
-                        <div className="absolute z-20 p-1 bg-blue-500 rounded-full -right-1 animate-in zoom-in-0">
-                          <Check size={15} />
-                        </div>
-                      )}
+                      <span className="relative ">
+                        {roomMembers.includes(friend.id) && (
+                          <div className="absolute z-20 p-1 bg-blue-500 rounded-full -right-1 animate-in zoom-in-0">
+                            <Check size={15} />
+                          </div>
+                        )}
 
-                      <BadgeAvatar width={55} height={55} user={friend.id} />
+                        <BadgeAvatar width={55} height={55} user={friend.id} />
+                      </span>
+
                       <p className="truncate">{friend.name}</p>
                     </button>
                   ))}

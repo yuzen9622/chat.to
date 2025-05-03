@@ -72,7 +72,17 @@ export default function ClientLayout({
         newMessage,
       }: { action: string; newMessage: MessageInterface } = message.data;
       console.log(newMessage, action);
-      if (rooms.some((r) => r.id === newMessage.room) === false) {
+      const messageRoom = rooms.find(
+        (r) =>
+          r.id === newMessage.room &&
+          r.room_members.some((rm) => rm.user_id === userId)
+      );
+      if (
+        !messageRoom ||
+        messageRoom.room_members.find(
+          (rm) => rm.user_id === userId && rm.is_deleted
+        )
+      ) {
         return;
       }
       console.log(newMessage, action);

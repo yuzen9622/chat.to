@@ -15,7 +15,7 @@ export async function generateMetadata() {
   };
 }
 export default async function Page({ params }: { params: { roomId: string } }) {
-  const { roomId } = await params;
+  const { roomId } = params;
   const data = await getServerSession(authOptions);
 
   if (!data) return redirect("/chat");
@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { roomId: string } }) {
     return redirect("/chat");
 
   return (
-    <div className="flex flex-row flex-1 m-2 overflow-y-hidden transition-all rounded-md max-h-dvh">
+    <div className="flex flex-row flex-1 overflow-y-hidden transition-all max-h-dvh">
       <ChatRoomWrapper room={room} messages={messages} roomId={roomId} />
     </div>
   );
