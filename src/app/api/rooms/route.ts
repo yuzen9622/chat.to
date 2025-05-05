@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { supabase } from "@/app/lib/supabasedb";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import { getToken } from "next-auth/jwt";
 export async function GET() {
   const session = await getServerSession(authOptions);

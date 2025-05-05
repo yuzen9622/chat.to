@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { twMerge } from "tailwind-merge";
 
 import SessionProvider from "./components/provider/SessionProvider";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth";
 import NextAuthProvider from "./components/provider/NextAuthProvider";
 
 export const geistSans = Geist({

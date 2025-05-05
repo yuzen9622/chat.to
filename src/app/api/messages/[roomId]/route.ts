@@ -4,14 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { roomId: string } }
+  { params }: { params: Promise<{ roomId: string }> }
 ) {
   const token = await getToken({ req: request });
   if (!token) {
     return NextResponse.json({ error: "No authication" }, { status: 401 });
   }
   try {
-    const { roomId } = await params;
+    const roomId = (await params).roomId;
     const { data, error } = await supabase
       .from("messages")
       .select("*")

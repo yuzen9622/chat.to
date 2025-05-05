@@ -5,8 +5,7 @@ import ChatRoomWrapper from "@/app/components/ChatWrapper";
 import { MessageInterface, RoomInterface } from "@/app/lib/type";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
+import { authOptions } from "@/auth";
 export async function generateMetadata() {
   const data = await getServerSession(authOptions);
   if (!data) return {};
@@ -14,7 +13,11 @@ export async function generateMetadata() {
     title: `chat.to．聊天室`,
   };
 }
-export default async function Page({ params }: { params: { roomId: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ roomId: string }>;
+}) {
   const { roomId } = await params;
   const data = await getServerSession(authOptions);
 
