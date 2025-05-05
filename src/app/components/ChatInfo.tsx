@@ -76,14 +76,8 @@ function RoomUsers() {
   );
 }
 export default function ChatInfo() {
-  const {
-    currentChat,
-    currentMessage,
-    chatInfoOpen,
-    setChatInfoOpen,
-    rooms,
-    setRoom,
-  } = useChatStore();
+  const { currentChat, chatInfoOpen, setChatInfoOpen, rooms, setRoom } =
+    useChatStore();
   const { onlineUsers, channel, roomId } = useAblyStore();
 
   const [filterMessages, setFilterMessages] = useState<MessageInterface[]>([]);
