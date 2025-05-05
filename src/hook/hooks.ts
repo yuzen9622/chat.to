@@ -13,8 +13,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, useMemo } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
 import { RoomMemberInterface } from "@/app/lib/type";
-import { channel } from "diagnostics_channel";
-import { cursorTo } from "readline";
 
 export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();

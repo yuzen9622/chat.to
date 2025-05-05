@@ -4,8 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { useAblyStore } from "../store/AblyStore";
 import { RoomInterface } from "../lib/type";
 import { Skeleton } from "@mui/material";
-import groupAvatar from "../../../public/group-of-people.png";
-import defaultAvatar from "../../../public/user.png";
+
 import { useUserProfile } from "@/hook/hooks";
 import { useSession } from "next-auth/react";
 
@@ -54,7 +53,7 @@ export default function BadgeAvatar({
         {room?.room_type === "personal" && userProfile && (
           <Image
             className="border-2 border-transparent rounded-full bg-white/10 aspect-square"
-            src={userProfile?.image || defaultAvatar}
+            src={userProfile?.image || "/user.png"}
             width={width}
             height={height}
             alt={userProfile.name}
@@ -76,7 +75,7 @@ export default function BadgeAvatar({
               width && `max-w-[${width}px]`,
               height && `max-h-[${height}px]`
             )}
-            src={groupAvatar}
+            src={"/group-of-people.png"}
             width={width}
             height={height}
             alt={"group-avatar-default"}
@@ -101,7 +100,7 @@ export default function BadgeAvatar({
               "object-cover border-2 border-transparent rounded-full dark:bg-white/5 ",
               `min-w-[${width}px] min-h-[${height}px]`
             )}
-            src={userProfile?.image || defaultAvatar}
+            src={userProfile?.image || "/user.png"}
             width={width}
             height={height}
             title={userProfile.name}
