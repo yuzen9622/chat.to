@@ -357,7 +357,8 @@ export function MessageTextFormat({
                   {!metaData ? (
                     <Skeleton width={200} animation="wave" height={200} />
                   ) : (
-                    <Image
+                    <CldImage
+                      onTouchEnd={() => setMetaPreview(true)}
                       onClick={() => setMetaPreview(true)}
                       className="w-full -z-10 rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
                       src={metaData.url}
@@ -542,9 +543,9 @@ function SendMessage({
         >
           <div
             className={twMerge(
-              "p-2 bg-blue-500 rounded-lg text-white h-fit  w-fit max-w-full flex items-center  transition-all  ",
+              "p-2 bg-blue-500 rounded-lg backdrop-blur-3xl text-white h-fit  w-fit max-w-full flex items-center  transition-all  ",
               message.sender !== userId &&
-                "dark:bg-neutral-700/70 backdrop-blur-3xl bg-stone-200/70 text-stone-900 dark:text-white ",
+                "dark:bg-neutral-700/70  bg-stone-200/70 text-stone-900 dark:text-white ",
               message.status === "pending" && "bg-blue-500/70  ",
               message.meta_data && "bg-transparent p-0",
               message.meta_data &&
@@ -581,7 +582,7 @@ function SendMessage({
 
               <button
                 className={twMerge(
-                  "w-full flex items-center gap-x-3.5 p-1 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700 duration-200 hover:opacity-100"
+                  "w-full flex items-center gap-x-3.5  p-1 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700 duration-200  hover:opacity-100"
                 )}
                 onClick={() => {
                   setReply(message);

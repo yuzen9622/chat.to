@@ -13,6 +13,8 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, useMemo } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
 import { RoomMemberInterface } from "@/app/lib/type";
+import { channel } from "diagnostics_channel";
+import { cursorTo } from "readline";
 
 export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();
@@ -312,31 +314,37 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
         action,
         newMessage,
       }: { action: string; newMessage: MessageInterface } = message.data;
+      console.log(newMessage, action);
+      const messageRoom = rooms.find(
+        (r) =>
+          r.id === newMessage.room &&
+          r.room_members.some((rm) => rm.user_id === userId)
+      );
       if (
-        !rooms.some((r) => r.id === newMessage.room) ||
-        rooms.some((r) =>
-          r.room_members.some((rm) => rm.user_id === userId && rm.is_deleted)
+        !messageRoom ||
+        messageRoom.room_members.find(
+          (rm) => rm.user_id === userId && rm.is_deleted
         )
       ) {
         return;
       }
-
+      console.log(newMessage, action);
       newMessage.status = "send";
       const lastMessage = lastMessages[newMessage.room];
+
       if (action === "send") {
+        console.log(newMessage);
         setLastMessages(newMessage);
-        if (newMessage.room !== currentChat?.id) {
+        if (newMessage.room !== currentChat?.id || !currentChat) {
           setNewNotify({ type: "message", data: newMessage });
         }
-      }
-      if (action === "edit") {
+      } else if (action === "edit") {
         if (!lastMessage || lastMessage.id !== newMessage.id) return;
         setLastMessages(newMessage);
         if (newMessage.room !== currentChat?.id) {
           setNewNotify({ type: "message", data: newMessage });
         }
-      }
-      if (action === "delete") {
+      } else if (action === "delete") {
         if (!lastMessage || lastMessage.id !== newMessage.id) return;
         setLastMessages({
           ...lastMessage,
@@ -422,4 +430,20 @@ export const useNoteListner = (channel: RealtimeChannel) => {
       channel.unsubscribe("note_action");
     };
   }, [channel, setFriendNote, friends]);
+};
+
+export const useUserListner = (channel: RealtimeChannel) => {
+  const { setCurrentUsers, currentUser } = useChatStore();
+  useEffect(() => {
+    if (!channel) return;
+    const handleUserChange = (message: InboundMessage) => {
+      const { user }: { user: UserInterface } = message.data;
+      if (!currentUser.find((cu) => cu.id === user.id)) return;
+      setCurrentUsers(user);
+    };
+    channel.subscribe("user_action", handleUserChange);
+    return () => {
+      channel?.unsubscribe("user_action");
+    };
+  }, [channel, setCurrentUsers, currentUser]);
 };

@@ -1,14 +1,16 @@
+"use client";
 import React from "react";
-import { supabase } from "../lib/supabasedb";
-import NoteCard from "./NoteCard";
 
-export default async function FriendNote({ users }: { users: string[] }) {
-  const { data: notes } = await supabase
-    .from("user_note")
-    .select("*")
-    .in("user_id", users)
-    .order("created_at");
+import NoteCard from "./NoteCard";
+import { useAuthStore } from "../store/AuthStore";
+
+export default function FriendNote() {
+  const { friendNote } = useAuthStore();
+
   return (
-    <>{notes && notes.map((note) => <NoteCard key={note.id} note={note} />)}</>
+    <div className="flex flex-col h-full overflow-auto">
+      {friendNote &&
+        friendNote.map((note) => <NoteCard key={note.id} note={note} />)}
+    </div>
   );
 }

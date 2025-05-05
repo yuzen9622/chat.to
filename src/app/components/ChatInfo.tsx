@@ -426,7 +426,7 @@ export default function ChatInfo() {
               >
                 媒體
               </button>
-              <button
+              {/* <button
                 onClick={() => handleFileType("url")}
                 className={twMerge(
                   "flex-1 py-2   border-b-2 border-transparent",
@@ -434,7 +434,7 @@ export default function ChatInfo() {
                 )}
               >
                 連結
-              </button>
+              </button> */}
             </span>
             <div className="flex-1 overflow-hidden ">
               {filterMessages.length === 0 ? (

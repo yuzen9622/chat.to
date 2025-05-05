@@ -19,7 +19,6 @@ import {
   FileJson,
   FileImage,
 } from "lucide-react";
-import { error } from "console";
 
 export const getAllUserById = async (userIds: string[]) => {
   try {
@@ -286,7 +285,7 @@ export const deleteRoom = async (
 
 export const fetchUserFriends = async (userId: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/friends`, {
+    const response = await fetch(`/api/friends`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -562,7 +561,7 @@ export const getFileIcon = (mimeType: string) => {
 export const fetchFriendNote = async (friends: UserInterface[]) => {
   try {
     const userIds = friends.map((f) => f.id);
-    const response = await fetch("http://localhost:3000/api/note", {
+    const response = await fetch("/api/note", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ids: userIds }),

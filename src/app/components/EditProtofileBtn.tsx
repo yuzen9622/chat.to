@@ -5,11 +5,13 @@ import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { CircularProgress } from "@mui/material";
 import { twMerge } from "tailwind-merge";
+import { useAblyStore } from "../store/AblyStore";
 
 export default function EditProtofileBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, update } = useSession();
   const [editProfile, setEditProfile] = useState(session?.user);
+  const { channel } = useAblyStore();
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const handleEditProfofile = useCallback(async () => {
@@ -24,13 +26,15 @@ export default function EditProtofileBtn() {
       if (!res.ok) {
         throw data.error;
       }
+
       await update(editProfile);
+      channel?.publish("user_action", { user: editProfile });
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  }, [editProfile, update]);
+  }, [editProfile, update, channel]);
   return (
     <>
       <button
@@ -46,7 +50,7 @@ export default function EditProtofileBtn() {
       >
         <div className="w-11/12 max-w-md rounded-md dark:bg-stone-800 h-fit dark:text-white">
           <span className="flex justify-between p-2 border-b">
-            <button>
+            <button type="button" onClick={() => setIsOpen(false)}>
               <X />
             </button>
             <h1 className="text-lg">編輯個人資料</h1>

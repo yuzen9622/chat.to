@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import ListItem from "./ListItem";
 
-import { House, MessageSquareMore, Handshake, Bell } from "lucide-react";
+import { House, MessageSquareMore, Handshake } from "lucide-react";
 import { useAuthStore } from "../store/AuthStore";
 import { useChatStore } from "../store/ChatStore";
 import { useSession } from "next-auth/react";
@@ -35,10 +35,10 @@ export default function BarList() {
         <Handshake />
         <span className="hidden sm:block">Friends</span>
       </ListItem>
-      <ListItem href="/notify">
+      {/* <ListItem href="/notify">
         <Bell />
         <span className="hidden sm:block">Notify</span>
-      </ListItem>
+      </ListItem> */}
     </>
   );
 }
