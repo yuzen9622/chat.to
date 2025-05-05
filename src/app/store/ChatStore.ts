@@ -244,7 +244,9 @@ export const useChatStore = create<ChatStore>((set) => ({
       };
     });
   },
-  setTypingUsers: (typingUsers) => {},
+  setTypingUsers: (typingUsers) => {
+    return typingUsers;
+  },
   setNewNotify: (notifyOrFn) => {
     set((state) => {
       if (typeof notifyOrFn === "function") {

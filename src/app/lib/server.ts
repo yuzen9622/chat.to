@@ -35,14 +35,6 @@ export const getRoomById = async (roomId: string, userId: string) => {
   }
 };
 
-export const getUserProfileById = async (userId: string) => {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("id,name,image");
-  } catch (error) {}
-};
-
 export const getReplyMessage = async (messageId: string) => {
   try {
     if (!messageId) return null;

@@ -6,7 +6,7 @@ import { useAblyStore } from "../store/AblyStore";
 import { useChatStore } from "../store/ChatStore";
 import { MessageInterface, MessageType } from "../lib/type";
 
-import { X, Laugh, Pencil, Paperclip, Bot, Mic, CircleX } from "lucide-react";
+import { X, Laugh, Pencil, Paperclip, Mic, CircleX } from "lucide-react";
 import {
   editUserMessage,
   messageType,

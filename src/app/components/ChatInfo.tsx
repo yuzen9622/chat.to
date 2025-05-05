@@ -22,7 +22,7 @@ function RoomUsers() {
   const { currentChat, currentUser } = useChatStore();
   const [open, setOpen] = useState(false);
   const userId = useSession()?.data?.userId;
-  const router = useRouter();
+
   const roomUsers = useMemo(() => {
     if (!currentChat) return [];
     const members = currentChat.room_members;
@@ -139,16 +139,16 @@ export default function ChatInfo() {
     }
   }, [filterType, currentChat]);
 
-  const handleFilter = useCallback(() => {
-    if (!currentMessage || currentMessage.length === 0) return;
-    const filterData = currentMessage.filter((msg) => {
-      if (messageType(msg.meta_data!) !== "audio" && msg.type === filterType)
-        return msg;
-      return null;
-    });
+  // const handleFilter = useCallback(() => {
+  //   if (!currentMessage || currentMessage.length === 0) return;
+  //   const filterData = currentMessage.filter((msg) => {
+  //     if (messageType(msg.meta_data!) !== "audio" && msg.type === filterType)
+  //       return msg;
+  //     return null;
+  //   });
 
-    setFilterMessages(filterData);
-  }, [currentMessage, filterType]);
+  //   setFilterMessages(filterData);
+  // }, [currentMessage, filterType]);
 
   useEffect(() => {
     getMetaMessages();
