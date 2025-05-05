@@ -35,7 +35,7 @@ export default function EditProtofileBtn() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-1 text-sm rounded-md dark:bg-white/10"
+        className="p-1 text-sm rounded-md bg-stone-200 dark:bg-white/10"
       >
         編輯個人資料
       </button>

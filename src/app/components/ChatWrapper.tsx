@@ -38,6 +38,7 @@ export default function ChatRoomWrapper({
       setCurrentChat(null);
     };
   }, [room, messages, userId, setCurrentChat, setCurrentMessage]);
+
   useEffect(() => {
     setRoomId(roomId);
     setChatInfoOpen(false);

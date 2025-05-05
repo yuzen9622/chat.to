@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { NoteInterface } from "../lib/type";
 import { useAblyStore } from "../store/AblyStore";
 
-export default function NoteButton() {
+export default function NoteButton({ note }: { note: NoteInterface | null }) {
   const [isOpen, setIsOpen] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [isFoucs, setIsFoucs] = useState(false);
@@ -56,18 +56,18 @@ export default function NoteButton() {
     <div className="absolute right-0 shadow-md -top-8">
       <button
         onClick={() => setIsOpen((p) => !p)}
-        className="p-2 text-xs truncate rounded-md max-w-24 dark:bg-stone-700 text-white/40"
+        className="p-2 text-xs truncate rounded-md max-w-24 dark:bg-stone-700 dark:text-white/40"
       >
-        {session?.user.note ? session.user.note.text : "便利貼......"}
+        {note ? note.text : "便利貼......"}
       </button>
-      <span className="absolute w-4 h-4 rounded-full left-3 -bottom-2 dark:bg-stone-700"></span>
-      <span className="absolute w-2 h-2 rounded-full left-2 -bottom-4 dark:bg-stone-700"></span>
+      <span className="absolute w-4 h-4 bg-white rounded-full left-3 -bottom-2 dark:bg-stone-700"></span>
+      <span className="absolute w-2 h-2 bg-white rounded-full left-2 -bottom-4 dark:bg-stone-700"></span>
       <Modal
         onClose={() => setIsOpen(false)}
         open={isOpen}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-col w-11/12 max-w-lg rounded-md dark:bg-stone-800 h-96">
+        <div className="flex flex-col w-11/12 max-w-lg bg-white rounded-md dark:bg-stone-800 h-96">
           <span className="flex items-center justify-between w-full px-2 py-3 border-b ">
             <button
               onClick={() => setIsOpen(false)}

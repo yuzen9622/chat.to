@@ -49,17 +49,17 @@ export default function ChatHeader() {
           <AlignLeft className="dark:text-white text-stone-800" size={25} />
         </button>
         <button
-          onClick={() => setChatInfoOpen(true)}
-          onTouchEnd={() => setChatInfoOpen(true)}
+          onClick={() => setChatInfoOpen(!sidebarOpen)}
+          onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
           type="button"
         >
           <BadgeAvatar room={currentChat} width={40} height={40} />
         </button>
 
         <span
-          className="flex flex-col pl-2 "
-          onClick={() => setChatInfoOpen(true)}
-          onTouchEnd={() => setChatInfoOpen(true)}
+          className="flex flex-col pl-2 cursor-pointer"
+          onClick={() => setChatInfoOpen(!sidebarOpen)}
+          onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
         >
           <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
             <p>

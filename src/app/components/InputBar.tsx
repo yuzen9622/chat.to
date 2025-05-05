@@ -46,18 +46,18 @@ function SendBar({
           <button
             type="button"
             onClick={() => handleFile("*", "file")}
-            className="flex items-center w-full gap-2 p-1 text-sm font-bold text-white rounded-md hover:bg-white/10"
+            className="flex items-center w-full gap-2 p-2 text-sm font-bold text-white rounded-md hover:bg-white/10"
           >
             <Paperclip className="mr-2" size={20} />
             檔案
           </button>
 
-          <button
+          {/* <button
             type="button"
             className="flex items-center justify-around w-full gap-2 p-1 text-sm font-bold text-white rounded-md hover:bg-white/10"
           >
             <Bot size={20} className="mr-2" /> AI 文字
-          </button>
+          </button> */}
         </div>
       )}
     </div>
@@ -185,7 +185,7 @@ export default function InputBar({
   const handleEditMessage = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      if (!edit || !room) return;
+      if (!edit || !room || messageText.trim().length === 0) return;
       const newMessage: MessageInterface = {
         ...edit,
         text: messageText,
@@ -396,7 +396,7 @@ export default function InputBar({
           handleSendMessage(e);
         }
       }}
-      className="w-full"
+      className="z-20 w-full"
     >
       <div className="sticky bottom-0 px-2 py-1 m-2 rounded bg-white/10 backdrop-blur-3xl">
         {reply && (
@@ -499,6 +499,7 @@ export default function InputBar({
                 lazyLoadEmojis={true}
                 autoFocusSearch={false}
                 theme={Theme.DARK}
+                className="z-20 "
                 emojiStyle={EmojiStyle.NATIVE}
                 onEmojiClick={(e) => setMessageText((prev) => prev + e.emoji)}
               />

@@ -265,6 +265,10 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
     };
     const handleEdit = (message: InboundMessage) => {
       const { newRoom }: { newRoom: RoomInterface } = message.data;
+      console.log(newRoom);
+      if (newRoom.id === currentChat?.id) {
+        setCurrentChat(newRoom);
+      }
       setRoom((prev) => {
         return prev.map((r) => {
           if (r.id === newRoom.id) {

@@ -39,7 +39,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" className="max-h-dvh dark ">
+    <html lang="en" className="max-h-dvh dark">
       <body
         className={twMerge(
           " bg-white dark:bg-neutral-900  h-dvh max-h-dvh overflow-y-hidden  [&::-webkit-scrollbar]:w-2   [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",

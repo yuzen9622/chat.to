@@ -97,7 +97,10 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
 
   return (
     <div className="flex items-center justify-between p-1 my-1 bg-gray-100 rounded-lg opacity-0 dark:bg-white/10 animate-slide-in">
-      <div className="flex items-center m-1">
+      <div
+        className="flex items-center m-1 cursor-pointer"
+        onClick={() => router.push(`/profile/${friend.id}`)}
+      >
         <BadgeAvatar user={friend.id} />
         <span className="px-2 ">{friend.name}</span>
       </div>

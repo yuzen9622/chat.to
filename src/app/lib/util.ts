@@ -19,6 +19,7 @@ import {
   FileJson,
   FileImage,
 } from "lucide-react";
+import { error } from "console";
 
 export const getAllUserById = async (userIds: string[]) => {
   try {
@@ -225,9 +226,12 @@ export const createRoom = async (
 export const joinRoom = async (room_id: string, users_id: Array<string>) => {
   try {
     const { rooms } = useChatStore.getState();
+    if (users_id.length === 0) return;
     const room = rooms.find((room) => room.id === room_id);
-    if (room?.room_members.some((m) => users_id.includes(m.user_id)))
+    if (room?.room_members.some((m) => users_id.includes(m.user_id))) {
       return room;
+    }
+
     const response = await fetch("/api/rooms/join", {
       method: "POST",
       headers: {
@@ -240,6 +244,9 @@ export const joinRoom = async (room_id: string, users_id: Array<string>) => {
     });
 
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error("Join failed");
+    }
     if (room) return data.rooms;
     useChatStore.setState((state) => ({
       rooms: [...state.rooms, data.rooms],

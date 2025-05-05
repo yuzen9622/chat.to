@@ -7,7 +7,7 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const { users_id, room_id } = await req.json();
-    if (!token || users_id.includes(token.sub))
+    if (!token)
       return NextResponse.json({ error: "No authication" }, { status: 401 });
 
     const roomMembers = users_id.map((uid: string) => ({

@@ -60,6 +60,7 @@ export interface RoomMemberInterface {
   room_id: string;
   user_id: string;
   is_deleted: boolean;
+  created_at?: string;
 }
 
 export interface RoomInterface {

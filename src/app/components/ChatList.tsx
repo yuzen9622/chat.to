@@ -24,6 +24,7 @@ function JoinModal() {
   const [roomId, setRoomId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { channel } = useAblyStore();
+  const { rooms } = useChatStore();
 
   const userId = useSession()?.data?.userId;
   const handleOpen = () => {
@@ -37,7 +38,12 @@ function JoinModal() {
       try {
         e.preventDefault();
         setIsLoading(true);
-        if (!channel) return;
+
+        if (
+          !channel ||
+          rooms.some((r) => r.id === roomId && r.room_type === "group")
+        )
+          return;
         const data = await joinRoom(roomId, [userId!]);
         if (!data) return;
         await channel?.publish("room_action", {
@@ -50,7 +56,7 @@ function JoinModal() {
         setIsLoading(false);
       }
     },
-    [channel, roomId, userId]
+    [channel, roomId, userId, rooms]
   );
   return (
     <React.Fragment>
@@ -400,7 +406,7 @@ export default function ChatList() {
   }, [userId, setRoom, setNotify, rooms]);
 
   return (
-    <div className="w-full h-full p-2 overflow-auto border-t-gray-500">
+    <div className="flex flex-col w-full h-full p-2 overflow-hidden border-t-gray-500">
       <div className="flex justify-between">
         <span className="text-lg font-semibold text-blue-400">Chats</span>
         <span>
@@ -412,15 +418,17 @@ export default function ChatList() {
           </button>
         </span>
       </div>
+      <div className="flex flex-col h-full gap-2 overflow-auto ">
+        {!isLoading ? (
+          rooms.length > 0 &&
+          rooms.map((room) => {
+            return <ChatButton key={room.id} room={room} />;
+          })
+        ) : (
+          <LoadingList />
+        )}
+      </div>
 
-      {!isLoading ? (
-        rooms.length > 0 &&
-        rooms.map((room) => {
-          return <ChatButton key={room.id} room={room} />;
-        })
-      ) : (
-        <LoadingList />
-      )}
       <CreateRoomModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );

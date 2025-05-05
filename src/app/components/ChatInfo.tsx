@@ -5,7 +5,7 @@ import { useChatStore } from "../store/ChatStore";
 import { useAblyStore } from "../store/AblyStore";
 import { MessageInterface, MetaData } from "../lib/type";
 import { messageType, formatSize, deleteRoom } from "../lib/util";
-import { UserPlus, LogOut, Download, X, LucideIcon } from "lucide-react";
+import { UserPlus, LogOut, Download, X, LucideIcon, Users } from "lucide-react";
 import BadgeAvatar from "./Avatar";
 import { getFileIcon, joinRoom } from "../lib/util";
 import { twMerge } from "tailwind-merge";
@@ -16,10 +16,74 @@ import { useAuthStore } from "../store/AuthStore";
 import { useSession } from "next-auth/react";
 import { useUserProfile } from "@/hook/hooks";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
+function RoomUsers() {
+  const { currentChat, currentUser } = useChatStore();
+  const [open, setOpen] = useState(false);
+  const userId = useSession()?.data?.userId;
+  const router = useRouter();
+  const roomUsers = useMemo(() => {
+    if (!currentChat) return [];
+    const members = currentChat.room_members;
+    const roomMembers = members.map((m) => {
+      const user = currentUser.find((cu) => cu.id === m.user_id);
+      if (user) {
+        const userMember = { ...m, user };
+        return userMember;
+      }
+    });
+    return roomMembers;
+  }, [currentChat, currentUser]);
+  return (
+    <>
+      <button
+        title="成員"
+        onClick={() => setOpen(true)}
+        className="flex flex-col justify-center p-1 rounded-md dark:text-white hover:bg-white/10 "
+      >
+        <Users />
+      </button>
+      <Modal
+        onClose={() => setOpen(false)}
+        open={open}
+        className="flex items-center justify-center"
+      >
+        <div className="flex flex-col w-full h-64 max-w-md gap-2 p-2 rounded-md dark:bg-stone-900">
+          <h1 className="text-xl text-center dark:text-white">成員</h1>
+
+          <div className="flex flex-col max-h-full gap-2 overflow-auto dark:text-white">
+            {roomUsers &&
+              roomUsers.map((rm) => (
+                <button
+                  className="flex flex-row items-center gap-4 p-2 rounded-md hover:dark:bg-white/10"
+                  key={rm?.id}
+                >
+                  <BadgeAvatar user={rm?.user_id} />
+                  <span className="text-start">
+                    <p>{userId === rm?.user_id ? "你" : rm?.user.name}</p>
+                    <p className="text-xs dark:text-white/40">
+                      加入日期:
+                      {rm?.created_at && moment(rm.created_at).format("LL")}
+                    </p>
+                  </span>
+                </button>
+              ))}
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
 export default function ChatInfo() {
-  const { currentChat, currentMessage, chatInfoOpen, setChatInfoOpen, rooms } =
-    useChatStore();
+  const {
+    currentChat,
+    currentMessage,
+    chatInfoOpen,
+    setChatInfoOpen,
+    rooms,
+    setRoom,
+  } = useChatStore();
   const { onlineUsers, channel, roomId } = useAblyStore();
 
   const [filterMessages, setFilterMessages] = useState<MessageInterface[]>([]);
@@ -48,9 +112,10 @@ export default function ChatInfo() {
   }, []);
 
   const getMetaMessages = useCallback(async () => {
+    if (!currentChat) return;
+    setIsLoading(true);
     setFilterMessages([]);
     try {
-      setIsLoading(true);
       const res = await fetch("/api/messages/meta", {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -81,16 +146,13 @@ export default function ChatInfo() {
         return msg;
       return null;
     });
+
     setFilterMessages(filterData);
   }, [currentMessage, filterType]);
 
   useEffect(() => {
     getMetaMessages();
   }, [getMetaMessages]);
-
-  useEffect(() => {
-    handleFilter();
-  }, [handleFilter]);
 
   const handleDownload = useCallback(
     async (metaData: MetaData, text: string) => {
@@ -110,14 +172,13 @@ export default function ChatInfo() {
     []
   );
 
-  useEffect(() => {
-    if (friends) {
-      setRoomMembers(() => friends.map((f) => f.id));
-    }
-  }, [friends]);
-
   const handleRoomMember = useCallback(
     (userId: string) => {
+      if (
+        currentChat &&
+        currentChat.room_members.some((rm) => rm.user_id === userId)
+      )
+        return;
       if (roomMembers.includes(userId)) {
         setRoomMembers((prev) => {
           return prev.filter((m) => m !== userId);
@@ -126,24 +187,34 @@ export default function ChatInfo() {
         setRoomMembers((prev) => [...prev, userId]);
       }
     },
-    [roomMembers]
+    [currentChat, roomMembers]
   );
 
   const handleDelete = useCallback(async () => {
     const newRoom = rooms.find((r) => r.id === currentChat?.id);
     if (newRoom && userId && channel) {
-      newRoom.room_members = newRoom.room_members.map((rm) => {
-        if (rm.user_id === userId) {
-          return { ...rm, is_deleted: true };
-        }
-        return rm;
-      });
+      if (newRoom.room_type === "group") {
+        newRoom.room_members = newRoom.room_members.filter(
+          (rm) => rm.user_id !== userId
+        );
+        setRoom((prev) => {
+          return prev.filter((r) => r.id !== currentChat?.id);
+        });
+      } else {
+        newRoom.room_members = newRoom.room_members.map((rm) => {
+          if (rm.user_id === userId) {
+            return { ...rm, is_deleted: true };
+          }
+          return rm;
+        });
+      }
+
       channel?.publish("room_action", { action: "edit", newRoom });
       await deleteRoom(newRoom.id, userId!, newRoom.room_type);
 
       router.push("/chat");
     }
-  }, [userId, rooms, currentChat, channel, router]);
+  }, [userId, rooms, currentChat, channel, router, setRoom]);
 
   const handleJoin = useCallback(async () => {
     try {
@@ -258,10 +329,13 @@ export default function ChatInfo() {
                       return (
                         <button
                           key={friend.id}
+                          disabled={currentChat.room_members.some(
+                            (rm) => rm.user_id === friend.id
+                          )}
                           type="button"
                           onClick={() => handleRoomMember(friend.id)}
                           className={twMerge(
-                            " relative flex  items-center  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
+                            " relative flex  items-center disabled:text-white/40  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
                             roomMembers.includes(friend.id) &&
                               "after:content-['✔'] after:text-xs after:absolute after:w-4 after:border-0 after:h-4 after:bottom-6 after:right-2 after:rounded-full after:animate-in after:zoom-in-0 after:bg-blue-500"
                           )}
@@ -321,8 +395,7 @@ export default function ChatInfo() {
                   <UserPlus />
                 </button>
               )}
-
-              <button></button>
+              <RoomUsers />
 
               <button
                 title="刪除"

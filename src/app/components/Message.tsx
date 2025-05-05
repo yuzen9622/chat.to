@@ -343,7 +343,7 @@ export function MessageTextFormat({
                       </div>
 
                       <CldImage
-                        className={"w-full h-full rounded-md "}
+                        className={"w-full h-full rounded-md -z-10"}
                         src={metaData.url}
                         width={400}
                         zoom="0.5"
@@ -357,9 +357,9 @@ export function MessageTextFormat({
                   {!metaData ? (
                     <Skeleton width={200} animation="wave" height={200} />
                   ) : (
-                    <CldImage
+                    <Image
                       onClick={() => setMetaPreview(true)}
-                      className="w-full rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
+                      className="w-full -z-10 rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
                       src={metaData.url}
                       width={400}
                       height={400}
@@ -544,7 +544,7 @@ function SendMessage({
             className={twMerge(
               "p-2 bg-blue-500 rounded-lg text-white h-fit  w-fit max-w-full flex items-center  transition-all  ",
               message.sender !== userId &&
-                "dark:bg-neutral-700/70 backdrop-blur-3xl bg-gray-400/20 text-stone-700 dark:text-white ",
+                "dark:bg-neutral-700/70 backdrop-blur-3xl bg-stone-200/70 text-stone-900 dark:text-white ",
               message.status === "pending" && "bg-blue-500/70  ",
               message.meta_data && "bg-transparent p-0",
               message.meta_data &&

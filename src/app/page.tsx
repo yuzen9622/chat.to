@@ -32,7 +32,7 @@ export default async function Home() {
               height={100}
               alt="avatar"
             />
-            <NoteButton />
+            <NoteButton note={session?.user.note || null} />
           </div>
 
           <div className="flex flex-col gap-2 ">
@@ -46,7 +46,7 @@ export default async function Home() {
             </Link>
             <p>{session?.user?.email}</p>
             <span className="flex gap-2">
-              <button className="p-1 text-sm rounded-md dark:bg-white/10">
+              <button className="p-1 text-sm rounded-md bg-stone-200 dark:bg-white/10">
                 切換帳號
               </button>
               <LogoutBtn />
@@ -55,7 +55,7 @@ export default async function Home() {
         </span>
       </section>
       <section className="flex w-full h-full p-3 px-4 text-white rounded-md dark:bg-white/5 ">
-        <div className="w-1/2 h-full ">
+        <div className="h-full ">
           <p className="mb-2">便利貼</p>
           <FriendNote users={users!} />
         </div>

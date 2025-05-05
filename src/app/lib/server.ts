@@ -13,7 +13,7 @@ export const getRoomById = async (roomId: string, userId: string) => {
       console.error("Room not found or user is not a member:", error);
       return { room: null, messages: [] };
     }
-    console.log(data);
+
     const { data: msgData, error: msgError } = await supabase
       .from("messages")
       .select("*")
@@ -33,6 +33,14 @@ export const getRoomById = async (roomId: string, userId: string) => {
     console.log(error);
     return { room: null, messages: [] };
   }
+};
+
+export const getUserProfileById = async (userId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id,name,image");
+  } catch (error) {}
 };
 
 export const getReplyMessage = async (messageId: string) => {

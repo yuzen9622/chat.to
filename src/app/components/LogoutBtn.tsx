@@ -5,7 +5,7 @@ import React from "react";
 export default function LogoutBtn() {
   return (
     <button
-      className="p-1 px-2 text-sm rounded-md dark:bg-red-500"
+      className="p-1 px-2 text-sm text-white bg-red-500 rounded-md"
       onClick={() => signOut()}
     >
       登出

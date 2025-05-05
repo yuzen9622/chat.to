@@ -1,5 +1,8 @@
 import React from "react";
 
-export default function Page() {
-  return <div></div>;
+export default async function Page({ params }: { params: { userId: string } }) {
+  const { userId } = await params;
+
+  if (!userId) return null;
+  return <div>{userId}</div>;
 }

@@ -15,7 +15,7 @@ export async function generateMetadata() {
   };
 }
 export default async function Page({ params }: { params: { roomId: string } }) {
-  const { roomId } = params;
+  const { roomId } = await params;
   const data = await getServerSession(authOptions);
 
   if (!data) return redirect("/chat");

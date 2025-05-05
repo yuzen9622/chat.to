@@ -104,7 +104,8 @@ export default function BadgeAvatar({
             src={userProfile?.image || defaultAvatar}
             width={width}
             height={height}
-            alt={"group-avatar"}
+            title={userProfile.name}
+            alt={userProfile.name}
           />
         )}
       </div>

@@ -49,7 +49,10 @@ export default function ChatButton({
     return room.room_name === "" ? recipentUser?.name : room.room_name;
   }, [room.room_name, recipentUser?.name]);
 
-  if (room.room_members.find((rm) => rm.user_id === userId && rm.is_deleted))
+  if (
+    room.room_members.find((rm) => rm.user_id === userId && rm.is_deleted) ||
+    !room.room_members.find((rm) => rm.user_id === userId)
+  )
     return null;
 
   return (
@@ -58,7 +61,7 @@ export default function ChatButton({
       prefetch={true}
       {...props}
       className={twMerge(
-        "text-start w-full hover:dark:bg-white/5 transition-colors hover:bg-stone-900/10  p-3 my-2 rounded-lg text-gray-700 dark:text-white  flex items-center justify-between animate-in fade-in",
+        "text-start w-full hover:dark:bg-white/5 transition-colors hover:bg-stone-900/10  p-3  rounded-lg text-gray-700 dark:text-white  flex items-center justify-between animate-in fade-in",
         isActive && "dark:bg-white/5 bg-stone-900/10"
       )}
     >

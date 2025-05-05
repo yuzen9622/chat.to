@@ -230,7 +230,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all  max-h-dvh  bg-[url('/金汐.png')] bg-cover bg-center bg-no-repeat">
+        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover max-h-dvh">
           <div className="box-border relative flex flex-col flex-1 overflow-hidden max-h-dvh ">
             <ChatHeader />
 
@@ -252,7 +252,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                     <div key={date} className="flex flex-col items-center ">
                       <span
                         key={date}
-                        className="sticky top-0 z-10 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-white/10 backdrop-blur-3xl"
+                        className="sticky top-0 z-10 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-stone-700/50 backdrop-blur-3xl"
                       >
                         {date}
                       </span>
