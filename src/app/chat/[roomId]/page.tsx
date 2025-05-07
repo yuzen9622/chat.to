@@ -6,6 +6,9 @@ import { MessageInterface, RoomInterface } from "@/app/lib/type";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata() {
   const data = await getServerSession(authOptions);
   if (!data) return {};
@@ -13,6 +16,7 @@ export async function generateMetadata() {
     title: `聊天室`,
   };
 }
+
 export default async function Page({
   params,
 }: {

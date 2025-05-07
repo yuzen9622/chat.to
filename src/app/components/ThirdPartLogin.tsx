@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 export default function ThirdPartLogin() {
   return (
     <div>
-      <div className="flex items-center justify-center w-full h-full p-2 space-x-2">
+      <div className="flex items-center justify-center w-full h-full gap-2 p-2 max-sm:flex-col">
         <button
           onClick={() => signIn("google")}
           className="flex items-center justify-center w-full p-2 text-sm font-semibold border-2 rounded-lg dark:bg-white border-stone-700 text-stone-800 "
