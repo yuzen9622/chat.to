@@ -33,7 +33,7 @@ export default function SideBar() {
   return (
     <div
       className={twMerge(
-        "  sm:h-full sm:pr-0  z-50 sm:absolute lg:sticky   sm:w-[300] sm:min-w-[300] transition-all border-r dark:border-none",
+        "  sm:h-full sm:pr-0  z-50 sm:absolute lg:sticky   sm:w-[300px] sm:min-w-[300px] transition-all border-r dark:border-none",
         !sidebarOpen && "sm:-translate-x-full sm:absolute    sm:min-w-0"
       )}
       ref={sidebarRef}

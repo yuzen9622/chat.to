@@ -66,7 +66,7 @@ export default function ChatButton({
       )}
     >
       <div className="flex items-center w-full space-x-3">
-        <BadgeAvatar room={room} />
+        <BadgeAvatar width={45} height={45} room={room} />
         <div className="flex-1 min-w-0 overflow-hidden">
           <span className="flex space-x-1 font-medium ">
             <p className="truncate ">{displayName}</p>
