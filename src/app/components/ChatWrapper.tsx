@@ -31,9 +31,10 @@ export default function ChatRoomWrapper({
 
   useEffect(() => {
     if (!room || !messages) return;
-    readMessage(room.id, userId!);
+
     setCurrentChat(room);
     setCurrentMessage(() => messages);
+    // readMessage(room.id, userId!);
     return () => {
       setCurrentChat(null);
     };

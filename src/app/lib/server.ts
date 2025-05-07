@@ -13,6 +13,16 @@ export const getRoomById = async (roomId: string, userId: string) => {
       console.error("Room not found or user is not a member:", error);
       return { room: null, messages: [] };
     }
+    supabase
+      .rpc("read", {
+        room_id: roomId,
+        user_id: userId,
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.log(error);
+        }
+      });
 
     const { data: msgData, error: msgError } = await supabase
       .from("messages")

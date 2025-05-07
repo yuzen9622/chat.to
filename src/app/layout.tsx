@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     default: "主頁｜chat.to",
   },
   description: "The morden online chat app",
+
   icons: {
     icon: "/favicon/favicon.ico",
     shortcut: "/favicon/favicon.ico",
