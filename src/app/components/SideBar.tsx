@@ -60,7 +60,7 @@ export default function SideBar() {
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className={twMerge(
-              " sticky top-8 left-4 p-1 text-3xl rounded-lg active:dark:bg-gray-600   lg:hidden"
+              " sticky top-8 left-4 p-1 text-3xl rounded-lg hover:bg-stone-900/10 hover:dark:bg-white/10 active:dark:bg-white/10   lg:hidden"
             )}
           >
             <AlignLeft className="dark:text-white text-stone-900" size={25} />

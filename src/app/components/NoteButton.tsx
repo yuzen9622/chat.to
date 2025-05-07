@@ -100,7 +100,8 @@ export default function NoteButton({ note }: { note: NoteInterface | null }) {
                   rows={1}
                   className={twMerge(
                     " relative p-2 truncate rounded-md max-w-44 text-wrap shadow-md  dark:bg-stone-700 text-white/40 outline-none resize-none",
-                    (isFoucs || noteText.length !== 0) && "dark:text-white"
+                    (isFoucs || noteText.length !== 0) &&
+                      "dark:text-white text-stone-900"
                   )}
                   ref={textareaRef}
                   onKeyDown={(e) => {
@@ -113,8 +114,8 @@ export default function NoteButton({ note }: { note: NoteInterface | null }) {
                   onChange={onChange}
                 />
 
-                <span className="absolute w-4 h-4 rounded-full left-3 -bottom-0 dark:bg-stone-700"></span>
-                <span className="absolute w-2 h-2 rounded-full left-2 -bottom-4 dark:bg-stone-700"></span>
+                <span className="absolute w-4 h-4 bg-white rounded-full left-3 -bottom-0 dark:bg-stone-700"></span>
+                <span className="absolute w-2 h-2 bg-white rounded-full left-7 -bottom-4 dark:bg-stone-700"></span>
               </div>
             </span>
             <p className="text-sm dark:text-white">

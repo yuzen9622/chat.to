@@ -48,7 +48,7 @@ export default function EditProtofileBtn() {
         className="flex items-center justify-center h-full"
         open={isOpen}
       >
-        <div className="w-11/12 max-w-md rounded-md dark:bg-stone-800 h-fit dark:text-white">
+        <div className="w-11/12 max-w-md bg-white rounded-md dark:bg-stone-800 h-fit dark:text-white">
           <span className="flex justify-between p-2 border-b">
             <button type="button" onClick={() => setIsOpen(false)}>
               <X />
@@ -98,10 +98,11 @@ export default function EditProtofileBtn() {
                 disabled={editProfile?.provider !== "credentials"}
                 placeholder="example@example.com"
                 onChange={(e) => {
-                  if (!editProfile) return;
+                  if (!editProfile || editProfile.provider !== "credentials")
+                    return;
                   setEditProfile({ ...editProfile, email: e.target.value });
                 }}
-                className="w-full p-2 rounded-md dark:bg-stone-800 dark:disabled:bg-stone-600 dark:disabled:text-white/50 outline outline-2 outline-blue-300 focus:outline-blue-500"
+                className="w-full p-2 rounded-md dark:bg-stone-800 disabled:text-stone-400 dark:disabled:bg-stone-600 disabled:bg-stone-900/10 dark:disabled:text-white/50 outline outline-2 outline-blue-300 focus:outline-blue-500"
               />
             </span>
             <span className="w-full">

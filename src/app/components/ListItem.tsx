@@ -42,7 +42,7 @@ export default function ListItem({
       {children}
 
       {notify != void 0 && notify > 0 && (
-        <div className="absolute top-0 right-0 flex w-4 h-4 text-xs bg-red-500 rounded-full place-content-center">
+        <div className="absolute top-0 right-0 flex items-center justify-center flex-shrink-0 px-1.5 text-xs text-white bg-red-500 rounded-full ">
           {notify}
         </div>
       )}

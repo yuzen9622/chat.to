@@ -4,8 +4,8 @@ import Image from "next/image";
 
 export function generateMetadata() {
   return {
-    title: `chat.to．聊天室`,
-    description: `chat.to．聊天室`,
+    title: `聊天室`,
+    description: `聊天室`,
   };
 }
 export default function Page() {

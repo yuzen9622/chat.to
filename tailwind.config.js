@@ -6,7 +6,7 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/preline/dist/*.js",
   ],
-  darkMode: "class",
+  darkMode: "media",
   theme: {
     extend: {
       backgroundImage: {

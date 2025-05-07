@@ -35,54 +35,60 @@ export default function ChatHeader() {
   if (!currentChat) return null;
   return (
     <header className="box-border sticky top-0 flex items-center justify-between w-full p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
-      <span className="flex items-center sm:ml-2 w-fit">
-        <Link href={"/chat"} className=" sm:hidden">
+      <span className="flex items-center gap-2 w-fit">
+        <Link
+          href={"/chat"}
+          className="text-center rounded-md sm:hidden hover:dark:bg-white/10"
+        >
           <ChevronLeft
             className="dark:text-white text-stone-800"
             size={"30px"}
           />
         </Link>
         <button
-          className={twMerge("mr-2 lg:hidden max-sm:hidden")}
+          className={twMerge(
+            "mr-2 lg:hidden max-sm:hidden p-1 rounded-md hover:dark:bg-white/10"
+          )}
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          <AlignLeft className="dark:text-white text-stone-800" size={25} />
+          <AlignLeft className=" dark:text-white text-stone-800" size={25} />
         </button>
-        <button
-          onClick={() => setChatInfoOpen(!sidebarOpen)}
-          onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
-          type="button"
-        >
-          <BadgeAvatar room={currentChat} width={40} height={40} />
-        </button>
-
-        <span
-          className="flex flex-col pl-2 cursor-pointer"
-          onClick={() => setChatInfoOpen(!sidebarOpen)}
-          onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
-        >
-          <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
-            <p>
-              {currentChat &&
-                currentChat.room_name === "" &&
-                recipentUser?.name}
-              {currentChat &&
-                currentChat.room_name !== "" &&
-                currentChat.room_name}
-            </p>
-
-            {currentChat.room_type === "group" && (
-              <p className="flex-shrink-0 ">
-                ({currentChat.room_members.length})
+        <span className="flex items-center">
+          <button
+            onClick={() => setChatInfoOpen(!sidebarOpen)}
+            onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
+            type="button"
+          >
+            <BadgeAvatar room={currentChat} width={40} height={40} />
+          </button>
+          <span
+            className="flex flex-col pl-2 cursor-pointer"
+            onClick={() => setChatInfoOpen(!sidebarOpen)}
+            onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
+          >
+            <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
+              <p>
+                {currentChat &&
+                  currentChat.room_name === "" &&
+                  recipentUser?.name}
+                {currentChat &&
+                  currentChat.room_name !== "" &&
+                  currentChat.room_name}
               </p>
-            )}
+
+              {currentChat.room_type === "group" && (
+                <p className="flex-shrink-0 ">
+                  ({currentChat.room_members.length})
+                </p>
+              )}
+            </span>
+            {onlineUsers.some((item) =>
+              currentChat?.room_members.some(
+                (user) =>
+                  user.user_id === item.clientId && user.user_id !== userId
+              )
+            ) && <span className="text-xs text-green-400">目前在線上</span>}
           </span>
-          {onlineUsers.some((item) =>
-            currentChat?.room_members.some(
-              (user) =>
-                user.user_id === item.clientId && user.user_id !== userId
-            )
-          ) && <span className="text-xs text-green-400">目前在線上</span>}
         </span>
       </span>
       <button

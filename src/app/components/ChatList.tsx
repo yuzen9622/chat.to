@@ -62,14 +62,14 @@ function JoinModal() {
     <React.Fragment>
       <button
         onClick={handleOpen}
-        className="w-full p-2 my-2 text-sm font-bold text-white rounded-md bg-white/5 hover:bg-white/10 "
+        className="w-full p-2 my-2 text-sm font-bold rounded-md dark:text-white bg-stone-900/5 hover:bg-stone-900/10 dark:bg-white/5 hover:dark:bg-white/10 "
       >
         加入群組
       </button>
       <Modal open={open} onClose={handleClose}>
-        <div className="absolute w-11/12 max-w-[500px] p-4  transform -translate-x-1/2 -translate-y-1/2 bg-stone-900 rounded-md top-1/2 left-1/2  ">
+        <div className="absolute w-11/12 max-w-[500px] p-4  transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-stone-900 rounded-md top-1/2 left-1/2  ">
           <form onSubmit={handleJoin}>
-            <div className="flex flex-col text-white ">
+            <div className="flex flex-col dark:text-white ">
               <label
                 htmlFor="room_name"
                 className="after:content-['*'] after:text-red-600"
@@ -77,7 +77,7 @@ function JoinModal() {
                 群組 Id
               </label>
               <input
-                className="p-2 rounded-lg focus:outline-none focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 bg-stone-800"
+                className="p-2 rounded-lg bg-stone-900/10 focus:outline-none focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 dark:bg-stone-800"
                 type="text"
                 id="room_name"
                 required
@@ -167,14 +167,16 @@ function CreateRoomModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="absolute w-11/12 max-w-[500px] p-4  transform -translate-x-1/2 -translate-y-1/2 bg-stone-900 rounded-md top-1/2 left-1/2  ">
-          <h1 className="text-xl font-semibold text-white">群組</h1>
+        <div className="absolute w-11/12 max-w-[500px] p-4  transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-stone-900 rounded-md top-1/2 left-1/2  ">
+          <h1 className="text-xl font-semibold dark:text-white">群組</h1>
           <JoinModal />
-          <div className="relative flex items-center text-sm justify-center w-full p-2 text-center text-white/20 before:absolute before:w-[43%] before:h-[1px] before:left-0 before:bg-white/20 after:absolute after:w-[43%] after:h-[1px] after:right-0 after:bg-white/20">
+          <div className="relative text-stone-800/55 flex items-center text-sm justify-center w-full p-2 text-center dark:text-white/20 before:absolute before:w-[43%] before:h-[1px] before:left-0 before:bg-stone-800/55 after:bg-stone-800/55 before:dark:bg-white/20 after:absolute after:w-[43%] after:h-[1px] after:right-0 after:dark:bg-white/20">
             OR
           </div>
 
-          <p className="text-sm text-white/70">創建群組與好友聊天吧</p>
+          <p className="text-sm text-stone-900/70 dark:text-white/70">
+            創建群組與好友聊天吧
+          </p>
           <div className="flex items-center justify-center ">
             <span className="relative">
               <Image
@@ -187,7 +189,7 @@ function CreateRoomModal({
               />
               <button
                 onClick={handleImageUpload}
-                className="absolute right-0 p-1 rounded-full -bottom-2 text-white/50 bg-stone-800"
+                className="absolute right-0 p-1 rounded-full -bottom-2 bg-stone-800/10 text-stone-400 dark:text-white/50 dark:bg-stone-800"
               >
                 <Camera size={20} />
               </button>
@@ -217,7 +219,7 @@ function CreateRoomModal({
               redirect(`/chat/${newRoom.id}`);
             }}
           >
-            <div className="flex flex-col text-white ">
+            <div className="flex flex-col dark:text-white ">
               <label
                 htmlFor="room_name"
                 className="after:content-['*'] after:text-red-600"
@@ -225,7 +227,7 @@ function CreateRoomModal({
                 Name
               </label>
               <input
-                className="p-2 rounded-lg focus:outline-none focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 bg-stone-800"
+                className="p-2 rounded-lg focus:outline-none focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 bg-stone-900/5 dark:bg-stone-800"
                 type="text"
                 id="room_name"
                 required
@@ -242,7 +244,7 @@ function CreateRoomModal({
                       type="button"
                       onClick={() => handleRoomMember(friend.id)}
                       className={twMerge(
-                        " relative flex flex-col items-center text-white max-w-20 min-w-fit "
+                        " relative flex flex-col items-center dark:text-white max-w-20 min-w-fit "
                       )}
                     >
                       <span className="relative ">

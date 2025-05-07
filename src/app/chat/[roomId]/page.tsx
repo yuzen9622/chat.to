@@ -10,7 +10,7 @@ export async function generateMetadata() {
   const data = await getServerSession(authOptions);
   if (!data) return {};
   return {
-    title: `chat.to．聊天室`,
+    title: `聊天室`,
   };
 }
 export default async function Page({
