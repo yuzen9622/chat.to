@@ -1,37 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BadgeAvatar from "./Avatar";
 import { AlignLeft, Info } from "lucide-react";
 import { useChatStore } from "../store/ChatStore";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { UserInterface } from "../lib/type";
 
 import { useAblyStore } from "../store/AblyStore";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
+import { useChatInfo } from "@/hook/hooks";
 
 export default function ChatHeader() {
   const {
     currentChat,
-    currentUser,
     sidebarOpen,
     setSidebarOpen,
     setChatInfoOpen,
     chatInfoOpen,
   } = useChatStore();
   const { onlineUsers } = useAblyStore();
-  const [recipentUser, setRecipentUser] = useState<UserInterface | null>(null);
+
   const userId = useSession()?.data?.userId;
-  useEffect(() => {
-    if (!currentChat) return;
-    const recipentId = currentChat.room_members.find(
-      (id) => id.user_id !== userId!
-    );
-    const recipent =
-      currentUser.find((user) => user.id === recipentId?.user_id) || null;
-    setRecipentUser(recipent);
-  }, [currentChat, currentUser, userId]);
+
+  const { recipentUser, displayName } = useChatInfo(currentChat!, userId!);
+
   if (!currentChat) return null;
   return (
     <header className="box-border sticky top-0 flex items-center justify-between w-full p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
@@ -59,7 +52,15 @@ export default function ChatHeader() {
             onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
             type="button"
           >
-            <BadgeAvatar room={currentChat} width={40} height={40} />
+            {currentChat.room_type === "personal" ? (
+              <BadgeAvatar
+                user={recipentUser?.user_id}
+                width={40}
+                height={40}
+              />
+            ) : (
+              <BadgeAvatar room={currentChat} width={40} height={40} />
+            )}
           </button>
           <span
             className="flex flex-col pl-2 cursor-pointer"
@@ -67,14 +68,7 @@ export default function ChatHeader() {
             onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
           >
             <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
-              <p>
-                {currentChat &&
-                  currentChat.room_name === "" &&
-                  recipentUser?.name}
-                {currentChat &&
-                  currentChat.room_name !== "" &&
-                  currentChat.room_name}
-              </p>
+              <p>{displayName}</p>
 
               {currentChat.room_type === "group" && (
                 <p className="flex-shrink-0 ">

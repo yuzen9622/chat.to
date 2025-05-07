@@ -21,9 +21,7 @@ export default function BadgeAvatar({
 }) {
   const { onlineUsers } = useAblyStore();
   const userId = useSession()?.data?.userId;
-  const userProfile = useUserProfile(
-    room?.room_members.find((user) => user.user_id !== userId)?.user_id || user
-  );
+  const userProfile = useUserProfile(user);
 
   if (!userProfile && room?.room_type === "personal")
     return (
@@ -35,7 +33,6 @@ export default function BadgeAvatar({
         variant="circular"
       />
     );
-
   return (
     <div className="relative w-fit h-fit">
       <div
@@ -50,63 +47,17 @@ export default function BadgeAvatar({
             " after:content-[''] after:w-[10px] after:h-[10px] after:absolute after:bg-green-500 after:right-0 after:bottom-1 after:rounded-full after:outline after:outline-white after:dark:outline  after:dark:outline-stone-800"
         )}
       >
-        {room?.room_type === "personal" && userProfile && (
-          <Image
-            className="border-2 border-transparent rounded-full bg-white/10 aspect-square"
-            src={userProfile?.image || "/user.png"}
-            width={width}
-            height={height}
-            alt={userProfile.name}
-          />
-        )}
-        {room?.room_type === "personal" && !userProfile && (
-          <Image
-            className="object-cover border-2 border-transparent rounded-full aspect-square"
-            src="/user.png"
-            width={width}
-            height={height}
-            alt={room.room_name}
-          />
-        )}
-        {room?.room_type === "group" && !room.room_img && (
-          <Image
-            className={twMerge(
-              "object-cover border-2 border-transparent rounded-full  aspect-square",
-              width && `max-w-[${width}px]`,
-              height && `max-h-[${height}px]`
-            )}
-            src={"/group-of-people.png"}
-            width={width}
-            height={height}
-            alt={"group-avatar-default"}
-          />
-        )}
-        {room?.room_type === "group" && room.room_img && (
-          <Image
-            className={twMerge(
-              "object-cover border-2 border-transparent rounded-full  aspect-square",
-              width && `w-[${width}px]`,
-              height && `h-[${height}px]`
-            )}
-            src={room.room_img}
-            width={width}
-            height={height}
-            alt={room.room_name}
-          />
-        )}
-        {!room && userProfile && (
-          <Image
-            className={twMerge(
-              "object-cover border-2 border-transparent rounded-full dark:bg-white/5 ",
-              `min-w-[${width}px] min-h-[${height}px]`
-            )}
-            src={userProfile?.image || "/user.png"}
-            width={width}
-            height={height}
-            title={userProfile.name}
-            alt={userProfile.name}
-          />
-        )}
+        <Image
+          className="border-2 border-transparent rounded-full bg-white/10 aspect-square"
+          src={
+            user
+              ? userProfile?.image || "/user.png"
+              : room?.room_img?.url || "/group.png"
+          }
+          width={width}
+          height={height}
+          alt={room?.room_name || "user"}
+        />
       </div>
     </div>
   );

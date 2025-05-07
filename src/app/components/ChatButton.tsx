@@ -5,7 +5,7 @@ import BadgeAvatar from "./Avatar";
 import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
 import { RoomInterface } from "../lib/type";
-import { useLastMessage, useRoomNotify } from "@/hook/hooks";
+import { useChatInfo, useLastMessage, useRoomNotify } from "@/hook/hooks";
 
 import { messageType } from "../lib/util";
 import { TimeAgo } from "./TimeAgo";
@@ -24,30 +24,24 @@ export default function ChatButton({
   const roomNotify = useRoomNotify(room.id);
   const user = useSession().data?.user;
   const isActive = pathname === `/chat/${room.id}`;
-  const { currentUser } = useChatStore();
-  //const [recipentUser, setRecipentUser] = useState<UserInterface | null>(null);
+
   const userId = useSession()?.data?.userId;
 
-  const recipentUser = useMemo(() => {
-    if (!room || !userId) return null;
-    const recipentId = room.room_members.find((id) => id.user_id !== userId);
-    return currentUser.find((user) => user.id === recipentId?.user_id) || null;
-  }, [room, currentUser, userId]);
+  const { recipentUser, displayName } = useChatInfo(room, userId!);
 
   const messageContent = useMemo(() => {
     if (!lastMessage) return null;
     if (lastMessage.status === "pending") return "傳送中...";
+    const type = {
+      image: "傳送圖片",
+      video: "傳送影片",
+      file: "傳送檔案",
+      audio: "傳送語音",
+    };
+    const msgType = messageType(lastMessage.meta_data!);
 
-    if (messageType(lastMessage.meta_data!) === "image") return "傳送圖片";
-    if (messageType(lastMessage.meta_data!) === "video") return "傳送影片";
-    if (messageType(lastMessage.meta_data!) === "file") return "傳送檔案";
-    if (messageType(lastMessage.meta_data!) === "audio") return "傳送語音";
-    return lastMessage.text;
+    return msgType ? type[msgType] : lastMessage.text;
   }, [lastMessage]);
-
-  const displayName = useMemo(() => {
-    return room.room_name === "" ? recipentUser?.name : room.room_name;
-  }, [room.room_name, recipentUser?.name]);
 
   if (
     room.room_members.find((rm) => rm.user_id === userId && rm.is_deleted) ||
@@ -66,7 +60,12 @@ export default function ChatButton({
       )}
     >
       <div className="flex items-center w-full space-x-3">
-        <BadgeAvatar width={45} height={45} room={room} />
+        {room.room_type === "personal" ? (
+          <BadgeAvatar width={45} height={45} user={recipentUser?.user_id} />
+        ) : (
+          <BadgeAvatar width={45} height={45} room={room} />
+        )}
+
         <div className="flex-1 min-w-0 overflow-hidden">
           <span className="flex space-x-1 font-medium ">
             <p className="truncate ">{displayName}</p>

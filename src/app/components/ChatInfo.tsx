@@ -14,8 +14,8 @@ import Image from "next/image";
 import { CircularProgress, Modal } from "@mui/material";
 import { useAuthStore } from "../store/AuthStore";
 import { useSession } from "next-auth/react";
-import { useUserProfile } from "@/hook/hooks";
 import { useRouter } from "next/navigation";
+import { useChatInfo } from "@/hook/hooks";
 import moment from "moment";
 
 function RoomUsers() {
@@ -91,15 +91,9 @@ export default function ChatInfo() {
   const { friends } = useAuthStore();
   const [joinOpen, setJoinOpen] = useState(false);
   const userId = useSession()?.data?.userId;
-  const recipent = useMemo(() => {
-    if (!currentChat) return null;
-    const member = currentChat.room_members.find(
-      (id) => id.user_id !== userId!
-    );
-    return member;
-  }, [currentChat, userId]);
+
   const router = useRouter();
-  const recipentUser = useUserProfile(recipent?.user_id);
+  const { recipentUser, displayName } = useChatInfo(currentChat!, userId!);
 
   const handleFileType = useCallback((fileType: string) => {
     setFilterType(fileType);
@@ -357,7 +351,15 @@ export default function ChatInfo() {
             </div>
           </Modal>
           <div className="flex flex-col items-center justify-center w-full gap-2 py-4 border-b dark:border-white/10">
-            <BadgeAvatar width={80} height={80} room={currentChat!} />
+            {currentChat.room_type === "personal" ? (
+              <BadgeAvatar
+                width={80}
+                height={80}
+                user={recipentUser?.user_id}
+              />
+            ) : (
+              <BadgeAvatar width={80} height={80} room={currentChat!} />
+            )}
             {onlineUsers.some((item) =>
               currentChat?.room_members.some(
                 (user) =>
@@ -365,14 +367,7 @@ export default function ChatInfo() {
               )
             ) && <span className="text-xs text-green-400">目前在線上</span>}
             <span className="flex text-lg dark:text-white">
-              <p>
-                {currentChat &&
-                  currentChat.room_name === "" &&
-                  recipentUser?.name}
-                {currentChat &&
-                  currentChat.room_name !== "" &&
-                  currentChat.room_name}
-              </p>
+              <p>{displayName}</p>
               {currentChat.room_type === "group" && (
                 <p className="flex-shrink-0 ml-1">
                   ({currentChat.room_members.length})

@@ -69,7 +69,7 @@ export interface RoomInterface {
   created_at: string;
   room_members: Array<RoomMemberInterface>;
   room_type: "personal" | "group";
-  room_img?: "";
+  room_img?: { url: string; public_id: "" };
   updated_at?: Date;
 }
 export interface FriendInterface {

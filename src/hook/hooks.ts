@@ -14,6 +14,29 @@ import { useEffect, useState, useMemo } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
 import { RoomMemberInterface } from "@/app/lib/type";
 
+export const useChatInfo = (
+  currentChat: RoomInterface,
+
+  userId: string
+) => {
+  const { currentUser } = useChatStore();
+
+  const recipentUser = useMemo(() => {
+    if (!currentChat || !userId) return null;
+    const recipentId = currentChat.room_members.find(
+      (id) => id.user_id !== userId
+    );
+    return recipentId;
+  }, [currentChat, userId]);
+  const displayName = useMemo(() => {
+    if (!currentChat) return null;
+    const user = currentUser.find((u) => u.id === recipentUser?.user_id);
+
+    return currentChat.room_name === "" ? user?.name : currentChat.room_name;
+  }, [currentChat, recipentUser, currentUser]);
+  return { recipentUser, displayName };
+};
+
 export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();
 
