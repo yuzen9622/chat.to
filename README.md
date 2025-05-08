@@ -8,6 +8,11 @@
 
 ---
 
+## Demo
+
+![image](https://github.com/yuzen9622/chat.to/blob/main/README/image.png)
+![image](https://github.com/yuzen9622/chat.to/blob/main/README/image2.png)
+
 ## 🚀 Features
 
 - 🔍 **Friend Search** – Easily find and add friends
