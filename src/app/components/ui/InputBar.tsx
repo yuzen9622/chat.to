@@ -303,9 +303,9 @@ export default function InputBar({
   const handleAudioMessage = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      console.log(audioUrl);
+
       if (audioUrl === "" || !userId) return;
-      console.log(audioUrl);
+
       const res = await fetch(audioUrl);
       const blob = await res.blob();
       const file = new File([blob], `audio-${Date.now()}.mp3`, {
