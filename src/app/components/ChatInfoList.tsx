@@ -20,7 +20,7 @@ export default function ChatInfoList() {
     type: string;
   } | null>(null);
 
-  const { currentChat, currentMessage } = useChatStore();
+  const { currentChat } = useChatStore();
   const handleFilterMessage = useCallback(async () => {
     if (!currentChat) return;
     setFilterMessages([]);

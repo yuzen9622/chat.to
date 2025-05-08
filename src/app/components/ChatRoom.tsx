@@ -38,6 +38,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   const userMap = useRoomUser();
+  const [hasOldMessage, setHasOldMessage] = useState(true);
   const [downBtnAppear, setDownBtnAppear] = useState(false);
 
   const groupedMessages = useMemo(() => {
@@ -68,8 +69,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     const start = currentMessage.length;
     const end = start + 9;
     mainRef.current?.scrollTo({ top: 1, behavior: "smooth" });
+    if (isLoading || !hasOldMessage) return;
     setIsLoading(true);
-    if (isLoading) return;
+
     const { data, error } = await supabase
       .from("messages")
       .select("*")
@@ -79,6 +81,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
     if (error) return;
     if (data) {
+      if (data.length === 0) {
+        setHasOldMessage(false);
+      }
       setPage(nextPage);
       data.reverse();
       setCurrentMessage((prev) => {
@@ -87,7 +92,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       });
     }
     setIsLoading(false);
-  }, [page, roomId, setCurrentMessage, currentMessage, isLoading]);
+  }, [
+    page,
+    roomId,
+    setCurrentMessage,
+    hasOldMessage,
+    currentMessage,
+    isLoading,
+  ]);
 
   // const isNearBottom = useCallback(() => {
   //   const container = mainRef.current;
