@@ -6,21 +6,22 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import Message from "./Message";
+import Message from "./ui/Message";
 
 import ChatHeader from "./CharHeader";
-import InputBar from "./InputBar";
+import InputBar from "./ui/InputBar";
 import { useAblyRoom, useAblyStore } from "../store/AblyStore";
 import { useChatStore } from "../store/ChatStore";
 import { InboundMessage } from "ably";
-import { readMessage } from "../lib/util";
+import { clearReadMessage, readMessage } from "../lib/util";
 import moment from "moment";
 import { ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabasedb";
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 
-import { useRoomUser } from "@/hook/hooks";
+import { useRoomUser } from "@/hook/useRoomUser";
+import { CircularProgress } from "@mui/material";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const { currentMessage, setCurrentMessage, currentChat, reply } =
@@ -66,6 +67,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     const nextPage = page + 1;
     const start = currentMessage.length;
     const end = start + 9;
+    mainRef.current?.scrollTo({ top: 1, behavior: "smooth" });
     setIsLoading(true);
     if (isLoading) return;
     const { data, error } = await supabase
@@ -74,6 +76,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       .eq("room", roomId)
       .order("created_at", { ascending: false })
       .range(start, end);
+
     if (error) return;
     if (data) {
       setPage(nextPage);
@@ -209,6 +212,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         );
       } else {
         readMessage(newMessage.room, userId!);
+        clearReadMessage(newMessage.room);
         newMessage.status = "send";
         newMessage.is_read.push(userId);
         setCurrentMessage((prev) => [...prev, newMessage]);
@@ -246,6 +250,11 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 " relative flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none "
               )}
             >
+              {isLoading && (
+                <span className="flex items-center justify-center w-full">
+                  <CircularProgress size={24} />
+                </span>
+              )}
               {Object.entries(groupedMessages).map(([date, messages]) => (
                 <React.Fragment key={date}>
                   {userMap && (

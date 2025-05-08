@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import RequestButton from "./RequestButton";
+import RequestButton from "@/app/components/ui/RequestButton";
 import FriendSearch from "./FriendSearch";
 
 import { useAuthStore } from "../store/AuthStore";

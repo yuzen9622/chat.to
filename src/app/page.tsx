@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import NoteButton from "./components/NoteButton";
 import NavBar from "./components/NavBar";
-import EditProtofileBtn from "./components/EditProtofileBtn";
+import EditProtofileBtn from "@/app/components/ui/EditProtofileBtn";
 import FriendNote from "./components/FriendNote";
 
 import LogoutBtn from "./components/LogoutBtn";

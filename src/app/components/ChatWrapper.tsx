@@ -8,6 +8,7 @@ import { useAblyStore } from "../store/AblyStore";
 
 import ChatInfo from "./ChatInfo";
 import { useSession } from "next-auth/react";
+import { clearReadMessage } from "../lib/util";
 
 export default function ChatRoomWrapper({
   room,
@@ -33,7 +34,7 @@ export default function ChatRoomWrapper({
 
     setCurrentChat(room);
     setCurrentMessage(() => messages);
-    // readMessage(room.id, userId!);
+    clearReadMessage(room.id);
     return () => {
       setCurrentChat(null);
     };

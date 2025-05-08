@@ -1,22 +1,22 @@
 "use client";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 
 import { useChatStore } from "../store/ChatStore";
 import { useAblyStore } from "../store/AblyStore";
-import { MessageInterface, MetaData } from "../lib/type";
-import { messageType, formatSize, deleteRoom } from "../lib/util";
-import { UserPlus, LogOut, Download, X, LucideIcon, Users } from "lucide-react";
-import BadgeAvatar from "./Avatar";
-import { getFileIcon, joinRoom } from "../lib/util";
+
+import { deleteRoom } from "../lib/util";
+import { UserPlus, LogOut, X, Users } from "lucide-react";
+import BadgeAvatar from "@/app/components/ui/Avatar";
+import { joinRoom } from "../lib/util";
 import { twMerge } from "tailwind-merge";
-import { CldImage, CldVideoPlayer } from "next-cloudinary";
-import Image from "next/image";
-import { CircularProgress, Modal } from "@mui/material";
+
+import { Modal } from "@mui/material";
 import { useAuthStore } from "../store/AuthStore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useChatInfo } from "@/hook/hooks";
+import { useChatInfo } from "@/hook/useChatInfo";
 import moment from "moment";
+import ChatInfoList from "./ChatInfoList";
 
 function RoomUsers() {
   const { currentChat, currentUser } = useChatStore();
@@ -49,7 +49,7 @@ function RoomUsers() {
         open={open}
         className="flex items-center justify-center"
       >
-        <div className="flex flex-col w-full h-64 max-w-md gap-2 p-2 rounded-md dark:bg-stone-900">
+        <div className="flex flex-col w-full h-64 max-w-md gap-2 p-2 bg-white rounded-md dark:bg-stone-900">
           <h1 className="text-xl text-center dark:text-white">成員</h1>
 
           <div className="flex flex-col max-h-full gap-2 overflow-auto dark:text-white">
@@ -80,13 +80,6 @@ export default function ChatInfo() {
     useChatStore();
   const { onlineUsers, channel, roomId } = useAblyStore();
 
-  const [filterMessages, setFilterMessages] = useState<MessageInterface[]>([]);
-  const [filterType, setFilterType] = useState("file");
-  const [metaPreview, setMetaPreview] = useState(false);
-  const [previewMessage, setPreviewMessage] = useState<MessageInterface | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(false);
   const [roomMembers, setRoomMembers] = useState<string[]>([]);
   const { friends } = useAuthStore();
   const [joinOpen, setJoinOpen] = useState(false);
@@ -94,71 +87,6 @@ export default function ChatInfo() {
 
   const router = useRouter();
   const { recipentUser, displayName } = useChatInfo(currentChat!, userId!);
-
-  const handleFileType = useCallback((fileType: string) => {
-    setFilterType(fileType);
-  }, []);
-
-  const getMetaMessages = useCallback(async () => {
-    if (!currentChat) return;
-    setIsLoading(true);
-    setFilterMessages([]);
-    try {
-      const res = await fetch("/api/messages/meta", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          metaType: filterType,
-          roomId: currentChat?.id,
-        }),
-      });
-      if (res.ok) {
-        const data: MessageInterface[] = await res.json();
-        const filterData = data.filter((msg) => {
-          if (messageType(msg.meta_data!) === "audio") return null;
-          return msg;
-        });
-        setFilterMessages(filterData);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [filterType, currentChat]);
-
-  // const handleFilter = useCallback(() => {
-  //   if (!currentMessage || currentMessage.length === 0) return;
-  //   const filterData = currentMessage.filter((msg) => {
-  //     if (messageType(msg.meta_data!) !== "audio" && msg.type === filterType)
-  //       return msg;
-  //     return null;
-  //   });
-
-  //   setFilterMessages(filterData);
-  // }, [currentMessage, filterType]);
-
-  useEffect(() => {
-    getMetaMessages();
-  }, [getMetaMessages]);
-
-  const handleDownload = useCallback(
-    async (metaData: MetaData, text: string) => {
-      try {
-        if (!metaData.url) return;
-        const res = await fetch(metaData.url);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = text;
-        a.click();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    []
-  );
 
   const handleRoomMember = useCallback(
     (userId: string) => {
@@ -206,7 +134,6 @@ export default function ChatInfo() {
 
   const handleJoin = useCallback(async () => {
     try {
-      setIsLoading(true);
       console.log(channel);
       if (!channel) return;
       const data = await joinRoom(roomId, roomMembers);
@@ -218,14 +145,13 @@ export default function ChatInfo() {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false);
     }
   }, [channel, roomId, roomMembers]);
   return (
     <div
       className={twMerge(
-        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-gray-white/20 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden  xl:scale-100 xl:relative xl:block absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
-        chatInfoOpen && "block"
+        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-gray-white/20 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden  xl:scale-100 xl:relative xl:flex xl:flex-col absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
+        chatInfoOpen && "flex flex-col overflow-hidden"
       )}
     >
       {currentChat && (
@@ -236,65 +162,7 @@ export default function ChatInfo() {
           >
             <X className="text-gray-400 hover:dark:text-white" />
           </button>
-          {metaPreview && previewMessage && (
-            <Modal
-              className="absolute flex items-center justify-center w-full h-full overflow-hidden "
-              open={metaPreview}
-              onClose={() => setMetaPreview(false)}
-            >
-              <>
-                {previewMessage.meta_data &&
-                  messageType(previewMessage.meta_data) === "image" && (
-                    <div className=" w-10/12  max-w-[550px] max-h-[95%] overflow-auto p-2 rounded-md">
-                      <div className="flex justify-end">
-                        <button className="p-1 rounded-sm hover:bg-white/5">
-                          <Download className="dark:text-white " />
-                        </button>
-                        <button
-                          onClick={() => setMetaPreview(false)}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <X className="dark:text-white " />
-                        </button>
-                      </div>
-                      {previewMessage.meta_data &&
-                        messageType(previewMessage.meta_data) === "image" && (
-                          <CldImage
-                            className={"w-full h-full rounded-md "}
-                            src={previewMessage.meta_data.url}
-                            width={400}
-                            zoom="0.5"
-                            height={400}
-                            alt={previewMessage.text}
-                            title={previewMessage.text}
-                          />
-                        )}
-                    </div>
-                  )}
-                {previewMessage.meta_data &&
-                  messageType(previewMessage.meta_data) === "video" && (
-                    <div className=" w-10/12  max-w-[1024px] max-h-[90dvh] overflow-auto p-2 rounded-md">
-                      <div className="flex justify-end">
-                        <button className="p-1 rounded-lg hover:bg-white/5">
-                          <Download className="dark:text-white " />
-                        </button>
-                        <button
-                          onClick={() => setMetaPreview(false)}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <X className="dark:text-white " />
-                        </button>
-                      </div>
-                      <CldVideoPlayer
-                        className="w-full h-full rounded-md "
-                        src={previewMessage.meta_data.url}
-                        width={2480}
-                      />
-                    </div>
-                  )}
-              </>
-            </Modal>
-          )}
+
           <Modal
             open={joinOpen}
             onClose={() => {
@@ -395,140 +263,7 @@ export default function ChatInfo() {
               </button>
             </span>
           </div>
-          <div className="flex flex-col w-full h-[calc(100%-210px)] ">
-            <span className="flex w-full dark:text-white ">
-              <button
-                onClick={() => handleFileType("file")}
-                className={twMerge(
-                  "flex-1 py-2 border-b-2 border-transparent",
-                  filterType === "file" && "  border-blue-600"
-                )}
-              >
-                檔案
-              </button>
-              <button
-                onClick={() => handleFileType("media")}
-                className={twMerge(
-                  "flex-1 py-2   border-b-2 border-transparent",
-                  filterType === "media" && "  border-blue-600"
-                )}
-              >
-                媒體
-              </button>
-              {/* <button
-                onClick={() => handleFileType("url")}
-                className={twMerge(
-                  "flex-1 py-2   border-b-2 border-transparent",
-                  filterType === "url" && " border-blue-600"
-                )}
-              >
-                連結
-              </button> */}
-            </span>
-            <div className="flex-1 overflow-hidden ">
-              {filterMessages.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                  {isLoading && <CircularProgress />}
-                  {!isLoading && (
-                    <p className="text-lg text-center dark:text-white/50">
-                      {filterType === "file" && "暫無檔案"}
-                      {filterType === "media" && "暫無媒體"}
-                      {filterType === "url" && "暫無連結"}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <>
-                  {filterType === "media" && (
-                    <div className="grid h-full grid-cols-3 overflow-y-auto">
-                      {filterMessages.map((msg) => {
-                        if (
-                          msg.meta_data &&
-                          messageType(msg.meta_data) === "image"
-                        ) {
-                          return (
-                            <Image
-                              onClick={() => {
-                                setMetaPreview(true);
-                                setPreviewMessage(msg);
-                              }}
-                              className="object-cover w-full rounded-sm aspect-square bg-white/20"
-                              key={msg.id}
-                              width={100}
-                              height={100}
-                              src={msg.meta_data.url}
-                              alt={msg.text}
-                            />
-                          );
-                        } else if (
-                          msg.meta_data &&
-                          messageType(msg.meta_data) === "video"
-                        ) {
-                          return (
-                            <video
-                              onClick={() => {
-                                setMetaPreview(true);
-                                setPreviewMessage(msg);
-                              }}
-                              className="object-cover w-full rounded-sm aspect-square bg-white/20"
-                              key={msg.id}
-                              width={100}
-                              height={100}
-                              src={msg.meta_data.url}
-                            ></video>
-                          );
-                        }
-                      })}
-                    </div>
-                  )}
-                  {filterType === "file" && (
-                    <div className="flex flex-col items-center w-full h-full gap-1 pt-1 overflow-y-auto">
-                      {filterMessages.map((msg) => {
-                        if (msg.meta_data) {
-                          const Icon: LucideIcon = getFileIcon(
-                            msg.text.split(".")[msg.text.split(".").length - 1]
-                          );
-                          return (
-                            <button
-                              title={msg.text}
-                              key={msg.id}
-                              onClick={() =>
-                                handleDownload(msg.meta_data!, msg.text)
-                              }
-                              className="flex items-center w-11/12 gap-2 p-2 rounded-md dark:text-white dark:bg-stone-800/5"
-                            >
-                              <div className="flex flex-col items-center justify-center">
-                                <span className="flex flex-col items-center p-2 rounded-full bg-gray-600/5 dark:bg-white/5">
-                                  <Icon size={20} />
-                                </span>
-                                <p className="text-xs">
-                                  {
-                                    msg.text.split(".")[
-                                      msg.text.split(".").length - 1
-                                    ]
-                                  }
-                                </p>
-                              </div>
-                              <span className="w-full ">
-                                <p className="text-sm break-all text-start">
-                                  {msg.text}
-                                </p>
-                                <span className="flex items-center justify-between w-full gap-1 mt-1 text-xs">
-                                  <p>大小:{formatSize(msg.meta_data.size)}</p>
-                                  <p>點擊下載</p>
-                                </span>
-                              </span>
-                            </button>
-                          );
-                        }
-                        return null;
-                      })}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
+          <ChatInfoList />
         </>
       )}
     </div>

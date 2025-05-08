@@ -2,9 +2,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CirclePlus } from "lucide-react";
 import { Send } from "lucide-react";
-import { useAblyStore } from "../store/AblyStore";
-import { useChatStore } from "../store/ChatStore";
-import { MessageInterface, MessageType } from "../lib/type";
+import { useAblyStore } from "../../store/AblyStore";
+import { useChatStore } from "../../store/ChatStore";
+import { MessageInterface, MessageType } from "../../lib/type";
 
 import { X, Laugh, Pencil, Paperclip, Mic, CircleX } from "lucide-react";
 import {
@@ -12,13 +12,13 @@ import {
   messageType,
   sendUserMessage,
   uploadFile,
-} from "../lib/util";
+} from "../../lib/util";
 import EmojiPicker from "emoji-picker-react";
 import { Theme, EmojiStyle } from "emoji-picker-react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
-import { WavesurferRecord } from "@/app/components/Audio";
+import { WavesurferRecord } from "@/app/components/ui/Audio";
 import { useSession } from "next-auth/react";
 function SendBar({
   handleFile,

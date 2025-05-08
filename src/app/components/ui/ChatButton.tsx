@@ -4,14 +4,15 @@ import { useMemo } from "react";
 import BadgeAvatar from "./Avatar";
 import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
-import { RoomInterface } from "../lib/type";
-import { useChatInfo, useLastMessage, useRoomNotify } from "@/hook/hooks";
-
-import { messageType } from "../lib/util";
-import { TimeAgo } from "./TimeAgo";
+import { RoomInterface } from "../../lib/type";
+import { useChatInfo } from "@/hook/useChatInfo";
+import { useLastMessage } from "@/hook/useLastMessage";
+import { useRoomNotify } from "@/hook/useRoomNotify";
+import { messageType } from "../../lib/util";
+import { TimeAgo } from "../TimeAgo";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
-import { useChatStore } from "../store/ChatStore";
+
 import { useSession } from "next-auth/react";
 type ButtonProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ChatButton({

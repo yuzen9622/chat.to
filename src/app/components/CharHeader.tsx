@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar";
 import { AlignLeft, Info } from "lucide-react";
 import { useChatStore } from "../store/ChatStore";
 import { ChevronLeft } from "lucide-react";
@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useAblyStore } from "../store/AblyStore";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
-import { useChatInfo } from "@/hook/hooks";
+import { useChatInfo } from "@/hook/useChatInfo";
 
 export default function ChatHeader() {
   const {

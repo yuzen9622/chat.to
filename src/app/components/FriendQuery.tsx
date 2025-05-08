@@ -8,7 +8,7 @@ import { useChatStore } from "../store/ChatStore";
 import { useAblyStore } from "../store/AblyStore";
 import { createRoom, sendFriendRequest, queryFriend } from "../lib/util";
 import { Skeleton } from "@mui/material";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar";
 
 function Loading() {
   return (

@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { FriendRequestInterface, friendStatus } from "../lib/type";
-import { useUserProfile } from "@/hook/hooks";
+import { FriendRequestInterface, friendStatus } from "@/app/lib/type";
+import { useUserProfile } from "@/hook/useUserProfile";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
-import { cancelFriendRequest, responseFriendRequest } from "../lib/util";
+import { cancelFriendRequest, responseFriendRequest } from "@/app/lib/util";
 import { twMerge } from "tailwind-merge";
 import CircularProgress from "@mui/material/CircularProgress";
 export default function RequestButton({

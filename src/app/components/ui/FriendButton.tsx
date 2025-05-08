@@ -1,13 +1,13 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { RoomInterface, UserInterface } from "../lib/type";
-import { useChatStore } from "../store/ChatStore";
-import { createRoom } from "../lib/util";
+import { RoomInterface, UserInterface } from "../../lib/type";
+import { useChatStore } from "../../store/ChatStore";
+import { createRoom } from "../../lib/util";
 
 import { useRouter } from "next/navigation";
-import { useAblyStore } from "../store/AblyStore";
+import { useAblyStore } from "../../store/AblyStore";
 import BadgeAvatar from "./Avatar";
-import { useAuthStore } from "../store/AuthStore";
+import { useAuthStore } from "../../store/AuthStore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";

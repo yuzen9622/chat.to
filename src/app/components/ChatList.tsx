@@ -7,14 +7,14 @@ import {
 } from "../lib/util";
 
 import { useChatStore } from "../store/ChatStore";
-import ChatButton from "./ChatButton";
+import ChatButton from "./ui/ChatButton";
 import { Skeleton, Modal } from "@mui/material";
 import { SquarePen, Camera, Check } from "lucide-react";
 import { useAblyStore } from "../store/AblyStore";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { CircularProgress } from "@mui/material";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar";
 import { redirect } from "next/navigation";
 import { useAuthStore } from "../store/AuthStore";
 import { RoomInterface } from "../lib/type";

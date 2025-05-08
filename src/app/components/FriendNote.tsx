@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import NoteCard from "./NoteCard";
+import NoteCard from "./ui/NoteCard";
 import { useAuthStore } from "../store/AuthStore";
 
 export default function FriendNote() {

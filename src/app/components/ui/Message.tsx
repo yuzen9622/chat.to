@@ -6,12 +6,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { MessageInterface, MessageType, MetaData } from "../lib/type";
+import { MessageInterface, MessageType, MetaData } from "../../lib/type";
 import {
   Ellipsis,
   Reply,
   Download,
-  X,
   Pencil,
   Trash2,
   LucideIcon,
@@ -20,24 +19,25 @@ import {
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import { useChatStore } from "../store/ChatStore";
+import { useChatStore } from "../../store/ChatStore";
 import Link from "next/link";
-import { useUserProfile } from "@/hook/hooks";
+import { useUserProfile } from "@/hook/useUserProfile";
 import {
   replyText,
   messageType,
   deleteMessage,
   formatSize,
   getFileIcon,
-} from "../lib/util";
+} from "../../lib/util";
 import WavesurferAudio from "./Audio";
-import { CldImage, CldVideoPlayer } from "next-cloudinary";
-import { Skeleton, Modal } from "@mui/material";
+import { CldImage } from "next-cloudinary";
+import { Skeleton } from "@mui/material";
 import "next-cloudinary/dist/cld-video-player.css";
-import { getReplyMessage } from "../lib/server";
+import { getReplyMessage } from "../../lib/server";
 
-import { useAblyStore } from "../store/AblyStore";
+import { useAblyStore } from "../../store/AblyStore";
 import { useSession } from "next-auth/react";
+import PreviewMediaModal from "./PreviewMediaModal";
 function SettingBar({
   message,
   isOpen,
@@ -232,11 +232,13 @@ export function MessageTextFormat({
   message_type: MessageType;
 }) {
   const userId = useSession()?.data?.userId;
-  const [metaPreview, setMetaPreview] = useState(false);
-  const Icon: LucideIcon = getFileIcon(
-    text.split(".")[text.split(".").length - 1]
-  );
-
+  const [isOpen, setIsOpen] = useState(false);
+  const Icon: LucideIcon = getFileIcon(text);
+  const [previewMedia, setPreviewMedia] = useState<{
+    alt: string;
+    url: string;
+    type: string;
+  } | null>(null);
   const type = useMemo(() => {
     return messageType(metaData);
   }, [metaData]);
@@ -252,6 +254,17 @@ export function MessageTextFormat({
     } catch (error) {
       console.log(error);
     }
+  }, [metaData, text]);
+
+  const handlePreview = useCallback(() => {
+    const mediaType = messageType(metaData!);
+    if (!mediaType || !metaData) return;
+    setIsOpen(true);
+    setPreviewMedia({
+      alt: text,
+      url: metaData.url,
+      type: mediaType,
+    });
   }, [metaData, text]);
 
   return (
@@ -319,47 +332,19 @@ export function MessageTextFormat({
           )}
           {message_type === "media" && (
             <>
+              <PreviewMediaModal
+                open={isOpen}
+                media={previewMedia!}
+                onClose={() => setIsOpen(false)}
+              />
               {type === "image" && (
                 <>
-                  <Modal
-                    className="absolute flex items-center justify-center w-full h-full overflow-hidden "
-                    open={metaPreview}
-                    onClose={() => setMetaPreview(false)}
-                  >
-                    <div className=" w-10/12  max-w-[550px] max-h-[95%] overflow-auto p-2 rounded-md">
-                      <div className="flex justify-end">
-                        <button
-                          onClick={handleDownload}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <Download className="text-white " />
-                        </button>
-                        <button
-                          onClick={() => setMetaPreview(false)}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <X className="text-white " />
-                        </button>
-                      </div>
-
-                      <CldImage
-                        className={"w-full h-full rounded-md -z-10"}
-                        src={metaData.url}
-                        width={400}
-                        zoom="0.5"
-                        height={400}
-                        alt={text}
-                        title={text}
-                      />
-                    </div>
-                  </Modal>
-
                   {!metaData ? (
                     <Skeleton width={200} animation="wave" height={200} />
                   ) : (
                     <CldImage
-                      onTouchEnd={() => setMetaPreview(true)}
-                      onClick={() => setMetaPreview(true)}
+                      onTouchEnd={() => handlePreview()}
+                      onClick={() => handlePreview()}
                       className="w-full -z-10 rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
                       src={metaData.url}
                       width={400}
@@ -372,39 +357,12 @@ export function MessageTextFormat({
               )}
               {type === "video" && (
                 <>
-                  <Modal
-                    className="absolute flex items-center justify-center w-full h-full overflow-hidden "
-                    open={metaPreview}
-                    onClose={() => setMetaPreview(false)}
-                  >
-                    <div className=" w-10/12  max-w-[1024px] max-h-[90dvh] overflow-auto p-2 rounded-md">
-                      <div className="flex justify-end">
-                        <button
-                          onClick={handleDownload}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <Download className="text-white " />
-                        </button>
-                        <button
-                          onClick={() => setMetaPreview(false)}
-                          className="p-1 rounded-lg hover:bg-white/5"
-                        >
-                          <X className="text-white " />
-                        </button>
-                      </div>
-                      <CldVideoPlayer
-                        className="w-full h-full rounded-md "
-                        src={metaData.url}
-                        width={2480}
-                      />
-                    </div>
-                  </Modal>
                   {!metaData ? (
                     <Skeleton width={200} animation="wave" height={200} />
                   ) : (
                     <video
                       title={text}
-                      onClick={() => setMetaPreview(true)}
+                      onClick={() => handlePreview()}
                       className="w-full rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
                       src={metaData.url}
                       muted

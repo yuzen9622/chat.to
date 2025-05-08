@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
-import ListItem from "./ListItem";
+import ListItem from "./ui/ListItem";
 
 import { House, MessageSquareMore, Handshake } from "lucide-react";
 import { useAuthStore } from "../store/AuthStore";

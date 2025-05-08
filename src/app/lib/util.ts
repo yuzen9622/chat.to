@@ -115,12 +115,15 @@ export const fetchRoomMessage = async (roomId: string) => {
   }
 };
 
+export const clearReadMessage = (roomId: string) => {
+  useChatStore.setState((state) => ({
+    notify: state.notify.filter((msg) => msg.room !== roomId),
+  }));
+};
+
 export const readMessage = async (roomId: string, userId: string | null) => {
   if (!roomId || !userId) return;
   try {
-    useChatStore.setState((state) => ({
-      notify: state.notify.filter((msg) => msg.room !== roomId),
-    }));
     const response = await fetch(`/api/messages/read`, {
       method: "POST",
       headers: {
@@ -132,12 +135,6 @@ export const readMessage = async (roomId: string, userId: string | null) => {
     if (!response.ok) {
       throw new Error("Failed to mark messages as read");
     }
-
-    // useChatStore.setState((state) => ({
-    //   currentMessage: state.currentMessage.map((msg) =>
-    //     msg.room === roomId ? { ...msg, isRead: true } : msg
-    //   ),
-    // }));
 
     const data = await response.json();
     return data;
@@ -537,7 +534,8 @@ export const roomSort = () => {
   });
 };
 
-export const getFileIcon = (mimeType: string) => {
+export const getFileIcon = (fileName: string) => {
+  const mimeType = fileName.split(".")[fileName.split(".").length - 1];
   const fileIcons = {
     pdf: FileText,
     docx: FileText,

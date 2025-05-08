@@ -2,7 +2,7 @@ import React, { LinkHTMLAttributes } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { usePathname, useRouter } from "next/navigation";
-import { useChatStore } from "../store/ChatStore";
+import { useChatStore } from "../../store/ChatStore";
 type LinkProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ListItem({
   children,

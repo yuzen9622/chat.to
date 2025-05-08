@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { NoteInterface } from "../lib/type";
+import { NoteInterface } from "../../lib/type";
 
 import BadgeAvatar from "./Avatar";
-import { useUserProfile } from "@/hook/hooks";
-import { TimeAgo } from "./TimeAgo";
+import { useUserProfile } from "@/hook/useUserProfile";
+import { TimeAgo } from "../TimeAgo";
 export default function NoteCard({ note }: { note: NoteInterface }) {
   const user = useUserProfile(note.user_id);
   return (

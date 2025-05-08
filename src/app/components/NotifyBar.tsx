@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Snackbar } from "@mui/material";
 import { useChatStore } from "../store/ChatStore";
 import { RoomInterface } from "../lib/type";
-import { useUserProfile } from "@/hook/hooks";
+import { useUserProfile } from "@/hook//useUserProfile";
 import { replyText } from "@/app/lib/util";
 import { redirect } from "next/navigation";
 import moment from "moment";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar";
 export default function NotifyBar() {
   const [open, setOpen] = useState(false);
 
@@ -52,7 +52,15 @@ export default function NotifyBar() {
           }}
         >
           <div className="flex flex-row w-full p-2">
-            {room && <BadgeAvatar room={room} />}
+            {room && (
+              <>
+                {room.room_type == "personal" ? (
+                  <BadgeAvatar width={45} height={45} user={senderId} />
+                ) : (
+                  <BadgeAvatar width={45} height={45} room={room} />
+                )}
+              </>
+            )}
             <div className="flex flex-col w-full px-2">
               <span className="flex justify-between text-sm font-semibold dark:text-white ">
                 <p className="text-base">

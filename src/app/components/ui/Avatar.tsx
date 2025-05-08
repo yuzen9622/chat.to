@@ -1,12 +1,13 @@
 import Image from "next/image";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import { useAblyStore } from "../store/AblyStore";
-import { RoomInterface } from "../lib/type";
+
 import { Skeleton } from "@mui/material";
 
-import { useUserProfile } from "@/hook/hooks";
+import { useUserProfile } from "@/hook/useUserProfile";
 import { useSession } from "next-auth/react";
+import { RoomInterface } from "@/app/lib/type";
+import { useAblyStore } from "@/app/store/AblyStore";
 
 export default function BadgeAvatar({
   width = 45,

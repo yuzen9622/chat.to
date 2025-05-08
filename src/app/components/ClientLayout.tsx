@@ -15,7 +15,7 @@ import {
   useNotifyListner,
   useRoomActionListner,
   useUserListner,
-} from "@/hook/hooks";
+} from "@/hook/useRealtime";
 
 moment.locale("zh-tw");
 export default function ClientLayout({

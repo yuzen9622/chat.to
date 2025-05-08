@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { CircularProgress } from "@mui/material";
 import { twMerge } from "tailwind-merge";
-import { useAblyStore } from "../store/AblyStore";
+import { useAblyStore } from "@/app/store/AblyStore";
 
 export default function EditProtofileBtn() {
   const [isOpen, setIsOpen] = useState(false);
