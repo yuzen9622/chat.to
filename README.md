@@ -1,27 +1,42 @@
 # Chat.to 💬
 
-The modern online chat you'll love.
+> **The modern online chat you'll love.**
 
-Chat.to is a sleek, real-time chat application that lets you connect with friends and groups effortlessly. Powered by Ably, Next.js, Supabase, and NextAuth, it delivers a seamless, secure, and engaging messaging experience.
+**Chat.to** is a sleek, real-time chat application that lets you connect with friends and groups effortlessly. Powered by **Ably**, **Next.js**, **Supabase**, and **NextAuth**, it delivers a seamless, secure, and engaging messaging experience.
 
-🚀 Features
-🔍 Friend Search – Easily find and add friends
+## Try it [here](https://chat-to-sage.vercel.app/)
 
-👥 Group Chat – Create or join group conversations
+---
 
-💬 Real-time Messaging – Built on Ably for smooth and instant communication
+## 🚀 Features
 
-🔐 Secure Authentication – User login via NextAuth with JWT and OAuth providers
+- 🔍 **Friend Search** – Easily find and add friends
+- 👥 **Group Chat** – Create or join group conversations
+- 💬 **Real-time Messaging** – Built on Ably for smooth and instant communication
+- 🔐 **Secure Authentication** – User login via NextAuth with JWT and OAuth providers
+- 🌐 **Modern Stack** – Developed with the latest tools in the web ecosystem
 
-🌐 Modern Stack – Developed with the latest tools in the web ecosystem
+---
 
-🛠️ Tech Stack
-Frontend: Next.js
+## 🛠️ Tech Stack
 
-Backend/Realtime: Ably
+- **Frontend**: [Next.js](https://nextjs.org/)
+- **Backend/Realtime**: [Ably](https://ably.com/)
+- **Database**: [Supabase](https://supabase.com/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
-Database: Supabase
+---
 
-Authentication: NextAuth.js
+## 📌 TODO
 
-Deployment: Vercel / Custom
+- [ ] Call/Video
+- [ ] Typing indicators
+- [ ] Markdown message
+- [ ] AI gernarate
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
