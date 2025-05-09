@@ -24,7 +24,7 @@ export default function BadgeAvatar({
   const userId = useSession()?.data?.userId;
   const userProfile = useUserProfile(user);
 
-  if (!userProfile && room?.room_type === "personal")
+  if (user && !userProfile)
     return (
       <Skeleton
         animation="wave"

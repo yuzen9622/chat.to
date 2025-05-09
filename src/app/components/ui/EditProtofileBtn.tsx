@@ -29,7 +29,7 @@ export default function EditProtofileBtn() {
           userImage.imgFile
         );
         image = imageData.url;
-        setUserImage(null);
+
         setEditProfile((prev) => {
           if (!prev) return prev;
           return { ...prev, image: imageData.url };
@@ -53,6 +53,7 @@ export default function EditProtofileBtn() {
       console.log(error);
     } finally {
       setIsLoading(false);
+      setUserImage(null);
     }
   }, [editProfile, update, channel, userImage]);
 
