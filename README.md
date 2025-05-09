@@ -25,8 +25,8 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: [Next.js](https://nextjs.org/)
-- **Backend/Realtime**: [Ably](https://ably.com/)
+- **Frontend/Backend**: [Next.js](https://nextjs.org/)
+- **Realtime**: [Ably](https://ably.com/)
 - **Database**: [Supabase](https://supabase.com/)
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/)
 - **Deployment**: [Vercel](https://vercel.com/)
