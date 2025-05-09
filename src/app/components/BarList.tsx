@@ -21,6 +21,11 @@ export default function BarList() {
     });
     return isExist.length;
   }, [notify, userId]);
+
+  const FriendRequestCount = useMemo(() => {
+    if (!friendRequests) return 0;
+    return friendRequests.filter((fr) => fr.receiver_id === userId).length;
+  }, [friendRequests, userId]);
   return (
     <>
       <ListItem href="/">
@@ -31,7 +36,7 @@ export default function BarList() {
         <MessageSquareMore />
         <span className="hidden sm:block">Chats</span>
       </ListItem>
-      <ListItem href="/friend" notify={friendRequests?.length}>
+      <ListItem href="/friend" notify={FriendRequestCount}>
         <Handshake />
         <span className="hidden sm:block">Friends</span>
       </ListItem>

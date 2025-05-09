@@ -570,3 +570,19 @@ export const fetchFriendNote = async (friends: UserInterface[]) => {
     throw error;
   }
 };
+
+export const handleDownload = async (fileUrl: string, fileName: string) => {
+  const a = document.createElement("a");
+  if (!fileUrl) return;
+  try {
+    const response = await fetch(fileUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.target = "_blank";
+    a.click();
+  } catch (error) {
+    console.log(error);
+  }
+};

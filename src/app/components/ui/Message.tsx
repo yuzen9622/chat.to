@@ -28,6 +28,7 @@ import {
   deleteMessage,
   formatSize,
   getFileIcon,
+  handleDownload,
 } from "../../lib/util";
 import WavesurferAudio from "./Audio";
 import { CldImage } from "next-cloudinary";
@@ -60,22 +61,6 @@ function SettingBar({
       setIsOpen(false);
     }
   };
-
-  const handleDownload = useCallback(async () => {
-    const a = document.createElement("a");
-    if (!message.meta_data) return;
-    try {
-      const response = await fetch(message.meta_data.url);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = message.text;
-      a.target = "_blank";
-      a.click();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [message]);
 
   const handleDelete = useCallback(async () => {
     if (!room || !channel || !message.id) return;
@@ -175,7 +160,7 @@ function SettingBar({
                 )}
                 onClick={() => {
                   setIsOpen(false);
-                  handleDownload();
+                  handleDownload(message.meta_data?.url || "", message.text);
                 }}
               >
                 <Download size={20} />

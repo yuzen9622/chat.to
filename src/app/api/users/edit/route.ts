@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req: req });
   if (!token)
     return NextResponse.json({ error: "No authication" }, { status: 401 });
-  const { id, name, email } = await req.json();
+  const { id, name, email, image } = await req.json();
   try {
     const { error } = await supabase
       .from("users")
-      .update({ email, name })
+      .update({ email, name, image })
       .eq("id", id);
     if (error) {
       return NextResponse.json({ error }, { status: 401 });

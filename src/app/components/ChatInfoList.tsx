@@ -2,8 +2,13 @@ import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import { formatSize, getFileIcon, messageType } from "../lib/util";
-import { MessageInterface, MetaData } from "../lib/type";
+import {
+  formatSize,
+  getFileIcon,
+  handleDownload,
+  messageType,
+} from "../lib/util";
+import { MessageInterface } from "../lib/type";
 import { useChatStore } from "../store/ChatStore";
 import { LucideIcon } from "lucide-react";
 import PreviewMediaModal from "./ui/PreviewMediaModal";
@@ -65,24 +70,6 @@ export default function ChatInfoList() {
     handleFilterMessage();
   }, [handleFilterMessage]);
 
-  const handleDownload = useCallback(
-    async (metaData: MetaData, text: string) => {
-      try {
-        if (!metaData.url) return;
-        const res = await fetch(metaData.url);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = text;
-        a.click();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    []
-  );
-
   return (
     <>
       <PreviewMediaModal
@@ -137,7 +124,10 @@ export default function ChatInfoList() {
                     key={message.id}
                     title={message.text}
                     onClick={() =>
-                      handleDownload(message.meta_data!, message.text)
+                      handleDownload(
+                        message?.meta_data?.url || "",
+                        message.text
+                      )
                     }
                     className={twMerge(
                       "flex  p-2  dark:text-white bg-gray-500/20 gap-1 dark:bg-wjite/5"
