@@ -70,6 +70,7 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
   const { friends, friendRequests } = useAuthStore();
   const [searchFriends, setSearchFriends] = useState<UserInterface[]>([]);
   const [isLoading, setIsloading] = useState(false);
+  const [requestLoading, setRequestLoading] = useState(false);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -136,7 +137,12 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
               ) && (
                 <div>
                   <button
-                    onClick={() => sendFriendRequest(friend.id, userId!)}
+                    disabled={requestLoading}
+                    onClick={async () => {
+                      setRequestLoading(true);
+                      await sendFriendRequest(friend.id, userId!);
+                      setRequestLoading(false);
+                    }}
                     className="p-1 text-sm font-bold text-white bg-blue-600 rounded-md hover:bg-blue-500 "
                   >
                     發送邀請
