@@ -16,7 +16,7 @@ export default function PreviewMediaModal({
 }: previewParams) {
   return (
     <Modal
-      className="flex items-center justify-center w-full h-full "
+      className="flex items-center justify-center w-full h-full dark:bg-white/10 backdrop-blur-xl "
       open={open}
       onClose={onClose}
     >

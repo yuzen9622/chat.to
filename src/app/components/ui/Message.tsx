@@ -32,36 +32,20 @@ import {
 } from "../../lib/util";
 import WavesurferAudio from "./Audio";
 import { CldImage } from "next-cloudinary";
-import { Skeleton } from "@mui/material";
+import { Popover, Skeleton } from "@mui/material";
 import "next-cloudinary/dist/cld-video-player.css";
 import { getReplyMessage } from "../../lib/server";
 
 import { useAblyStore } from "../../store/AblyStore";
 import { useSession } from "next-auth/react";
 import PreviewMediaModal from "./PreviewMediaModal";
-function SettingBar({
-  message,
-  isOpen,
-  setIsOpen,
-}: {
-  message: MessageInterface;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function SettingBar({ message }: { message: MessageInterface }) {
   const { setReply, setEdit, setCurrentMessage } = useChatStore();
   const { channel, room } = useAblyStore();
   const userId = useSession()?.data?.userId;
 
-  const handleFocus = () => {
-    setIsOpen(true);
-  };
-
-  const handleBlur = (e: React.FocusEvent) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      setIsOpen(false);
-    }
-  };
-
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const handleDelete = useCallback(async () => {
     if (!room || !channel || !message.id) return;
     try {
@@ -86,63 +70,53 @@ function SettingBar({
       console.log(error);
     }
   }, [room, channel, message, setCurrentMessage]);
-
-  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    const dropdown = document.getElementById(`dropdown-${message.id}`);
-    const target = e.target as HTMLElement;
-
-    if (!dropdown?.contains(target)) {
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
-    }
+  const handleClose = () => {
+    setAnchorEl(null);
   };
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const dropdown = document.getElementById(`dropdown-${message.id}`);
-      if (dropdown && !dropdown.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [isOpen, message.id, setIsOpen]);
   return (
-    <div
-      id={`dropdown-${message.id}`}
-      className={" inline-flex relative  hs-dropdown "}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onTouchStart={handleClick}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div>
       <button
         type="button"
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
         data-hs-dropdown-toggle={`dropdown-menu-${message.id}`}
         className={twMerge(
-          "hs-dropdown-toggle  p-1.5 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100",
-          isOpen && "opacity-100"
+          "  p-1.5 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
         )}
+        onClick={handleOpen}
       >
         <Ellipsis size={16} />
       </button>
 
-      {isOpen && (
-        <div className="absolute -left-10  mt-2 w-fit z-50  border bg-white shadow-sm dark:bg-neutral-800  rounded-lg p-1.5 animate-in fade-in slide-in-from-top-1">
-          <div className="py-1 first:pt-0 last:pb-0">
-            <p className="text-center">
-              {moment(message.created_at).format("a hh:mm")}
-            </p>
-            {/* <button
+      <Popover
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        className="p-0 "
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          sx: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            padding: "2px",
+          },
+        }}
+      >
+        <div className="flex flex-col p-1 bg-white border rounded-md dark:bg-neutral-900">
+          <p className="text-xs text-center dark:text-white/50">
+            {moment(message.created_at).format("a hh:mm")}
+          </p>
+          {/* <button
               className="w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-neutral-300 hover:bg-neutral-700"
               onClick={() => {
                 setReply(message);
@@ -153,54 +127,52 @@ function SettingBar({
               回覆
             </button> */}
 
-            {message.meta_data && messageType(message.meta_data) && (
+          {message.meta_data && messageType(message.meta_data) && (
+            <button
+              className={twMerge(
+                "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+              )}
+              onClick={() => {
+                handleDownload(message.meta_data?.url || "", message.text);
+              }}
+            >
+              <Download size={20} />
+              下載
+            </button>
+          )}
+          {message.sender === userId && (
+            <div>
               <button
                 className={twMerge(
-                  "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+                  "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700",
+                  (message.sender !== userId || message.meta_data) && "hidden"
                 )}
                 onClick={() => {
-                  setIsOpen(false);
-                  handleDownload(message.meta_data?.url || "", message.text);
+                  setEdit(message);
+                  setReply(null);
+                  handleClose();
                 }}
               >
-                <Download size={20} />
-                下載
+                <Pencil size={20} />
+                編輯
               </button>
-            )}
-            {message.sender === userId && (
-              <>
-                <button
-                  className={twMerge(
-                    "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700",
-                    (message.sender !== userId || message.meta_data) && "hidden"
-                  )}
-                  onClick={() => {
-                    setEdit(message);
-                    setReply(null);
-                    setIsOpen(false);
-                  }}
-                >
-                  <Pencil size={20} />
-                  編輯
-                </button>
-                <button
-                  className={twMerge(
-                    "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md hover:bg-gray-100 text-red-400 hover:dark:bg-neutral-700",
-                    message.sender !== userId && "hidden"
-                  )}
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleDelete();
-                  }}
-                >
-                  <Trash2 size={20} />
-                  刪除
-                </button>
-              </>
-            )}
-          </div>
+              <button
+                className={twMerge(
+                  "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md hover:bg-gray-100 text-red-400 hover:dark:bg-neutral-700",
+                  message.sender !== userId && "hidden"
+                )}
+                onClick={() => {
+                  handleDelete();
+                  handleClose();
+                }}
+              >
+                <Trash2 size={20} />
+                刪除
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </Popover>
     </div>
   );
 }
@@ -384,7 +356,7 @@ function SendMessage({
   user: { id: string; name: string; image: string };
 }) {
   const userId = useSession()?.data?.userId;
-  const [isOpen, setIsOpen] = useState(false);
+
   const [replyMessage, setReplyMessage] = useState<MessageInterface | null>(
     null
   );
@@ -511,17 +483,10 @@ function SendMessage({
           >
             <div
               className={twMerge(
-                "flex transition-opacity pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100",
-                isOpen && "opacity-100"
+                "flex transition-opacity pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100"
               )}
             >
-              {message.status === "send" && (
-                <SettingBar
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  message={message}
-                />
-              )}
+              {message.status === "send" && <SettingBar message={message} />}
 
               <button
                 className={twMerge(
