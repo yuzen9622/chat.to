@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
           .maybeSingle();
         console.log(user);
         if (error || !user) {
-          throw new Error("帳戶或密碼錯誤");
+          throw new Error("帳戶不存在");
         }
 
         if (user.password) {

@@ -85,3 +85,10 @@ export interface FriendRequestInterface {
   status: friendStatus;
   created_at: Date;
 }
+
+export interface SystemAlertInterface {
+  open: boolean;
+  serverity: "success" | "info" | "error";
+  variant: "standard" | "filled" | "outlined";
+  text: string;
+}

@@ -3,6 +3,7 @@ import { create } from "zustand";
 import {
   FriendRequestInterface,
   NoteInterface,
+  SystemAlertInterface,
   UserInterface,
 } from "../lib/type";
 import {
@@ -16,6 +17,8 @@ interface AuthStore {
   friendRequests: FriendRequestInterface[] | null;
   friendNote: NoteInterface[] | null;
   isInitialized: boolean;
+  systemAlert: SystemAlertInterface;
+  setSystemAlert: (alertInfo: SystemAlertInterface) => void;
   setFriends: (
     friend: UserInterface | ((prev: UserInterface[]) => UserInterface[])
   ) => void;
@@ -35,6 +38,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isInitialized: false,
   friends: null,
   friendRequests: null,
+  systemAlert: {
+    open: false,
+    serverity: "success",
+    variant: "standard",
+    text: "",
+  },
+  setSystemAlert: (alertInfo: SystemAlertInterface) => {
+    set({ systemAlert: alertInfo });
+  },
   friendNote: null,
   initialize: async (user: string) => {
     try {

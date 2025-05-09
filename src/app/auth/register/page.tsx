@@ -1,10 +1,11 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ThirdPartLogin from "@/app/components/ThirdPartLogin";
 import Link from "next/link";
 import { uploadFile } from "@/app/lib/util";
+import { useAuthStore } from "@/app/store/AuthStore";
 
 export default function RegisterPage() {
   const [registerForm, setRegister] = useState<{
@@ -19,6 +20,9 @@ export default function RegisterPage() {
     name: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { systemAlert, setSystemAlert } = useAuthStore();
 
   const validForm = useCallback(() => {
     const { email, password } = registerForm;
@@ -39,28 +43,46 @@ export default function RegisterPage() {
     return true;
   }, [registerForm]);
 
-  const handleLogin = useCallback(
+  const handleRegister = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!validForm()) return;
-      const avatar_url = await uploadFile(registerForm.image.file!);
-      const res = await fetch("/api/auth/register", {
-        headers: { "Content-Type": "application/json" },
-        method: "post",
-        body: JSON.stringify({
-          ...registerForm,
-          image: { ...registerForm.image, url: avatar_url.url },
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        redirect("/auth/login");
-      }
-      if (data.error) {
-        setError(data.error);
+      try {
+        setIsLoading(true);
+        let avatar_url = "";
+        if (registerForm.image.file) {
+          const avatarData = await uploadFile(registerForm.image.file!);
+          avatar_url = avatarData.url;
+        }
+
+        const res = await fetch("/api/auth/register", {
+          headers: { "Content-Type": "application/json" },
+          method: "post",
+          body: JSON.stringify({
+            ...registerForm,
+            image: { ...registerForm.image, url: avatar_url },
+          }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          setSystemAlert({
+            ...systemAlert,
+            text: "註冊成功",
+            serverity: "success",
+            open: true,
+          });
+          router.push("/auth/login");
+        }
+        if (data.error) {
+          setError(data.error);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     },
-    [validForm, registerForm]
+    [validForm, registerForm, systemAlert, setSystemAlert, router]
   );
 
   const handleAvatar = useCallback(async () => {
@@ -84,7 +106,7 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-bold text-center text-blue-500">
           歡迎加入
         </h1>
-        <form onSubmit={handleLogin} className="flex flex-col gap-2">
+        <form onSubmit={handleRegister} className="flex flex-col gap-2">
           <span className="flex justify-center w-full">
             <Image
               className="rounded-full w-36 h-36 "
@@ -141,9 +163,10 @@ export default function RegisterPage() {
           <span className="w-full">
             <button
               type="submit"
-              className="w-full p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 active:bg-blue-300"
+              disabled={isLoading}
+              className="w-full p-2 text-white bg-blue-500 rounded-md disabled:bg-blue-300 hover:bg-blue-600 active:bg-blue-300"
             >
-              註冊
+              {isLoading ? "註冊中..." : "註冊"}
             </button>
           </span>
         </form>
