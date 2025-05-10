@@ -20,6 +20,7 @@ import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import { WavesurferRecord } from "@/app/components/ui/Audio";
 import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/app/store/AuthStore";
 function SendBar({
   handleFile,
 }: {
@@ -81,11 +82,13 @@ export default function InputBar({
     reply,
     setReply,
     currentUser,
+
     edit,
     setEdit,
     setLastMessages,
   } = useChatStore();
   const { roomId, room } = useAblyStore();
+  const { setSystemAlert } = useAuthStore();
 
   const userId = useSession().data?.userId;
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -357,6 +360,12 @@ export default function InputBar({
         }
         await room.publish("message", { action: "send", newMessage });
       } catch (error) {
+        setSystemAlert({
+          open: true,
+          serverity: "error",
+          text: error as string,
+          variant: "standard",
+        });
         setCurrentMessage((prev) =>
           prev.map((msg) =>
             msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
@@ -368,6 +377,7 @@ export default function InputBar({
       }
     },
     [
+      setSystemAlert,
       audioUrl,
       userId,
       reply,

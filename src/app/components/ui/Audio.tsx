@@ -199,7 +199,6 @@ export function WavesurferRecord({
     try {
       if (!record.isPaused()) {
         record.pauseRecording();
-
         record.on("record-pause", async (blob) => {
           if (!blob) return;
           const url = URL.createObjectURL(blob);
@@ -214,7 +213,6 @@ export function WavesurferRecord({
           setAudioUrl(url);
         });
       }
-
       record.stopRecording();
     } catch (error) {
       console.log(error);
@@ -223,6 +221,7 @@ export function WavesurferRecord({
       setIsRecord(false);
     }
   }, [recordRef, wavesurfer, setIsRecord, setAudioUrl, formRef]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
