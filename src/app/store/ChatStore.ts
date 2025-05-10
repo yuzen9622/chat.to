@@ -12,6 +12,7 @@ interface ChatStore {
   rooms: RoomInterface[];
   currentUser: UserInterface[];
   currentMessage: MessageInterface[];
+
   loading: boolean;
   newMessage: MessageInterface | null;
   reply: MessageInterface | null;
