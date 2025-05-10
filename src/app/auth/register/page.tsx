@@ -6,19 +6,25 @@ import ThirdPartLogin from "@/app/components/ThirdPartLogin";
 import Link from "next/link";
 import { uploadFile } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
+import Input from "@/app/components/ui/Input";
+import UploadAvatar from "@/app/components/ui/UploadAvatar";
 
 export default function RegisterPage() {
   const [registerForm, setRegister] = useState<{
     email: string;
     password: string;
-    image: { file: File | null; url: string };
+    image: string;
     name: string;
   }>({
     email: "",
     password: "",
-    image: { file: null, url: "" },
+    image: "",
     name: "",
   });
+  const [userImage, setUserImage] = useState<{
+    imgUrl: string;
+    imgFile: File;
+  } | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -50,8 +56,8 @@ export default function RegisterPage() {
       try {
         setIsLoading(true);
         let avatar_url = "";
-        if (registerForm.image.file) {
-          const avatarData = await uploadFile(registerForm.image.file!);
+        if (userImage) {
+          const avatarData = await uploadFile(userImage.imgFile);
           avatar_url = avatarData.url;
         }
 
@@ -60,7 +66,7 @@ export default function RegisterPage() {
           method: "post",
           body: JSON.stringify({
             ...registerForm,
-            image: { ...registerForm.image, url: avatar_url },
+            image: avatar_url,
           }),
         });
         const data = await res.json();
@@ -82,22 +88,22 @@ export default function RegisterPage() {
         setIsLoading(false);
       }
     },
-    [validForm, registerForm, systemAlert, setSystemAlert, router]
+    [validForm, registerForm, systemAlert, setSystemAlert, router, userImage]
   );
 
-  const handleAvatar = useCallback(async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.click();
-    input.addEventListener("change", () => {
-      if (input.files) {
-        const file = input.files[0];
-        const url = URL.createObjectURL(file);
-        setRegister((prev) => ({ ...prev, image: { file, url } }));
-      }
-    });
-  }, []);
+  // const handleAvatar = useCallback(async () => {
+  //   const input = document.createElement("input");
+  //   input.type = "file";
+  //   input.accept = "image/*";
+  //   input.click();
+  //   input.addEventListener("change", () => {
+  //     if (input.files) {
+  //       const file = input.files[0];
+  //       const url = URL.createObjectURL(file);
+  //       setRegister((prev) => ({ ...prev, image: { file, url } }));
+  //     }
+  //   });
+  // }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-dvh w-dvw dark:text-white">
@@ -107,19 +113,14 @@ export default function RegisterPage() {
           歡迎加入
         </h1>
         <form onSubmit={handleRegister} className="flex flex-col gap-2">
-          <span className="flex justify-center w-full">
-            <Image
-              className="rounded-full w-36 h-36 "
-              onClick={() => handleAvatar()}
-              src={registerForm.image.url || "/user.png"}
-              width={150}
-              height={150}
-              alt="avatar"
-            />
-          </span>
+          <UploadAvatar
+            src={userImage?.imgUrl}
+            userImage={userImage}
+            setUserImage={setUserImage}
+          />
           <span className="w-full">
             <label htmlFor="name">用戶名</label>
-            <input
+            <Input
               value={registerForm.name}
               type="text"
               id="name"
@@ -128,12 +129,11 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setRegister({ ...registerForm, name: e.target.value })
               }
-              className="w-full p-2 rounded-md dark:bg-white/5 outline outline-2 outline-blue-300 focus:outline-blue-500"
             />
           </span>
           <span className="w-full">
             <label htmlFor="email">郵件</label>
-            <input
+            <Input
               value={registerForm.email}
               type="email"
               required
@@ -142,12 +142,11 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setRegister({ ...registerForm, email: e.target.value })
               }
-              className="w-full p-2 rounded-md dark:bg-white/5 outline outline-2 outline-blue-300 focus:outline-blue-500"
             />
           </span>
           <span className="w-full">
             <label htmlFor="password">密碼</label>
-            <input
+            <Input
               value={registerForm.password}
               type="password"
               placeholder="*****"
@@ -156,7 +155,6 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setRegister({ ...registerForm, password: e.target.value })
               }
-              className="w-full p-2 rounded-md dark:bg-white/5 outline outline-2 outline-blue-300 focus:outline-blue-500"
             />
           </span>
           {error && <p className="py-1 text-sm text-red-600">*{error}</p>}

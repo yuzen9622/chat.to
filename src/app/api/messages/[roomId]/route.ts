@@ -12,11 +12,18 @@ export async function GET(
   }
   try {
     const roomId = (await params).roomId;
+    const searchParams = request.nextUrl.searchParams;
+    const start = searchParams.get("start") as number | null;
+    const end = searchParams.get("end") as number | null;
+    if (!start || !end) {
+      return NextResponse.json({ error: "No message range" }, { status: 401 });
+    }
     const { data, error } = await supabase
       .from("messages")
       .select("*")
       .eq("room", roomId)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: true })
+      .range(start, end);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

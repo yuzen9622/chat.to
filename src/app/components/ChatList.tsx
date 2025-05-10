@@ -422,10 +422,15 @@ export default function ChatList() {
       </div>
       <div className="flex flex-col h-full gap-2 overflow-auto ">
         {!isLoading ? (
-          rooms.length > 0 &&
-          rooms.map((room) => {
-            return <ChatButton key={room.id} room={room} />;
-          })
+          rooms.length > 0 ? (
+            rooms.map((room) => {
+              return <ChatButton key={room.id} room={room} />;
+            })
+          ) : (
+            <span className="text-center dark:text-blue-500">
+              快去新增好友或加入群組吧!
+            </span>
+          )
         ) : (
           <LoadingList />
         )}

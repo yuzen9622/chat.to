@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
 export const dynamic = "force-dynamic";
-
+export const revalidate = 0;
 export async function generateMetadata() {
   const data = await getServerSession(authOptions);
   if (!data) return {};
@@ -27,7 +27,7 @@ export default async function Page({
 
   if (!data) return redirect("/chat");
   const { room, messages } = (await getRoomById(roomId, data.userId!)) as {
-    room: RoomInterface;
+    room: RoomInterface | null;
     messages: MessageInterface[];
   };
 

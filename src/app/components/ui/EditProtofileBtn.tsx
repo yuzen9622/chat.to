@@ -1,13 +1,14 @@
 "use client";
 import { Modal } from "@mui/material";
 import React, { useCallback, useState } from "react";
-import { Camera, Trash, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { CircularProgress } from "@mui/material";
 import { twMerge } from "tailwind-merge";
 import { useAblyStore } from "@/app/store/AblyStore";
-import Image from "next/image";
 import { uploadFile } from "@/app/lib/util";
+import Input from "./Input";
+import UploadAvatar from "./UploadAvatar";
 export default function EditProtofileBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, update } = useSession();
@@ -57,28 +58,28 @@ export default function EditProtofileBtn() {
     }
   }, [editProfile, update, channel, userImage]);
 
-  const handleImageUpload = async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.click();
-    input.addEventListener("change", (e) => {
-      const target = e.target as HTMLInputElement;
-      if (target.files) {
-        const file = target.files[0];
-        const url = URL.createObjectURL(file);
+  // const handleImageUpload = async () => {
+  //   const input = document.createElement("input");
+  //   input.type = "file";
+  //   input.accept = "image/*";
+  //   input.click();
+  //   input.addEventListener("change", (e) => {
+  //     const target = e.target as HTMLInputElement;
+  //     if (target.files) {
+  //       const file = target.files[0];
+  //       const url = URL.createObjectURL(file);
 
-        setUserImage({ imgUrl: url, imgFile: file });
-      }
-    });
-  };
+  //       setUserImage({ imgUrl: url, imgFile: file });
+  //     }
+  //   });
+  // };
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-1 text-sm rounded-md bg-stone-200 dark:bg-white/10"
+        className="p-1 px-4 text-sm rounded-md outline outline-2 outline-black dark:outline dark:outline-2 dark:outline-white"
       >
-        編輯個人資料
+        編輯個人檔案
       </button>
       <Modal
         onClose={() => setIsOpen(false)}
@@ -101,34 +102,14 @@ export default function EditProtofileBtn() {
             </button>
           </span>
           <div className="flex flex-col gap-2 p-4">
-            <div className="flex items-center justify-center ">
-              <span className="relative">
-                <Image
-                  width={80}
-                  height={80}
-                  onClick={handleImageUpload}
-                  className="object-cover w-20 h-20 rounded-full cursor-pointer"
-                  src={userImage?.imgUrl || editProfile?.image || "/user.png"}
-                  alt="room_img"
-                />
-
-                <button
-                  onClick={() => {
-                    if (userImage) {
-                      setUserImage(null);
-                    } else {
-                      handleImageUpload();
-                    }
-                  }}
-                  className="absolute right-0 p-1 rounded-full -bottom-2 bg-stone-800/10 text-stone-400 dark:text-white/50 dark:bg-stone-800"
-                >
-                  {userImage ? <Trash size={20} /> : <Camera size={20} />}
-                </button>
-              </span>
-            </div>
+            <UploadAvatar
+              src={userImage?.imgUrl || editProfile?.image}
+              setUserImage={setUserImage}
+              userImage={userImage}
+            />
             <span className="w-full">
               <label htmlFor="name">用戶名</label>
-              <input
+              <Input
                 value={editProfile?.name}
                 type="text"
                 id="name"
@@ -138,7 +119,6 @@ export default function EditProtofileBtn() {
                   if (!editProfile) return;
                   setEditProfile({ ...editProfile, name: e.target.value });
                 }}
-                className="w-full p-2 rounded-md dark:bg-stone-800 outline outline-2 outline-blue-300 focus:outline-blue-500"
               />
             </span>{" "}
             <span className="w-full">
@@ -152,8 +132,8 @@ export default function EditProtofileBtn() {
               >
                 郵件
               </label>
-              <input
-                value={editProfile?.email}
+              <Input
+                value={editProfile?.email || ""}
                 type="email"
                 id="email"
                 required
@@ -164,21 +144,31 @@ export default function EditProtofileBtn() {
                     return;
                   setEditProfile({ ...editProfile, email: e.target.value });
                 }}
-                className="w-full p-2 rounded-md dark:bg-stone-800 disabled:text-stone-400 dark:disabled:bg-stone-600 disabled:bg-stone-900/10 dark:disabled:text-white/50 outline outline-2 outline-blue-300 focus:outline-blue-500"
               />
             </span>
             <span className="w-full">
-              <label htmlFor="pass">密碼</label>
-              <input
+              <label
+                htmlFor="pass"
+                className={twMerge(
+                  "dark:text-white after:content-['*由第三方登入無法更改密碼'] after:text-xs after:text-red-500",
+                  editProfile?.provider !== "credentials" &&
+                    "dark:text-white/50"
+                )}
+              >
+                密碼
+              </label>
+              <Input
                 value={password}
                 type="password"
+                disabled={editProfile?.provider !== "credentials"}
                 id="pass"
                 required
                 placeholder=""
                 onChange={(e) => {
+                  if (!editProfile || editProfile.provider !== "credentials")
+                    return;
                   setPassword(e.target.value);
                 }}
-                className="w-full p-2 rounded-md dark:bg-stone-800 outline outline-2 outline-blue-300 focus:outline-blue-500"
               />
             </span>
           </div>

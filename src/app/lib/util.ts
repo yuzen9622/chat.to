@@ -84,34 +84,32 @@ export const fetchUsersNotify = async (
     throw error;
   }
 };
-let abortController: AbortController | null = null;
 
-export const fetchRoomMessage = async (roomId: string) => {
+export const fetchRoomMessage = async (
+  roomId: string,
+  start: number,
+  end: number
+) => {
   try {
-    if (abortController) {
-      abortController.abort();
-      abortController = null;
-    }
-    abortController = new AbortController();
-    const response = await fetch(`/api/messages/${roomId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      signal: abortController.signal,
-    });
+    const response = await fetch(
+      `/api/messages/${roomId}?start=${start}&end=${end}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
     if (!response.ok) {
       throw new Error("Server Error");
     }
-    abortController = null;
+
     return data.data;
   } catch (error) {
     console.log(error);
     throw error;
   } finally {
-    abortController = null;
   }
 };
 

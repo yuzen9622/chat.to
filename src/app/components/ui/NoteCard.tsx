@@ -9,7 +9,7 @@ export default function NoteCard({ note }: { note: NoteInterface }) {
   const user = useUserProfile(note.user_id);
   return (
     <span className="flex items-center w-full max-w-md gap-2 px-3 py-2 mb-2 text-black rounded-md bg-stone-100 min-h-fit dark:text-white dark:bg-white/5">
-      <BadgeAvatar user={user?.id} width={65} height={65} />
+      <BadgeAvatar user={note.user_id} width={65} height={65} />
       <div className="w-full h-full">
         <span className="flex items-center gap-2 ">
           <p className="text-lg font-medium">{user?.name}</p>

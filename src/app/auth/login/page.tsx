@@ -7,6 +7,7 @@ import { getSession, signIn, useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/AuthStore";
+import Input from "@/app/components/ui/Input";
 
 export default function LoginPage() {
   const [loginForm, setLoginForm] = useState<{
@@ -74,7 +75,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="flex flex-col gap-2 ">
           <span className="w-full">
             <label htmlFor="email">郵件</label>
-            <input
+            <Input
               value={loginForm.email}
               type="email"
               id="email"
@@ -83,12 +84,11 @@ export default function LoginPage() {
               onChange={(e) =>
                 setLoginForm({ ...loginForm, email: e.target.value })
               }
-              className="w-full p-2 rounded-md dark:bg-white/5 outline outline-2 outline-blue-300 focus:outline-blue-500"
             />
           </span>
           <span className="w-full">
             <label htmlFor="password">密碼</label>
-            <input
+            <Input
               value={loginForm.password}
               type="password"
               placeholder="*****"
@@ -97,7 +97,6 @@ export default function LoginPage() {
               onChange={(e) =>
                 setLoginForm({ ...loginForm, password: e.target.value })
               }
-              className="w-full p-2 rounded-md outline dark:bg-white/5 outline-2 outline-blue-300 focus:outline-blue-500"
             />
           </span>
           {error && <p className="py-1 text-sm text-red-600">{error}</p>}

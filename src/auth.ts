@@ -109,12 +109,15 @@ export const authOptions: NextAuthOptions = {
           .from("user_note")
           .select("*")
           .eq("user_id", data.id);
-        console.log(note);
+        console.log(data);
+
         if (note) {
           user.note = note[0];
         }
         user.id = data.id;
-        user.provider = data.provider;
+        user.name = data.name;
+        user.image = data.image;
+        user.email = data.email;
         return true;
       }
 

@@ -11,6 +11,7 @@ import { useAuthStore } from "../../store/AuthStore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
+import WarningButton from "./WarningButton";
 
 export default function FriendButton({ friend }: { friend: UserInterface }) {
   const { rooms } = useChatStore();
@@ -105,18 +106,18 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
         <span className="px-2 ">{friend.name}</span>
       </div>
 
-      <div className="inline-flex">
+      <div className="inline-flex gap-4">
         <button
           onClick={handleClick}
-          className="p-1 mx-2 font-bold text-white transition-colors bg-blue-500 rounded-md dark:bg-white/10 hover:bg-blue-600 active:bg-blue-300"
+          className="p-1 px-3 font-bold text-white transition-colors rounded-md outline outline-2 outline-black dark:outline dark:outline-2 dark:outline-white "
         >
           發送訊息
         </button>
-        <button
+        <WarningButton
           onClick={deleteFriend}
           className={twMerge(
-            "flex items-center p-1 text-white font-bold bg-red-500 rounded-md ",
-            isLoading && "bg-red-300 pointer-events-none"
+            "flex items-center font-bold ",
+            isLoading && "outline-red-300 pointer-events-none"
           )}
         >
           {isLoading && (
@@ -127,7 +128,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
             />
           )}
           解除好友
-        </button>
+        </WarningButton>
       </div>
     </div>
   );
