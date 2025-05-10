@@ -21,29 +21,51 @@ import { v4 as uuidv4 } from "uuid";
 import { WavesurferRecord } from "@/app/components/ui/Audio";
 import { useSession } from "next-auth/react";
 import { useAuthStore } from "@/app/store/AuthStore";
+import { Popover } from "@mui/material";
 function SendBar({
   handleFile,
 }: {
   handleFile: (accept: string, fromType: MessageType) => Promise<void>;
 }) {
-  const [barOpen, setBarOpen] = useState(false);
-  const handleBlur = (e: React.FocusEvent) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      setBarOpen(false);
-    }
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const barOpen = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
   return (
-    <div onBlur={handleBlur}>
+    <div>
       <button
         type="button"
+        onClick={handleOpen}
         className={twMerge("p-1 h-fit transition-all", barOpen && " rotate-45")}
-        onClick={() => setBarOpen((prev) => !prev)}
       >
         <CirclePlus className="text-gray-400 hover:dark:text-white" />
       </button>
-      {barOpen && (
-        <div className="absolute left-0 flex flex-col p-1 rounded-md bottom-12 bg-neutral-800 animate-in fade-in slide-in-from-top-1">
+      <Popover
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          sx: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            padding: "2px",
+          },
+        }}
+        onClose={handleClose}
+        open={barOpen}
+      >
+        <div className="flex flex-col p-1 rounded-md bg-neutral-800 animate-in fade-in slide-in-from-top-1">
           <button
             type="button"
             onClick={() => handleFile("*", "file")}
@@ -60,7 +82,7 @@ function SendBar({
             <Bot size={20} className="mr-2" /> AI 文字
           </button> */}
         </div>
-      )}
+      </Popover>
     </div>
   );
 }
@@ -76,7 +98,7 @@ export default function InputBar({
   const [isComposing, setIsComposing] = useState(false);
   const [isRecord, setIsRecord] = useState(false);
 
-  const [audioUrl, setAudioUrl] = useState("");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const {
     setCurrentMessage,
     reply,
@@ -307,16 +329,11 @@ export default function InputBar({
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
 
-      if (audioUrl === "" || !userId) return;
+      if (!audioFile || !userId) return;
 
-      const res = await fetch(audioUrl);
-      const blob = await res.blob();
-      const file = new File([blob], `audio-${Date.now()}.mp3`, {
-        type: "audio/mp3",
-      });
       const newMessage: MessageInterface = {
         id: uuidv4(),
-        text: file.name,
+        text: audioFile.name,
         room: roomId,
         is_read: [userId],
         reply: reply?.id,
@@ -324,16 +341,16 @@ export default function InputBar({
         sender: userId,
         type: "media",
         meta_data: {
-          type: file.type,
-          size: file.size,
-          url: URL.createObjectURL(file),
+          type: audioFile.type,
+          size: audioFile.size,
+          url: URL.createObjectURL(audioFile),
           public_id: "",
         },
         created_at: new Date().toISOString(),
       };
       try {
         setCurrentMessage((prev) => [...prev, newMessage]);
-        const fileRes = await uploadFile(file);
+        const fileRes = await uploadFile(audioFile);
         if (newMessage.meta_data) {
           newMessage.meta_data = {
             ...newMessage.meta_data,
@@ -341,10 +358,7 @@ export default function InputBar({
             public_id: fileRes.public_id,
           };
         }
-
         if (!room) return;
-        if (!res) return;
-
         setReply(null);
         if (inputRef.current) {
           inputRef.current?.focus();
@@ -373,12 +387,12 @@ export default function InputBar({
         );
         console.log(error);
       } finally {
-        setAudioUrl("");
+        setAudioFile(null);
       }
     },
     [
       setSystemAlert,
-      audioUrl,
+      audioFile,
       userId,
       reply,
       roomId,
@@ -390,9 +404,9 @@ export default function InputBar({
   );
 
   useEffect(() => {
-    if (audioUrl === "") return;
+    if (!audioFile) return;
     handleAudioMessage();
-  }, [handleAudioMessage, audioUrl]);
+  }, [handleAudioMessage, audioFile]);
 
   return (
     <form
@@ -400,7 +414,7 @@ export default function InputBar({
       onSubmit={(e) => {
         if (edit) {
           handleEditMessage(e);
-        } else if (audioUrl) {
+        } else if (audioFile) {
           handleAudioMessage(e);
         } else {
           handleSendMessage(e);
@@ -518,7 +532,7 @@ export default function InputBar({
           <>
             <button
               onClick={() => {
-                setAudioUrl("");
+                setAudioFile(null);
                 setIsRecord((prev) => !prev);
               }}
               className={twMerge(
@@ -536,7 +550,7 @@ export default function InputBar({
             {isRecord && (
               <WavesurferRecord
                 formRef={formRef}
-                setAudioUrl={setAudioUrl}
+                setAudioFile={setAudioFile}
                 isRecord={isRecord}
                 setIsRecord={setIsRecord}
               />

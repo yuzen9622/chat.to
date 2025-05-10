@@ -16,6 +16,7 @@ interface AuthStore {
   friends: UserInterface[] | null;
   friendRequests: FriendRequestInterface[] | null;
   friendNote: NoteInterface[] | null;
+  userNote: NoteInterface | null;
   isInitialized: boolean;
   systemAlert: SystemAlertInterface;
   setSystemAlert: (alertInfo: SystemAlertInterface) => void;
@@ -31,6 +32,7 @@ interface AuthStore {
   setFriendNote: (
     note: NoteInterface | ((prev: NoteInterface[]) => NoteInterface[])
   ) => void;
+  setUserNote: (note: NoteInterface) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -38,11 +40,17 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isInitialized: false,
   friends: null,
   friendRequests: null,
+  userNote: null,
   systemAlert: {
     open: false,
     serverity: "success",
     variant: "standard",
     text: "",
+  },
+  setUserNote: (note) => {
+    set((state) => {
+      return { ...state, userNote: note };
+    });
   },
   setSystemAlert: (alertInfo: SystemAlertInterface) => {
     set({ systemAlert: alertInfo });

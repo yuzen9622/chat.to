@@ -71,13 +71,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     mainRef.current?.scrollTo({ top: 1, behavior: "smooth" });
     if (isLoading || !hasOldMessage) return;
     setIsLoading(true);
-
+    const abortSignal = new AbortController();
     const { data, error } = await supabase
       .from("messages")
       .select("*")
       .eq("room", roomId)
       .order("created_at", { ascending: false })
-      .range(start, end);
+      .range(start, end)
+      .abortSignal(abortSignal.signal);
 
     if (error) return;
     if (data) {
@@ -187,11 +188,11 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   }, [scrollToBottom, currentMessage, reply, target]);
 
   useEffect(() => {
-    if (containerEnd.current && shouldScroll) {
+    if (containerEnd.current && shouldScroll && currentMessage.length > 0) {
       scrollToBottom();
       setShouldScroll(false);
     }
-  }, [scrollToBottom, currentChat, shouldScroll, userMap]);
+  }, [scrollToBottom, currentMessage, shouldScroll, userMap]);
 
   useEffect(() => {
     if (!room) return;

@@ -153,7 +153,7 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
         action,
         newMessage,
       }: { action: string; newMessage: MessageInterface } = message.data;
-      console.log(newMessage, action);
+
       const messageRoom = rooms.find(
         (r) =>
           r.id === newMessage.room &&
@@ -167,12 +167,11 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
       ) {
         return;
       }
-      console.log(newMessage, action);
+
       newMessage.status = "send";
       const lastMessage = lastMessages[newMessage.room];
 
       if (action === "send") {
-        console.log(newMessage);
         setLastMessages(newMessage);
         if (newMessage.room !== currentChat?.id || !currentChat) {
           setNewNotify({ type: "message", data: newMessage });
@@ -253,7 +252,7 @@ export const useNoteListner = (channel: RealtimeChannel) => {
   useEffect(() => {
     const handleNote = (message: InboundMessage) => {
       const { note }: { note: NoteInterface } = message.data;
-      console.log(note);
+
       if (friends?.some((f) => f.id === note.user_id)) {
         setFriendNote((prev) => {
           if (!prev.some((n) => n.id === note.id)) {

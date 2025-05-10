@@ -18,16 +18,18 @@ export async function GET(
     if (!start || !end) {
       return NextResponse.json({ error: "No message range" }, { status: 401 });
     }
+
     const { data, error } = await supabase
       .from("messages")
       .select("*")
       .eq("room", roomId)
-      .order("created_at", { ascending: true })
+      .order("created_at", { ascending: false })
       .range(start, end);
+
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
+    data.reverse();
     return NextResponse.json({ data }, { status: 200 });
   } catch (error) {
     console.error(error);

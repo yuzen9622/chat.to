@@ -88,12 +88,12 @@ export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
 export function WavesurferRecord({
   setIsRecord,
   isRecord,
-  setAudioUrl,
+  setAudioFile,
   formRef,
 }: {
   setIsRecord: React.Dispatch<React.SetStateAction<boolean>>;
   isRecord: boolean;
-  setAudioUrl: React.Dispatch<React.SetStateAction<string>>;
+  setAudioFile: React.Dispatch<React.SetStateAction<File | null>>;
 
   formRef: React.RefObject<HTMLFormElement | null>;
 }) {
@@ -158,7 +158,7 @@ export function WavesurferRecord({
   useEffect(() => {
     const record = recordRef.current;
     if (!record) return;
-  }, [isPaused, setAudioUrl]);
+  }, [isPaused, setAudioFile]);
 
   useEffect(() => {
     handleRecord();
@@ -173,13 +173,12 @@ export function WavesurferRecord({
     if (record.isPaused() || wavesurfer.isPlaying()) {
       wavesurfer.pause();
       record.resumeRecording();
-
       setIsPaused(false);
     } else {
       record.pauseRecording();
       // record.once("record-pause", (blob) => {
       //   const url = URL.createObjectURL(blob);
-      //   setAudioUrl(url);
+      //   setAudioFile(url);
       // });
       wavesurfer.setTime(0);
       setIsPaused(true);
@@ -201,16 +200,20 @@ export function WavesurferRecord({
         record.pauseRecording();
         record.on("record-pause", async (blob) => {
           if (!blob) return;
-          const url = URL.createObjectURL(blob);
 
-          setAudioUrl(url);
+          const file = new File([blob], `audio-${Date.now()}`, {
+            type: "audio/mp3",
+          });
+          setAudioFile(file);
         });
       } else if (record.isPaused()) {
         record.on("record-end", async (blob) => {
           if (!blob) return;
-          const url = URL.createObjectURL(blob);
 
-          setAudioUrl(url);
+          const file = new File([blob], `audio-${Date.now()}`, {
+            type: "audio/mp3",
+          });
+          setAudioFile(file);
         });
       }
       record.stopRecording();
@@ -220,7 +223,7 @@ export function WavesurferRecord({
       formRef.current?.requestSubmit();
       setIsRecord(false);
     }
-  }, [recordRef, wavesurfer, setIsRecord, setAudioUrl, formRef]);
+  }, [recordRef, wavesurfer, setIsRecord, setAudioFile, formRef]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -230,8 +233,10 @@ export function WavesurferRecord({
         e.preventDefault();
         recordRef.current?.stopRecording();
         recordRef.current?.once("record-end", (blob) => {
-          const url = URL.createObjectURL(blob);
-          setAudioUrl(url);
+          const file = new File([blob], `audio-${Date.now()}`, {
+            type: "audio/mp3",
+          });
+          setAudioFile(file);
         });
 
         handleSendAudio();
@@ -241,7 +246,7 @@ export function WavesurferRecord({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleSendAudio, recordRef, setAudioUrl]);
+  }, [handleSendAudio, recordRef, setAudioFile]);
 
   return (
     <>

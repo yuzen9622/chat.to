@@ -68,12 +68,7 @@ export default function ClientLayout({
     <div className="flex flex-col-reverse w-full h-full overflow-hidden sm:flex-row">
       <NotifyBar />
 
-      <div
-        className={twMerge(
-          "transition-all duration-200 ",
-          isChatRoom && "hidden sm:block"
-        )}
-      >
+      <div className={twMerge("flex", isChatRoom && " hidden sm:block")}>
         {!pathname.includes("/auth") && <SideBar />}
       </div>
 

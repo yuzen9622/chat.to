@@ -19,9 +19,11 @@ export const useLastMessage = (roomId: string) => {
     let ignore = false;
     const fetchLastMessage = async () => {
       if (ignore) return;
+      const controler = new AbortController();
       const { data, error } = await supabase
         .from("messages")
         .select("*")
+        .abortSignal(controler.signal)
         .eq("room", roomId)
         .eq("status", "send")
         .order("created_at", { ascending: false })

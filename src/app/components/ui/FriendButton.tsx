@@ -106,7 +106,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
         <span className="px-2 ">{friend.name}</span>
       </div>
 
-      <div className="inline-flex gap-4">
+      <div className="inline-flex gap-4 p-2">
         <button
           onClick={handleClick}
           className="p-1 px-3 font-bold text-white transition-colors rounded-md outline outline-2 outline-black dark:outline dark:outline-2 dark:outline-white "

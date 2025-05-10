@@ -11,7 +11,7 @@ export const getRoomById = async (roomId: string, userId: string) => {
 
     if (error || !data) {
       console.error("Room not found or user is not a member:", error);
-      return { room: null, messages: [] };
+      return { room: null };
     }
 
     supabase
@@ -20,15 +20,7 @@ export const getRoomById = async (roomId: string, userId: string) => {
         user_id: userId,
       })
       .then(({ error }) => console.log(error));
-    // const cachedMessage = (await redis.lrange(
-    //   `room:${roomId}`,
-    //   -21,
-    //   -1
-    // )) as MessageInterface[];
 
-    // if (cachedMessage.length > 0) {
-    //   return { room: data[0].rooms, messages: cachedMessage };
-    // }
     const { data: msgData, error: msgError } = await supabase
       .from("messages")
       .select("*")
@@ -39,18 +31,14 @@ export const getRoomById = async (roomId: string, userId: string) => {
 
     if (msgError) {
       console.error("Failed to fetch messages:", msgError);
-      return { room: data[0].rooms, messages: [] };
+      return { room: data[0].rooms };
     }
     msgData.reverse();
-    // const pipeline = redis.pipeline();
-    // msgData.forEach((msg) => pipeline.rpush(`room:${roomId}`, msg));
-    // pipeline.ltrim(`room:${roomId}`, -21, -1);
-    // pipeline.expire(`room:${roomId}`, 3600);
-    // await pipeline.exec();
-    return { room: data[0].rooms, messages: msgData };
+
+    return { room: data[0].rooms };
   } catch (error) {
     console.log(error);
-    return { room: null, messages: [] };
+    return { room: null };
   }
 };
 

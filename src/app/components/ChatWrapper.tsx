@@ -1,5 +1,5 @@
 "use client"; // 表示這是一個 Client Component
-import { RoomInterface, MessageInterface } from "../lib/type";
+import { RoomInterface } from "../lib/type";
 import { ChannelProvider } from "ably/react";
 import ChatRoom from "./ChatRoom";
 import { useEffect } from "react";
@@ -8,15 +8,15 @@ import { useAblyStore } from "../store/AblyStore";
 
 import ChatInfo from "./ChatInfo";
 import { useSession } from "next-auth/react";
-import { clearReadMessage } from "../lib/util";
+import { clearReadMessage, fetchRoomMessage } from "../lib/util";
 
 export default function ChatRoomWrapper({
   room,
-  messages,
+
   roomId,
 }: {
   room: RoomInterface;
-  messages: MessageInterface[];
+
   roomId: string;
 }) {
   const {
@@ -44,15 +44,25 @@ export default function ChatRoomWrapper({
   // }, [roomId, setCurrentMessage]);
 
   useEffect(() => {
-    if (!room || !messages) return;
+    if (!room) return;
 
     setCurrentChat(room);
-    setCurrentMessage(() => messages);
+
+    const getRoomMessages = async () => {
+      try {
+        const data = await fetchRoomMessage(room.id, 0, 20);
+        setCurrentMessage(() => data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRoomMessages();
+
     clearReadMessage(room.id);
     return () => {
       setCurrentChat(null);
     };
-  }, [room, messages, userId, setCurrentChat, setCurrentMessage]);
+  }, [room, userId, setCurrentChat, setCurrentMessage]);
 
   useEffect(() => {
     setRoomId(roomId);

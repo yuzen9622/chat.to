@@ -26,11 +26,12 @@ export const useUserProfile = (userId: string | undefined) => {
     const fetchUser = async () => {
       try {
         addOnboardingUser(userId);
-
+        const controler = new AbortController();
         const { data } = await supabase
           .from("users")
           .select("id,image,name")
-          .eq("id", userId);
+          .eq("id", userId)
+          .abortSignal(controler.signal);
         if (data) {
           setCurrentUsers(data[0]);
           setUser(data[0]);

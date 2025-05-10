@@ -39,6 +39,7 @@ import { getReplyMessage } from "../../lib/server";
 import { useAblyStore } from "../../store/AblyStore";
 import { useSession } from "next-auth/react";
 import PreviewMediaModal from "./PreviewMediaModal";
+
 function SettingBar({ message }: { message: MessageInterface }) {
   const { setReply, setEdit, setCurrentMessage } = useChatStore();
   const { channel, room } = useAblyStore();
@@ -88,7 +89,7 @@ function SettingBar({ message }: { message: MessageInterface }) {
         aria-expanded={open ? "true" : undefined}
         data-hs-dropdown-toggle={`dropdown-menu-${message.id}`}
         className={twMerge(
-          "  p-1.5 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+          "  p-2 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
         )}
         onClick={handleOpen}
       >
@@ -127,7 +128,7 @@ function SettingBar({ message }: { message: MessageInterface }) {
               回覆
             </button> */}
 
-          {message.meta_data && messageType(message.meta_data) && (
+          {message.meta_data && messageType(message.meta_data) !== "audio" && (
             <button
               className={twMerge(
                 "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
