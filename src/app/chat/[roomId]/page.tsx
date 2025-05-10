@@ -1,12 +1,11 @@
 import { getRoomById } from "@/app/lib/server";
-
 import { redirect } from "next/navigation";
 import ChatRoomWrapper from "@/app/components/ChatWrapper";
 import { MessageInterface, RoomInterface } from "@/app/lib/type";
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
+export const fetchCache = "force-no-store";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export async function generateMetadata() {
@@ -22,6 +21,13 @@ export default async function Page({
 }: {
   params: Promise<{ roomId: string }>;
 }) {
+  const headers = new Headers();
+  headers.set(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate"
+  );
+  headers.set("Pragma", "no-cache");
+  headers.set("Expires", "0");
   const { roomId } = await params;
   const data = await getServerSession(authOptions);
 

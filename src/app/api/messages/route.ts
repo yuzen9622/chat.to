@@ -1,4 +1,3 @@
-import { redis } from "@/app/lib/redis";
 import { supabase } from "@/app/lib/supabasedb";
 
 import { getToken } from "next-auth/jwt";
@@ -18,13 +17,13 @@ export async function POST(request: NextRequest) {
       .select("*")
       .limit(1)
       .maybeSingle();
-    const count = await redis.llen(`room:${message.room}`);
-    if (count) {
-      if (count >= 20) {
-        await redis.lpop(`room:${message.room}`);
-      }
-      await redis.rpushx(`room:${message.room}`, message);
-    }
+    // const count = await redis.llen(`room:${message.room}`);
+    // if (count) {
+    //   if (count >= 20) {
+    //     await redis.lpop(`room:${message.room}`);
+    //   }
+    //   await redis.rpushx(`room:${message.room}`, message);
+    // }
     if (error) {
       console.log(error);
       return NextResponse.json({ error: error.message }, { status: 500 });

@@ -29,6 +29,20 @@ export default function ChatRoomWrapper({
   const { setRoomId } = useAblyStore();
   const userId = useSession()?.data?.userId;
 
+  // useEffect(() => {
+  //   const getNewMessage = async () => {
+  //     try {
+  //       const newMessages = await fetchRoomMessage(roomId, 0, 20);
+  //       if (newMessages) {
+  //         setCurrentMessage(() => newMessages);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getNewMessage();
+  // }, [roomId, setCurrentMessage]);
+
   useEffect(() => {
     if (!room || !messages) return;
 
