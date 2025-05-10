@@ -38,6 +38,7 @@
     "nodemailer": "^6.10.1",
     "preline": "^2.7.0",
     "react": "^19.0.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^19.0.0",
     "server": "^1.0.41",
     "tailwind-merge": "^3.0.2",

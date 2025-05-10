@@ -22,6 +22,7 @@ import { WavesurferRecord } from "@/app/components/ui/Audio";
 import { useSession } from "next-auth/react";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { Popover } from "@mui/material";
+
 function SendBar({
   handleFile,
 }: {
@@ -104,13 +105,12 @@ export default function InputBar({
     reply,
     setReply,
     currentUser,
-
     edit,
     setEdit,
     setLastMessages,
   } = useChatStore();
   const { roomId, room } = useAblyStore();
-  const { setSystemAlert } = useAuthStore();
+  const { setSystemAlert, isMobile } = useAuthStore();
 
   const userId = useSession().data?.userId;
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -329,7 +329,7 @@ export default function InputBar({
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
 
-      if (!audioFile || !userId) return;
+      if (!audioFile || !userId || isMobile) return;
 
       const newMessage: MessageInterface = {
         id: uuidv4(),
@@ -397,6 +397,7 @@ export default function InputBar({
       reply,
       roomId,
       channel,
+      isMobile,
       room,
       setCurrentMessage,
       setReply,
@@ -404,9 +405,9 @@ export default function InputBar({
   );
 
   useEffect(() => {
-    if (!audioFile) return;
+    if (!audioFile && isMobile) return;
     handleAudioMessage();
-  }, [handleAudioMessage, audioFile]);
+  }, [handleAudioMessage, audioFile, isMobile]);
 
   return (
     <form
@@ -532,6 +533,15 @@ export default function InputBar({
           <>
             <button
               onClick={() => {
+                if (isMobile) {
+                  setSystemAlert({
+                    open: true,
+                    serverity: "info",
+                    text: "行動裝置不支援錄音，可使用桌面裝置",
+                    variant: "standard",
+                  });
+                  return;
+                }
                 setAudioFile(null);
                 setIsRecord((prev) => !prev);
               }}

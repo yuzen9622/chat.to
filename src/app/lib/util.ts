@@ -584,3 +584,7 @@ export const handleDownload = async (fileUrl: string, fileName: string) => {
     console.log(error);
   }
 };
+
+export const isMobile = (userAgent: string): boolean => {
+  return /android.+mobile|ip(hone|[oa]d)/i.test(userAgent);
+};
