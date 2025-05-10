@@ -430,7 +430,7 @@ export const responseFriendRequest = async (id: string, status: string) => {
 
 export async function uploadFile(file: File) {
   try {
-    if (!file) return null;
+    if (!file) throw new Error("No file .");
     const formData = new FormData();
     formData.append("file", file);
     const response = await fetch("/api/upload", {
