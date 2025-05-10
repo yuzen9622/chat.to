@@ -28,7 +28,7 @@ export default function Home() {
       }
     };
     getNote();
-  }, [session]);
+  }, [session, setUserNote]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-2 overflow-hidden flex-nowrap">
@@ -68,7 +68,7 @@ export default function Home() {
       <section className="flex w-full h-full p-3 px-4 overflow-hidden text-white rounded-md ">
         <div className="flex flex-col w-full h-full">
           <p className="mb-2">便利貼</p>
-          <FriendNote userNote={userNote} />
+          <FriendNote userNote={userNote!} />
         </div>
       </section>
     </div>

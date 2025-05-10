@@ -6,7 +6,11 @@ import { useAuthStore } from "../store/AuthStore";
 
 import { NoteInterface } from "../lib/type";
 
-export default function FriendNote({ userNote }: { userNote: NoteInterface }) {
+export default function FriendNote({
+  userNote,
+}: {
+  userNote: NoteInterface | null;
+}) {
   const { friendNote } = useAuthStore();
 
   return (
