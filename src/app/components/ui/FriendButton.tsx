@@ -25,7 +25,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
     if (!channel) return;
     const friendRoom = rooms.find(
       (room) =>
-        room.room_members.some((member) => member.user_id === friend.id) &&
+        room?.room_members.some((member) => member.user_id === friend.id) &&
         room.room_type === "personal"
     );
     if (!friendRoom) {
