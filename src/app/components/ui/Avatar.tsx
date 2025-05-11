@@ -49,7 +49,10 @@ export default function BadgeAvatar({
         )}
       >
         <Image
-          className="border-2 border-transparent rounded-full bg-white/10 aspect-square"
+          className={twMerge(
+            "border-2 border-transparent rounded-full bg-white/10 aspect-square",
+            `min-w-[40px] min-h-[40px]`
+          )}
           src={
             user
               ? userProfile?.image || "/user.png"

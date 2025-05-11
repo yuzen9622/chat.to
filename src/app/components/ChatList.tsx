@@ -9,9 +9,9 @@ import {
 import { useChatStore } from "../store/ChatStore";
 import ChatButton from "./ui/ChatButton";
 import { Skeleton, Modal } from "@mui/material";
-import { SquarePen, Camera, Check } from "lucide-react";
+import { SquarePen, Check } from "lucide-react";
 import { useAblyStore } from "../store/AblyStore";
-import Image from "next/image";
+
 import { twMerge } from "tailwind-merge";
 import { CircularProgress } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 import { useAuthStore } from "../store/AuthStore";
 import { RoomInterface } from "../lib/type";
 import { useSession } from "next-auth/react";
+import UploadAvatar from "./ui/UploadAvatar";
 function JoinModal() {
   const [open, setOpen] = React.useState(false);
   const [roomId, setRoomId] = useState("");
@@ -128,20 +129,6 @@ function CreateRoomModal({
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const userId = useSession().data?.userId;
-  const handleImageUpload = async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.click();
-    input.addEventListener("change", (e) => {
-      const target = e.target as HTMLInputElement;
-      if (target.files) {
-        const file = target.files[0];
-        const url = URL.createObjectURL(file);
-        setRoomImg({ imgUrl: url, imgFile: file });
-      }
-    });
-  };
 
   const handleRoomMember = useCallback(
     (userId: string) => {
@@ -177,24 +164,11 @@ function CreateRoomModal({
           <p className="text-sm text-stone-900/70 dark:text-white/70">
             創建群組與好友聊天吧
           </p>
-          <div className="flex items-center justify-center ">
-            <span className="relative">
-              <Image
-                width={80}
-                height={80}
-                onClick={handleImageUpload}
-                className="object-cover w-20 h-20 rounded-full cursor-pointer"
-                src={roomImg?.imgUrl || "/group-of-people.png"}
-                alt="room_img"
-              />
-              <button
-                onClick={handleImageUpload}
-                className="absolute right-0 p-1 rounded-full -bottom-2 bg-stone-800/10 text-stone-400 dark:text-white/50 dark:bg-stone-800"
-              >
-                <Camera size={20} />
-              </button>
-            </span>
-          </div>
+          <UploadAvatar
+            src={roomImg?.imgUrl}
+            setUserImage={setRoomImg}
+            userImage={roomImg}
+          />
           <form
             onSubmit={async (e) => {
               e.preventDefault();

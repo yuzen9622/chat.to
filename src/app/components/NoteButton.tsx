@@ -53,15 +53,15 @@ export default function NoteButton({ note }: { note: NoteInterface | null }) {
   }, []);
 
   return (
-    <div className="absolute right-0 shadow-md -top-8">
+    <div className="absolute right-0 rounded-md shadow-md -top-8">
       <button
         onClick={() => setIsOpen((p) => !p)}
-        className="p-2 text-xs truncate rounded-md max-w-24 dark:bg-stone-700 dark:text-white/40"
+        className="p-2 text-xs truncate rounded-md bg-stone-100 max-w-24 dark:bg-stone-700 dark:text-white/40"
       >
         {note ? note.text : "便利貼......"}
       </button>
-      <span className="absolute w-4 h-4 bg-white rounded-full left-3 -bottom-2 dark:bg-stone-700"></span>
-      <span className="absolute w-2 h-2 bg-white rounded-full left-2 -bottom-4 dark:bg-stone-700"></span>
+      <span className="absolute w-4 h-4 rounded-full bg-stone-100 left-3 -bottom-2 dark:bg-stone-700"></span>
+      <span className="absolute w-2 h-2 rounded-full bg-stone-100 left-2 -bottom-4 dark:bg-stone-700"></span>
       <Modal
         onClose={() => setIsOpen(false)}
         open={isOpen}

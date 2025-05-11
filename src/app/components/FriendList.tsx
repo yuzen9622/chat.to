@@ -19,11 +19,11 @@ export default function FriendList() {
     getFriends();
   }, [userId, setFriends]);
   return (
-    <div className="w-full mx-1 mt-2 dark:text-white">
+    <div className="flex flex-col w-full h-full overflow-hidden dark:text-white">
       {friends ? (
         <>
           <span>你的朋友 ({friends.length})</span>
-          <span className="w-full">
+          <span className="flex flex-col w-full gap-2 overflow-auto ">
             {Array.isArray(friends) && friends.length > 0 ? (
               friends.map((friend) => (
                 <FriendButton friend={friend} key={friend.id} />

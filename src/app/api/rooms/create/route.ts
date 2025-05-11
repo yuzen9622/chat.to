@@ -2,6 +2,7 @@ import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getToken } from "next-auth/jwt";
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
