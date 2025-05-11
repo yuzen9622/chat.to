@@ -127,12 +127,12 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   //   );
   // }, []);
 
-  const scrollToBottom = useCallback(() => {
+  const scrollToBottom = useCallback((behavior?: ScrollBehavior) => {
     if (!containerEnd.current) return;
 
     setTimeout(() => {
-      containerEnd.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+      containerEnd.current?.scrollIntoView({ behavior: behavior });
+    }, 0);
   }, []);
 
   useEffect(() => {
@@ -174,7 +174,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       (el) => {
         el.forEach((e) => {
           if (e.isIntersecting) {
-            scrollToBottom();
+            scrollToBottom("smooth");
           }
           setDownBtnAppear(!e.isIntersecting);
         });
@@ -305,7 +305,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
               ))}
               {downBtnAppear && (
                 <button
-                  onClick={scrollToBottom}
+                  onClick={() => scrollToBottom()}
                   className={twMerge(
                     "fixed z-10 p-1 my-1 text-sm bottom-20 bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl",
                     reply && "sticky bottom-0"

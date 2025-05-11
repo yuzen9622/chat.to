@@ -12,7 +12,7 @@ interface ChatStore {
   rooms: RoomInterface[];
   currentUser: UserInterface[];
   currentMessage: MessageInterface[];
-
+  cachedMessages: Map<string, MessageInterface[]>;
   loading: boolean;
   newMessage: MessageInterface | null;
   reply: MessageInterface | null;
@@ -25,6 +25,7 @@ interface ChatStore {
   lastMessages: Record<string, MessageInterface | null>;
   onboardingUsers: Set<string>;
   sidebarOpen: boolean;
+  setCachedMessages: (roomId: string, messages: MessageInterface[]) => void;
   setLoading: (load: boolean) => void;
   setRoom: (
     roomOrFn: RoomInterface | ((prev: RoomInterface[]) => RoomInterface[])
@@ -70,6 +71,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   newNotify: null,
   rooms: [],
   currentMessage: [],
+  cachedMessages: new Map(),
   newMessage: null,
   loading: false,
   lastMessages: {},
@@ -78,7 +80,6 @@ export const useChatStore = create<ChatStore>((set) => ({
   sidebarOpen: true,
   edit: null,
   notify: [],
-
   onboardingUsers: new Set(),
   chatInfoOpen: false,
   setChatInfoOpen: (isOpen: boolean) => {
@@ -140,6 +141,16 @@ export const useChatStore = create<ChatStore>((set) => ({
     if (!currentChat) return;
     set({ loading: false });
   },
+  setCachedMessages: (roomId, messages) => {
+    set((state) => {
+      const newCached = new Map(state.cachedMessages);
+      if (messages.length > 20) {
+        messages = messages.slice(-20);
+      }
+      newCached.set(roomId, messages);
+      return { ...state, cachedMessages: newCached };
+    });
+  },
   addOnboardingUser: (userId) =>
     set((state) => {
       const newSet = new Set(state.onboardingUsers);
@@ -156,8 +167,14 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((state) => {
       if (typeof msgOrFn === "function") {
         const newMessages = msgOrFn(state.currentMessage);
+        const newCached = state.cachedMessages;
+        if (state.currentChat) {
+          newCached.set(state.currentChat.id, newMessages);
+        }
+
         return {
           ...state,
+          cachedMessages: newCached,
           currentMessage: newMessages,
         };
       }

@@ -22,26 +22,13 @@ export default function ChatRoomWrapper({
   const {
     setCurrentChat,
     setCurrentMessage,
+    cachedMessages,
     currentChat,
     setChatInfoOpen,
     setSidebarOpen,
   } = useChatStore();
   const { setRoomId } = useAblyStore();
   const userId = useSession()?.data?.userId;
-
-  // useEffect(() => {
-  //   const getNewMessage = async () => {
-  //     try {
-  //       const newMessages = await fetchRoomMessage(roomId, 0, 20);
-  //       if (newMessages) {
-  //         setCurrentMessage(() => newMessages);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getNewMessage();
-  // }, [roomId, setCurrentMessage]);
 
   useEffect(() => {
     if (!room) return;
@@ -51,27 +38,48 @@ export default function ChatRoomWrapper({
     const getRoomMessages = async () => {
       try {
         const data = await fetchRoomMessage(room.id, 0, 20);
+
         setCurrentMessage(() => data);
       } catch (error) {
         console.log(error);
       }
     };
+    if (cachedMessages.get(room.id)) {
+      const getCached = cachedMessages.get(room.id);
+      if (getCached) {
+        setCurrentMessage((prev) => {
+          if (prev.length === 0) {
+            return getCached;
+          }
+          return prev;
+        });
+      }
+    }
     getRoomMessages();
 
     clearReadMessage(room.id);
     return () => {
       setCurrentChat(null);
     };
-  }, [room, userId, setCurrentChat, setCurrentMessage]);
+  }, [room, userId, setCurrentChat, setCurrentMessage, cachedMessages]);
 
   useEffect(() => {
     setRoomId(roomId);
     setChatInfoOpen(false);
     setSidebarOpen(false);
+
     return () => {
       setRoomId("");
     };
-  }, [roomId, userId, setRoomId, setChatInfoOpen, setSidebarOpen]);
+  }, [
+    roomId,
+    userId,
+    setRoomId,
+    setChatInfoOpen,
+    setSidebarOpen,
+    cachedMessages,
+    setCurrentMessage,
+  ]);
 
   return (
     <ChannelProvider channelName={roomId}>

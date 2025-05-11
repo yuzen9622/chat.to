@@ -45,9 +45,11 @@ export const getRoomById = async (roomId: string, userId: string) => {
 export const getReplyMessage = async (messageId: string) => {
   try {
     if (!messageId) return null;
+    const controller = new AbortController();
     const { data, error } = await supabase
       .from("messages")
       .select("*")
+      .abortSignal(controller.signal)
       .eq("id", messageId)
       .limit(1)
       .single();

@@ -253,6 +253,15 @@ export default function InputBar({
         const target = e.target as HTMLInputElement;
         if (target.files) {
           const file = target?.files[0];
+          if (file.size > 1024 * 1024 * 10) {
+            setSystemAlert({
+              open: true,
+              serverity: "error",
+              text: "請檢查檔案，檔案大小不得超過10MB",
+              variant: "filled",
+            });
+            return;
+          }
 
           const newMessage: MessageInterface = {
             id: uuidv4(),
@@ -307,12 +316,15 @@ export default function InputBar({
                 msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
               )
             );
+            setLastMessages({ ...newMessage, status: "failed" });
+
             console.error("發送訊息失敗:", error);
           }
         }
       };
     },
     [
+      setSystemAlert,
       room,
       channel,
       reply,

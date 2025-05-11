@@ -370,6 +370,7 @@ function SendMessage({
       );
       if (hasMessageFind) {
         setReplyMessage(hasMessageFind);
+        return;
       }
       const replyMsg = await getReplyMessage(message.reply);
       setReplyMessage(replyMsg);
