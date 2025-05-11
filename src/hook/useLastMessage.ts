@@ -10,14 +10,16 @@ export const useLastMessage = (roomId: string) => {
 
   const [lastMessageFromDB, setLastMessageFromDB] =
     useState<MessageInterface | null>(null);
-  const [isFetch, setIsFetch] = useState(false);
+
   const cachedMessage = useMemo(() => {
     return lastMessages[roomId];
   }, [lastMessages, roomId]);
 
   useEffect(() => {
     let ignore = false;
+
     const fetchLastMessage = async () => {
+      console.log(cachedMessage);
       if (ignore) return;
       const controler = new AbortController();
       const { data, error } = await supabase
@@ -29,7 +31,7 @@ export const useLastMessage = (roomId: string) => {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      setIsFetch(true);
+
       if (error) {
         setLastMessageFromDB(null);
         console.log("Error fetching last message:", error);
@@ -39,13 +41,14 @@ export const useLastMessage = (roomId: string) => {
       setLastMessages(data);
     };
 
-    if (!cachedMessage || cachedMessage.status === "failed" || !isFetch) {
+    if (!cachedMessage || cachedMessage.status === "failed") {
       fetchLastMessage();
     }
+
     return () => {
       ignore = true;
     };
-  }, [cachedMessage, setLastMessages, roomId, isFetch]);
+  }, [cachedMessage, setLastMessages, roomId]);
   useEffect(() => {
     roomSort();
   }, [lastMessages]);
