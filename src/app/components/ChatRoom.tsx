@@ -132,7 +132,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
     setTimeout(() => {
       containerEnd.current?.scrollIntoView({ behavior: behavior });
-    }, 0);
+    }, 100);
   }, []);
 
   useEffect(() => {
