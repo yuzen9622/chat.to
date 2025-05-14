@@ -106,7 +106,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         return [...data, ...prev];
       });
       scrollRef.current?.scrollToIndex({
-        index: data.length + 1,
+        index: data.length,
         align: "start",
       });
     }
@@ -263,7 +263,6 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                   initialTopMostItemIndex={
                     flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
                   }
-                  atTopThreshold={500}
                   context={{ isLoading }}
                   groupContent={dateContent}
                   groupCounts={dateCounts}
