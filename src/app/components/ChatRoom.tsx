@@ -19,30 +19,36 @@ import { ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabasedb";
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
-
+import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
 import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
+import { ClientMessageInterface } from "../lib/type";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
+  const userId = useSession().data?.userId;
+
   const { currentMessage, setCurrentMessage, currentChat, reply } =
     useChatStore();
+
   const { room } = useAblyStore();
   const [page, setPage] = useState(1);
-  const messagesRef = useRef<Record<string, HTMLDivElement | null>>({});
+
   const [target, setTarget] = useState<string>("");
-  useAblyRoom(roomId);
-  const userId = useSession().data?.userId;
-  const messageEnd = useRef<HTMLDivElement | null>(null);
-  const containerEnd = useRef<HTMLDivElement | null>(null);
-  const [shouldScroll, setShouldScroll] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const mainRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<VirtuosoHandle>(null);
   const userMap = useRoomUser();
   const [hasOldMessage, setHasOldMessage] = useState(true);
   const [downBtnAppear, setDownBtnAppear] = useState(false);
+  const [shouldScroll, setShouldScroll] = useState(true);
+  useAblyRoom(roomId);
 
-  const groupedMessages = useMemo(() => {
-    return Object.groupBy(currentMessage, ({ created_at }) => {
+  const { dateCounts, flatMessages, dates, isRended } = useMemo(() => {
+    const dateCounts: number[] = [];
+    const flatMessages: ClientMessageInterface[] = [];
+    const dates: string[] = [];
+    let isRended = false;
+    if (!currentMessage) return { dateCounts, flatMessages, dates };
+    const groupedMessages = Object.groupBy(currentMessage, ({ created_at }) => {
       if (
         moment().format("YYYYMMDD") === moment(created_at).format("YYYYMMDD")
       ) {
@@ -56,21 +62,30 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       }
       return moment(created_at).format("LL dddd");
     });
-  }, [currentMessage]);
 
-  const scrollToMessage = useCallback(async (messageId: string) => {
-    if (!messageId) return;
-    console.log(messageId);
-    setTarget(messageId);
-  }, []);
+    Object.entries(groupedMessages).map(([date, messages]) => {
+      if (date) {
+        dates.push(date);
+      }
+      if (messages) {
+        messages.map((message) => {
+          flatMessages.push(message);
+        });
+        dateCounts.push(messages.length);
+      }
+    });
+    isRended = true;
+    return { dateCounts, flatMessages, dates, isRended };
+  }, [currentMessage]);
 
   const loadMoreMessages = useCallback(async () => {
     const nextPage = page + 1;
     const start = currentMessage.length;
     const end = start + 9;
-    mainRef.current?.scrollTo({ top: 1, behavior: "smooth" });
-    if (isLoading || !hasOldMessage) return;
+
+    if (isLoading || !hasOldMessage || start < 20) return;
     setIsLoading(true);
+
     const abortSignal = new AbortController();
     const { data, error } = await supabase
       .from("messages")
@@ -88,11 +103,15 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       setPage(nextPage);
       data.reverse();
       setCurrentMessage((prev) => {
-        const concatMsg = data.concat(prev);
-        return concatMsg;
+        return [...data, ...prev];
+      });
+      scrollRef.current?.scrollToIndex({
+        index: data.length + 1,
+        align: "start",
       });
     }
     setIsLoading(false);
+    return data as ClientMessageInterface[];
   }, [
     page,
     roomId,
@@ -102,97 +121,31 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     isLoading,
   ]);
 
-  // const isNearBottom = useCallback(() => {
-  //   const container = mainRef.current;
-  //   const end = messageEnd.current;
-  //   if (!container || !end) return false;
-  //   const observer = new IntersectionObserver(
-  //     (el) => {
-  //       el.forEach((e) => {
-  //         console.log(e);
-  //         if (e.isIntersecting) {
-  //           return true;
-  //         }
-  //         return false;
-  //       });
-  //     },
-  //     { threshold: 0 }
-  //   );
-  //   observer.observe(end);
+  const scrollToMessage = async (messageId: string) => {
+    if (!messageId) return;
+    let index = currentMessage.findIndex((v) => v.id === messageId);
+    const current = currentMessage;
+    if (index !== -1) {
+      scrollRef.current?.scrollToIndex(index);
+    } else {
+      while (index === -1) {
+        const newMessages = await loadMoreMessages();
 
-  //   const threshold = 50;
-  //   return (
-  //     container.scrollHeight - container.scrollTop - container.clientHeight <
-  //     threshold
-  //   );
-  // }, []);
-
-  const scrollToBottom = useCallback((behavior?: ScrollBehavior) => {
-    if (!containerEnd.current) return;
-
-    setTimeout(() => {
-      containerEnd.current?.scrollIntoView({ behavior: behavior });
-    }, 100);
-  }, []);
-
-  useEffect(() => {
-    if (target === "") return;
-    const targetRef = messagesRef.current[target];
-    console.log(messagesRef);
-    if (!targetRef) {
-      loadMoreMessages();
-      return;
+        if (newMessages) {
+          current.unshift(...newMessages);
+          index = current.findIndex((v) => v.id === messageId);
+        }
+      }
+      scrollRef.current?.scrollToIndex(index);
     }
-    const targetObserver = new IntersectionObserver(
-      (el) => {
-        el.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("animate-wiggle");
-            setTarget("");
-          }
-          setTimeout(() => {
-            e.target.classList.remove("animate-wiggle");
-          }, 500);
-        });
-      },
-      { threshold: 1 }
-    );
-    if (targetRef) {
-      targetRef.scrollIntoView({ behavior: "smooth", block: "start" });
-      targetObserver.observe(targetRef);
-    }
-    return () => {
-      targetObserver.disconnect();
-    };
-  }, [target, messagesRef, loadMoreMessages]);
+    setTarget(messageId);
+  };
 
-  useEffect(() => {
-    const end = messageEnd.current;
+  const scrollToBottom = useCallback(() => {
+    if (!scrollRef.current) return;
 
-    if (!end || target !== "") return;
-    const observer = new IntersectionObserver(
-      (el) => {
-        el.forEach((e) => {
-          if (e.isIntersecting) {
-            scrollToBottom("smooth");
-          }
-          setDownBtnAppear(!e.isIntersecting);
-        });
-      },
-      { root: mainRef.current, threshold: 0 }
-    );
-    observer.observe(end);
-    return () => {
-      observer.disconnect();
-    };
-  }, [scrollToBottom, currentMessage, reply, target]);
-
-  useEffect(() => {
-    if (containerEnd.current && shouldScroll && currentMessage.length > 0) {
-      scrollToBottom();
-      setShouldScroll(false);
-    }
-  }, [scrollToBottom, currentMessage, shouldScroll, userMap]);
+    scrollRef.current?.scrollToIndex(flatMessages.length - 1);
+  }, [flatMessages]);
 
   useEffect(() => {
     if (!room) return;
@@ -200,9 +153,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     const handleMessage = (message: InboundMessage) => {
       const { newMessage, action } = message.data;
       if (newMessage.room !== currentChat?.id) return;
-      if (newMessage.sender === userId) {
-        //scrollToBottom();
-      }
+
       if (
         currentMessage.some(
           (msg) => msg.id === newMessage.id && action !== "delete"
@@ -235,14 +186,33 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     return () => {
       room.unsubscribe("message", handleMessage);
     };
-  }, [
-    room,
-    setCurrentMessage,
-    currentMessage,
-    userId,
-    currentChat,
-    scrollToBottom,
-  ]);
+  }, [room, setCurrentMessage, currentMessage, userId, currentChat]);
+
+  useEffect(() => {
+    if (userMap && shouldScroll) {
+      setTimeout(() => {
+        setShouldScroll(false);
+      }, 100);
+    }
+  }, [userMap, shouldScroll]);
+
+  const dateContent = useCallback(
+    (index: number) => {
+      const date = dates[index];
+
+      return (
+        <span
+          key={date}
+          className="z-10 flex items-center justify-center w-full text-xs font-medium "
+        >
+          <p className="p-1 px-2 rounded-3xl bg-gray-400/20 dark:text-white dark:bg-neutral-800/80 backdrop-blur-3xl">
+            {date}
+          </p>
+        </span>
+      );
+    },
+    [dates]
+  );
 
   return (
     <>
@@ -252,72 +222,98 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
             <ChatHeader />
 
             <main
-              onScroll={() => {
-                if (!mainRef.current) return;
-                if (mainRef.current.scrollTop === 0) {
-                  loadMoreMessages();
-                }
-              }}
-              ref={mainRef}
               className={twMerge(
-                " relative flex-1 p-2 overflow-y-auto duration-200 fade-in animate-in border-y dark:border-none "
+                " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in border-y dark:border-none "
               )}
             >
-              {isLoading && (
-                <span className="flex items-center justify-center w-full">
-                  <CircularProgress size={24} />
-                </span>
-              )}
-              {Object.entries(groupedMessages).map(([date, messages]) => (
-                <React.Fragment key={date}>
-                  {userMap && (
-                    <div key={date} className="flex flex-col items-center ">
-                      <span
-                        key={date}
-                        className="sticky top-0 z-10 p-1 px-2 my-1 text-sm font-medium rounded-md bg-gray-400/20 dark:text-white w-fit dark:bg-stone-700/50 backdrop-blur-3xl"
-                      >
-                        {date}
-                      </span>
-
-                      {messages &&
-                        messages.map((msg) => (
-                          <Message
-                            key={msg.id}
-                            scrollFn={scrollToMessage}
-                            user={userMap[msg.sender]}
-                            ref={(ref) => {
-                              if (msg.id) {
-                                messagesRef.current[msg.id] = ref;
-                              }
-                              if (
-                                currentMessage[currentMessage.length - 1].id ===
-                                msg.id
-                              ) {
-                                messageEnd.current = ref;
-                              }
-                            }}
-                            message={msg}
-                          />
-                        ))}
-                    </div>
+              {flatMessages.length > 0 && userMap && dates ? (
+                <GroupedVirtuoso
+                  ref={scrollRef}
+                  increaseViewportBy={{ top: 1000, bottom: 500 }}
+                  className="h-full overflow-x-hidden fade-in animate-in"
+                  atTopStateChange={(atTop: boolean) => {
+                    if (atTop && !isLoading && !shouldScroll) {
+                      loadMoreMessages();
+                    }
+                  }}
+                  onScroll={(e) => {
+                    if (
+                      e.currentTarget.scrollTop === 0 &&
+                      !isLoading &&
+                      !shouldScroll
+                    ) {
+                      loadMoreMessages();
+                    }
+                  }}
+                  atBottomStateChange={(atBottom) =>
+                    setDownBtnAppear(!atBottom)
+                  }
+                  followOutput={(atBottom) => {
+                    const lastMessage = flatMessages[flatMessages.length - 1];
+                    if (
+                      lastMessage.sender === userId &&
+                      atBottom &&
+                      !downBtnAppear
+                    ) {
+                      return true;
+                    }
+                    return false;
+                  }}
+                  alignToBottom
+                  initialTopMostItemIndex={
+                    flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
+                  }
+                  atTopThreshold={500}
+                  context={{ isLoading }}
+                  groupContent={dateContent}
+                  groupCounts={dateCounts}
+                  itemContent={(index) => (
+                    <Message
+                      key={flatMessages[index].id}
+                      index={index}
+                      target={target}
+                      setTarget={setTarget}
+                      scrollToMessage={scrollToMessage}
+                      roomUsers={userMap}
+                      message={flatMessages[index]}
+                    />
                   )}
-                </React.Fragment>
-              ))}
+                  components={{
+                    Header: ({ context: { isLoading } }) => {
+                      return (
+                        <>
+                          {isLoading && (
+                            <span className="flex items-center justify-center w-full">
+                              <CircularProgress size={24} />
+                            </span>
+                          )}
+                        </>
+                      );
+                    },
+                  }}
+                />
+              ) : (
+                !isRended && (
+                  <span className="flex items-center justify-center w-full">
+                    <CircularProgress size={24} />
+                  </span>
+                )
+              )}
+
               {downBtnAppear && (
                 <button
                   onClick={() => scrollToBottom()}
                   className={twMerge(
-                    "fixed z-10 p-1 my-1 text-sm bottom-20 bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl",
+                    "fixed z-10 p-1 my-1 text-sm bottom-20  bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl",
                     reply && "sticky bottom-0"
                   )}
                 >
                   <ChevronDown />
                 </button>
               )}
-              {userMap && <div ref={containerEnd}></div>}
             </main>
 
-            <InputBar containerEnd={containerEnd} />
+            <InputBar />
           </div>
         </div>
       )}

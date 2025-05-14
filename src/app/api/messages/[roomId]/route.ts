@@ -21,7 +21,7 @@ export async function GET(
 
     const { data, error } = await supabase
       .from("messages")
-      .select("*")
+      .select("*,reply(*)")
       .eq("room", roomId)
       .order("created_at", { ascending: false })
       .range(start, end);

@@ -1,52 +1,71 @@
-"use client";
+import { ClientMessageInterface, MetaData } from "@/app/lib/type";
 import React, {
-  forwardRef,
+  memo,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { MessageInterface, MessageType, MetaData } from "../../lib/type";
-import {
-  Ellipsis,
-  Reply,
-  Download,
-  Pencil,
-  Trash2,
-  LucideIcon,
-} from "lucide-react";
-
-import moment from "moment";
+import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import { useChatStore } from "../../store/ChatStore";
-import Link from "next/link";
-import { useUserProfile } from "@/hook/useUserProfile";
+import { CldImage } from "next-cloudinary";
 import {
-  replyText,
-  messageType,
+  Copy2ClipBoard,
   deleteMessage,
   formatSize,
   getFileIcon,
   handleDownload,
-} from "../../lib/util";
-import WavesurferAudio from "./Audio";
-import { CldImage } from "next-cloudinary";
-import { Popover, Skeleton } from "@mui/material";
-import "next-cloudinary/dist/cld-video-player.css";
-import { getReplyMessage } from "../../lib/server";
-
-import { useAblyStore } from "../../store/AblyStore";
-import { useSession } from "next-auth/react";
+  messageType,
+} from "@/app/lib/util";
 import PreviewMediaModal from "./PreviewMediaModal";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useAblyStore } from "@/app/store/AblyStore";
+import {
+  Download,
+  Ellipsis,
+  Pencil,
+  Trash2,
+  Clipboard,
+  LucideIcon,
+  Reply,
+} from "lucide-react";
+import { Popover } from "@mui/material";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import moment from "moment";
+import "react-photo-view/dist/react-photo-view.css";
+import WavesurferAudio from "./Audio";
+type MessageItemProps = {
+  index: number;
+  message: ClientMessageInterface;
+  scrollToMessage: (messageId: string) => Promise<void>;
+  target: string;
+  roomUsers: Record<
+    string,
+    {
+      id: string;
+      name: string;
+      image: string;
+    }
+  >;
+  setTarget: React.Dispatch<React.SetStateAction<string>>;
+};
 
-function SettingBar({ message }: { message: MessageInterface }) {
+const SettingBar = memo(function SettingBar({
+  message,
+  isOwn,
+}: {
+  isOwn: boolean;
+  message: ClientMessageInterface;
+}) {
   const { setReply, setEdit, setCurrentMessage } = useChatStore();
   const { channel, room } = useAblyStore();
   const userId = useSession()?.data?.userId;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleDelete = useCallback(async () => {
     if (!room || !channel || !message.id) return;
     try {
@@ -71,6 +90,7 @@ function SettingBar({ message }: { message: MessageInterface }) {
       console.log(error);
     }
   }, [room, channel, message, setCurrentMessage]);
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -79,8 +99,25 @@ function SettingBar({ message }: { message: MessageInterface }) {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleReply = useCallback(() => {
+    setReply(message);
+  }, [setReply, message]);
+
   return (
-    <div>
+    <div
+      className={twMerge(
+        "flex    justify-end items-end   opacity-0 group-hover:opacity-100",
+        isOwn ? " flex-row-reverse" : " flex-row"
+      )}
+    >
+      <button
+        className={twMerge(
+          "  p-1 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+        )}
+        onClick={handleReply}
+      >
+        <Reply />
+      </button>
       <button
         type="button"
         id="basic-button"
@@ -89,7 +126,7 @@ function SettingBar({ message }: { message: MessageInterface }) {
         aria-expanded={open ? "true" : undefined}
         data-hs-dropdown-toggle={`dropdown-menu-${message.id}`}
         className={twMerge(
-          "  p-2 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+          "  p-2 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 "
         )}
         onClick={handleOpen}
       >
@@ -117,16 +154,19 @@ function SettingBar({ message }: { message: MessageInterface }) {
           <p className="text-xs text-center dark:text-white/50">
             {moment(message.created_at).format("a hh:mm")}
           </p>
-          {/* <button
-              className="w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-neutral-300 hover:bg-neutral-700"
+          {!message.meta_data && (
+            <button
+              className={twMerge(
+                "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+              )}
               onClick={() => {
-                setReply(message);
-                setEdit(null);
-                setIsOpen(false);
+                Copy2ClipBoard(message.text);
               }}
             >
-              回覆
-            </button> */}
+              <Clipboard size={20} />
+              複製
+            </button>
+          )}
 
           {message.meta_data && messageType(message.meta_data) !== "audio" && (
             <button
@@ -176,398 +216,330 @@ function SettingBar({ message }: { message: MessageInterface }) {
       </Popover>
     </div>
   );
-}
+});
 
-export function MessageTextFormat({
-  metaData,
-  text,
-  sender,
-  message_type,
+const MediaMessage = memo(function MediaMessage({
+  message,
 }: {
-  metaData: MetaData;
-  text: string;
-  sender: string;
-  message_type: MessageType;
+  message: ClientMessageInterface;
 }) {
-  const userId = useSession()?.data?.userId;
-  const [isOpen, setIsOpen] = useState(false);
-  const Icon: LucideIcon = getFileIcon(text);
-  const [previewMedia, setPreviewMedia] = useState<{
-    alt: string;
-    url: string;
-    type: string;
-  } | null>(null);
+  const metaData = message.meta_data;
+  const [open, setOpen] = useState(false);
+
   const type = useMemo(() => {
+    if (!metaData) return false;
     return messageType(metaData);
   }, [metaData]);
-  const handleDownload = useCallback(async () => {
-    try {
-      const res = await fetch(metaData.url);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = text;
-      a.click();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [metaData, text]);
 
-  const handlePreview = useCallback(() => {
-    const mediaType = messageType(metaData!);
-    if (!mediaType || !metaData) return;
-    setIsOpen(true);
-    setPreviewMedia({
-      alt: text,
-      url: metaData.url,
-      type: mediaType,
-    });
-  }, [metaData, text]);
-
-  return (
-    <>
-      {!type && (
-        <>
-          {message_type === "url" ? (
-            <Link
-              className="underline break-all whitespace-pre-wrap"
-              href={text}
-              target="_blank"
-            >
-              {text}
-            </Link>
-          ) : (
-            <p className="break-all whitespace-pre-wrap ">{text}</p>
-          )}
-        </>
-      )}
-      {type && (
-        <>
-          {type === "audio" && (
-            <WavesurferAudio
-              url={metaData.url}
-              backgroundColor={
-                sender === userId
-                  ? "bg-blue-500"
-                  : document.documentElement.classList.contains("dark")
-                  ? "bg-stone-800"
-                  : "bg-gray-400/20"
-              }
-            />
-          )}
-          {message_type === "file" && (
-            <>
-              {!metaData ? (
-                <Skeleton width={200} animation="wave" height={200} />
-              ) : (
-                <button
-                  title={text}
-                  onClick={handleDownload}
-                  className={twMerge(
-                    "flex items-center p-2 rounded-md bg-gray-500/20 gap-x-1 dark:bg-stone-800",
-                    sender === userId && "bg-blue-500"
-                  )}
-                >
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="flex flex-col items-center p-2 rounded-full bg-white/5">
-                      <Icon />
-                    </span>
-                    <p className="text-xs">
-                      {text.split(".")[text.split(".").length - 1]}
-                    </p>
-                  </div>
-                  <span className="w-full max-w-40">
-                    <p className="text-sm break-all text-start">{text}</p>
-                    <span className="flex items-center justify-between w-full gap-1 mt-1 text-xs">
-                      <p>大小:{formatSize(metaData.size)}</p>
-                      <p>點擊下載</p>
-                    </span>
-                  </span>
-                </button>
-              )}
-            </>
-          )}
-          {message_type === "media" && (
-            <>
-              <PreviewMediaModal
-                open={isOpen}
-                media={previewMedia!}
-                onClose={() => setIsOpen(false)}
-              />
-              {type === "image" && (
-                <>
-                  {!metaData ? (
-                    <Skeleton width={200} animation="wave" height={200} />
-                  ) : (
-                    <CldImage
-                      onTouchEnd={() => handlePreview()}
-                      onClick={() => handlePreview()}
-                      className="w-full -z-10 rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
-                      src={metaData.url}
-                      width={400}
-                      height={400}
-                      alt={text}
-                      title={text}
-                    />
-                  )}
-                </>
-              )}
-              {type === "video" && (
-                <>
-                  {!metaData ? (
-                    <Skeleton width={200} animation="wave" height={200} />
-                  ) : (
-                    <video
-                      title={text}
-                      onClick={() => handlePreview()}
-                      className="w-full rounded-md max-w-[300px] max-h-[500px] bg-stone-900"
-                      src={metaData.url}
-                      muted
-                      onMouseEnter={(e) => {
-                        console.log(e);
-                        const video = e.target as HTMLVideoElement;
-                        video.play();
-                      }}
-                      onMouseLeave={(e) => {
-                        console.log(e);
-                        const video = e.target as HTMLVideoElement;
-                        video.pause();
-                      }}
-                      width={400}
-                      height={400}
-                    />
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </>
-      )}
-    </>
-  );
-}
-
-function SendMessage({
-  message,
-  scrollFn,
-}: {
-  message: MessageInterface;
-  scrollFn: (messageId: string) => void;
-  user: { id: string; name: string; image: string };
-}) {
-  const userId = useSession()?.data?.userId;
-
-  const [replyMessage, setReplyMessage] = useState<MessageInterface | null>(
-    null
-  );
-  const { setEdit, setReply, currentMessage } = useChatStore();
-  useEffect(() => {
-    const getReply = async () => {
-      if (!message.reply) return;
-      const hasMessageFind = currentMessage.find(
-        (msg) => msg.id === message.reply
-      );
-      if (hasMessageFind) {
-        setReplyMessage(hasMessageFind);
-        return;
-      }
-      const replyMsg = await getReplyMessage(message.reply);
-      setReplyMessage(replyMsg);
+  const PreviewMedia = useMemo(() => {
+    if (!metaData) return;
+    return {
+      alt: message.text,
+      url: metaData.url || "",
+      type: type || "",
     };
-    getReply();
-  }, [message, currentMessage]);
+  }, [metaData, type, message]);
 
-  const replyUser = useUserProfile(replyMessage?.sender);
-  const user = useUserProfile(message.sender);
+  const handleVideoPlay = useCallback(
+    async (e: React.MouseEvent<HTMLVideoElement>) => {
+      const video = e.target as HTMLVideoElement;
+      if (video.paused) {
+        await video.play();
+      } else {
+        video.pause();
+      }
+    },
+    []
+  );
+
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   return (
-    <>
-      <div
-        className={twMerge(
-          " relative max-w-[80%] flex flex-col group  transition-all ",
-          message.sender === userId && "items-end ",
-          message.status === "deleting" && "scale-0 duration-300 h-0 "
-        )}
-      >
-        {user?.id !== userId && (
-          <span className="text-xs dark:text-white/80 ">{user?.name}</span>
-        )}
-
-        {message.reply && (
-          <div
-            onClick={() => {
-              if (replyMessage) scrollFn(replyMessage.id!);
-            }}
-            onTouchStart={() => {
-              if (replyMessage) scrollFn(replyMessage.id!);
-            }}
-            className={twMerge(
-              "p-2 rounded-lg bg-stone-900/10 dark:bg-white/5 text-white w-fit mb-1 cursor-pointer  backdrop-blur-2xl ",
-              replyUser?.id === userId && "bg-blue-600/50 text-white"
-            )}
-          >
-            <div className="flex items-center justify-start font-semibold gap-x-1">
-              {replyMessage && (
-                <Image
-                  className={twMerge(
-                    "w-6 h-6 rounded-full mt-1 mr-1  bg-white/20"
-                  )}
-                  width={20}
-                  height={20}
-                  alt="avatar"
-                  src={replyUser?.image || "/user.png"}
+    <div className="w-auto h-auto max-w-[300px] rounded-3xl">
+      <PreviewMediaModal
+        media={PreviewMedia}
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
+      {metaData ? (
+        <>
+          {type === "image" && (
+            <PhotoProvider>
+              <PhotoView src={metaData.url}>
+                <CldImage
+                  width={300}
+                  height={300}
+                  src={metaData.url}
+                  className="w-full h-full rounded-3xl"
+                  alt={message.text}
                 />
-              )}
-
-              <p className="text-sm dark:text-white">{replyUser?.name}</p>
-            </div>
-            <span className="flex items-center justify-between ">
-              <p className="break-all whitespace-pre-wrap ">
-                {replyMessage && replyText(replyMessage)}
-                {!replyMessage && "已回復訊息"}
-              </p>
-              {replyMessage && (
-                <>
-                  {replyMessage.meta_data &&
-                    messageType(replyMessage.meta_data!) === "image" && (
-                      <Image
-                        alt={replyMessage.text}
-                        className="object-cover w-10 h-10 rounded-md"
-                        width={50}
-                        height={50}
-                        src={replyMessage.meta_data?.url}
-                      />
-                    )}
-                  {replyMessage.meta_data &&
-                    messageType(replyMessage.meta_data!) === "video" && (
-                      <video
-                        muted
-                        className="w-12 h-12 rounded-md"
-                        src={replyMessage.meta_data.url}
-                      ></video>
-                    )}
-                </>
-              )}
-            </span>
-          </div>
-        )}
-
-        <div
-          className={twMerge(
-            "flex w-full items-end",
-            message.sender === userId && "flex-row-reverse"
+              </PhotoView>
+            </PhotoProvider>
           )}
-        >
-          <div
-            className={twMerge(
-              "p-2 bg-blue-500 rounded-lg backdrop-blur-3xl text-white h-fit  w-fit max-w-full flex items-center  transition-all  ",
-              message.sender !== userId &&
-                "dark:bg-neutral-700/70  bg-stone-200/70 text-stone-900 dark:text-white ",
-              message.status === "pending" && "bg-blue-500/70  ",
-              message.meta_data && "bg-transparent p-0",
-              message.meta_data &&
-                message.status === "pending" &&
-                " blur-[5px] pointer-events-none"
-            )}
-          >
-            <MessageTextFormat
-              text={message.text}
-              sender={message.sender}
-              metaData={message.meta_data!}
-              message_type={message.type}
+          {type === "video" && (
+            <video
+              width={300}
+              height={300}
+              src={metaData.url}
+              onClick={handleOpen}
+              muted
+              onMouseEnter={handleVideoPlay}
+              onMouseLeave={handleVideoPlay}
+              className="w-full h-full rounded-3xl"
             />
-          </div>
-          <span
-            className={twMerge(
-              "  flex flex-col justify-end items-center text-xs whitespace-nowrap  text-gray-500  dark:text-white/50 font-semibold  px-1 ",
-              message.status === "pending" && "text-white/30"
-            )}
-          >
-            <div
-              className={twMerge(
-                "flex transition-opacity pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100"
-              )}
-            >
-              {message.status === "send" && <SettingBar message={message} />}
-
-              <button
-                className={twMerge(
-                  "w-full flex items-center gap-x-3.5  p-1 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700 duration-200  hover:opacity-100"
-                )}
-                onClick={() => {
-                  setReply(message);
-                  setEdit(null);
-                }}
-              >
-                <Reply />
-              </button>
-            </div>
-          </span>
-        </div>
-      </div>
-    </>
+          )}
+        </>
+      ) : (
+        <span className="w-full h-full dark:bg-neutral-800"></span>
+      )}
+    </div>
   );
-}
-function ErrorMessage({ message }: { message: MessageInterface }) {
-  const userId = useSession()?.data?.userId;
+});
+
+const TextMessage = memo(function TextMessage({
+  message,
+  isOwn,
+}: {
+  message: ClientMessageInterface;
+  isOwn: boolean;
+}) {
   return (
-    <>
-      <div
-        className={twMerge(
-          "p-2 bg-blue-500 rounded-xl dark:text-white    max-w-[80%]",
-          message.sender !== userId && "bg-white/20 text-black",
-          message.status === "pending" && "bg-blue-500/80"
-        )}
-      >
-        <p className={twMerge(" break-words ")}>{message.text}</p>
-      </div>
-      <span className="p-1 text-sm font-semibold text-red-600">error</span>
-    </>
+    <p
+      className={twMerge(
+        " py-1 px-3 rounded-3xl h-full  w-fit backdrop-blur-3xl max-w-full",
+        isOwn
+          ? " bg-blue-500 text-white "
+          : "dark:bg-neutral-700/70  bg-stone-200/70 text-stone-900 dark:text-white"
+      )}
+    >
+      {message.text}
+    </p>
   );
-}
+});
 
-const Message = forwardRef<
-  HTMLDivElement,
-  {
-    message: MessageInterface;
-    scrollFn: (messageId: string) => void;
-    user: { id: string; name: string; image: string };
-  }
->(({ message, scrollFn, user }, ref) => {
-  const userId = useSession()?.data?.userId;
+const AudioMessage = memo(function AudioMessage({
+  metaData,
+  isOwn,
+}: {
+  metaData: MetaData;
+  isOwn: boolean;
+}) {
+  return (
+    <WavesurferAudio
+      url={metaData.url}
+      backgroundColor={
+        isOwn
+          ? "bg-blue-500"
+          : document.documentElement.classList.contains("dark")
+          ? "bg-stone-800"
+          : "bg-gray-400/20"
+      }
+    />
+  );
+});
+
+const FileMessage = memo(function FileMessage({
+  message,
+  isOwn,
+}: {
+  message: ClientMessageInterface;
+  isOwn: boolean;
+}) {
+  const metaData = message.meta_data;
+  if (!metaData) return null;
+  const Icon: LucideIcon = getFileIcon(message.text);
+  return (
+    <button
+      title={message.text}
+      onClick={() => handleDownload(metaData.url, message.text)}
+      className={twMerge(
+        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-gray-500/20 gap-x-1 dark:bg-stone-800",
+        isOwn && "dark:bg-blue-500 bg-blue-500 text-white"
+      )}
+    >
+      <div className="flex flex-col items-center justify-center">
+        <span className="flex flex-col items-center p-2 rounded-full bg-white/5">
+          <Icon />
+        </span>
+        <p className="text-xs">
+          {message.text.split(".")[message.text.split(".").length - 1]}
+        </p>
+      </div>
+      <span className="w-full max-w-40">
+        <p className="text-sm break-all text-start">{message.text}</p>
+        <span className="flex items-center justify-between w-full gap-1 mt-1 text-xs">
+          <p>大小:{formatSize(metaData.size)}</p>
+          <p>點擊下載</p>
+        </span>
+      </span>
+    </button>
+  );
+});
+
+const ReplyMessage = memo(function ReplyMessage({
+  message,
+  roomUsers,
+  isOwn,
+  scrollToMessage,
+}: {
+  message: ClientMessageInterface;
+  roomUsers: Record<
+    string,
+    {
+      id: string;
+      name: string;
+      image: string;
+    }
+  >;
+  isOwn: boolean;
+  scrollToMessage: (messageId: string) => Promise<void>;
+}) {
+  const userId = useSession().data?.userId;
+  const replyOwn = message.sender === userId;
+  const replySender = roomUsers[message.sender];
+
+  const Message = useCallback(() => {
+    const messageType = {
+      text: <TextMessage message={message} isOwn={replyOwn} />,
+      media: <MediaMessage message={message} />,
+      file: <FileMessage message={message} isOwn={replyOwn} />,
+      url: <></>,
+      audio: message.meta_data && (
+        <AudioMessage metaData={message.meta_data} isOwn={replyOwn} />
+      ),
+    };
+
+    return messageType[message.type];
+  }, [message, replyOwn]);
 
   return (
     <div
       className={twMerge(
-        " flex  w-full max-w-full mt-1 ",
-        message.sender === userId && " justify-end"
+        " flex flex-col gap-2 pb-2 pl-7 w-fit ",
+        isOwn && "items-end pr-2"
       )}
+      onClick={() => message.id && scrollToMessage(message.id)}
     >
-      <div
-        ref={ref}
+      {replySender && (
+        <span className={twMerge(" w-fit text-xs dark:text-white/50")}>
+          {`${isOwn ? "你" : ""}已回復${replyOwn ? "自己" : replySender.name}`}
+        </span>
+      )}
+
+      <span
         className={twMerge(
-          "flex items-start min-w-0 w-full ",
-          message.sender === userId && " flex-row-reverse"
+          " relative rounded-3xl w-fit ",
+          isOwn ? " text-end" : "text-start"
         )}
       >
-        <Image
-          className={twMerge(
-            "w-6 h-6 rounded-full mt-1 mr-1  bg-white/20",
-            message.sender === userId && "hidden"
-          )}
-          width={20}
-          height={20}
-          alt="avatar"
-          src={user?.image || "/user.png"}
-        />
+        <div className="absolute inset-0 z-10 rounded-3xl opacity-40 bg-stone-900" />
+        <Message />
+      </span>
+    </div>
+  );
+});
 
-        {message.status !== "failed" && (
-          <SendMessage scrollFn={scrollFn} message={message} user={user} />
+const MessageItem = memo(function MessageItem({
+  index,
+  message,
+  roomUsers,
+  scrollToMessage,
+  target,
+  setTarget,
+}: MessageItemProps) {
+  const userId = useSession().data?.userId;
+  const isOwn = userId === message.sender;
+  const messageUser = roomUsers[message.sender];
+  const messageRef = useRef<HTMLDivElement>(null);
+  const Message = useCallback(() => {
+    const messageType = {
+      text: <TextMessage message={message} isOwn={isOwn} />,
+      media: <MediaMessage message={message} />,
+      file: <FileMessage message={message} isOwn={isOwn} />,
+      url: <></>,
+      audio: message.meta_data && (
+        <AudioMessage metaData={message.meta_data} isOwn={isOwn} />
+      ),
+    };
+
+    return messageType[message.type];
+  }, [message, isOwn]);
+
+  useEffect(() => {
+    if (!messageRef.current) return;
+    const observer = new IntersectionObserver(
+      (el) => {
+        el.forEach((e) => {
+          if (e.isIntersecting && target === message.id) {
+            e.target.classList.add("animate-wiggle");
+          }
+          setTimeout(() => {
+            e.target.classList.remove("animate-wiggle");
+            setTarget("");
+          }, 500);
+        });
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(messageRef.current);
+    return () => {
+      observer?.disconnect();
+    };
+  }, [target, message, setTarget]);
+
+  return (
+    <div
+      key={index}
+      ref={messageRef}
+      className={twMerge(
+        " w-full group flex-col flex py-1 ",
+        isOwn && " items-end"
+      )}
+    >
+      {/** reply message component */}
+      {message.reply && (
+        <ReplyMessage
+          scrollToMessage={scrollToMessage}
+          isOwn={isOwn}
+          roomUsers={roomUsers}
+          message={message.reply}
+        />
+      )}
+      <div className="flex items-start gap-1 w-fit">
+        {!isOwn && (
+          <Image
+            className="w-6 h-6 rounded-full bg-neutral-900"
+            width={30}
+            height={30}
+            src={messageUser?.image || "/user.png"}
+            alt={messageUser?.name || "user"}
+          />
         )}
-        {message.status === "failed" && <ErrorMessage message={message} />}
+
+        <div
+          className={twMerge(
+            " w-fit flex flex-col gap-1 ",
+            isOwn && " justify-end"
+          )}
+        >
+          {!isOwn && !message.reply && (
+            <span className="text-xs dark:text-white/80">
+              {messageUser?.name}
+            </span>
+          )}
+          <div className={twMerge("flex ", isOwn ? "flex-row-reverse" : "")}>
+            <Message />
+            <SettingBar message={message} isOwn={isOwn} />
+          </div>
+        </div>
       </div>
     </div>
   );
 });
-Message.displayName = "Message";
-export default Message;
+
+export default MessageItem;

@@ -2,9 +2,10 @@ import Modal from "@mui/material/Modal";
 import { Download, X } from "lucide-react";
 import { CldImage, CldVideoPlayer } from "next-cloudinary";
 import React, { useCallback } from "react";
+import "next-cloudinary/dist/cld-video-player.css";
 
 type previewParams = {
-  media?: { alt: string; url: string; type: string };
+  media?: { alt: string; url: string; type: string; public_id?: string };
   open: boolean;
   onClose: () => void;
 };
@@ -66,7 +67,7 @@ export default function PreviewMediaModal({
               />
             </div>
           ) : (
-            <div className=" w-full  max-w-[1024px] max-h-[90dvh] overflow-auto p-2 rounded-md">
+            <div className=" relative w-full  max-w-[1024px] max-h-screen overflow-auto p-2 rounded-md">
               <div className="flex justify-end">
                 <button
                   onClick={handleDownload}

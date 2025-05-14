@@ -4,7 +4,7 @@ import { CirclePlus } from "lucide-react";
 import { Send } from "lucide-react";
 import { useAblyStore } from "../../store/AblyStore";
 import { useChatStore } from "../../store/ChatStore";
-import { MessageInterface, MessageType } from "../../lib/type";
+import { ClientMessageInterface, MessageType } from "../../lib/type";
 
 import { X, Laugh, Pencil, Paperclip, Mic, CircleX } from "lucide-react";
 import {
@@ -88,11 +88,7 @@ function SendBar({
   );
 }
 
-export default function InputBar({
-  containerEnd,
-}: {
-  containerEnd: React.RefObject<HTMLDivElement | null>;
-}) {
+export default function InputBar() {
   const [messageText, setMessageText] = useState("");
   const [emojiOpen, setEmojiOpen] = useState(false);
   const { channel } = useAblyStore();
@@ -148,12 +144,12 @@ export default function InputBar({
       const messageType = messageText.trim().startsWith("http")
         ? "url"
         : "text";
-      const newMessage: MessageInterface = {
+      const newMessage: ClientMessageInterface = {
         id: uuidv4(),
         sender: userId || "",
         room: roomId,
         is_read: [userId || ""],
-        reply: reply?.id,
+        reply: reply!,
         status: "pending",
         text: messageText,
         created_at: new Date().toISOString(),
@@ -175,7 +171,7 @@ export default function InputBar({
       try {
         const sendMessage = (await sendUserMessage(
           newMessage
-        )) as MessageInterface;
+        )) as ClientMessageInterface;
         if (channel) {
           channel.publish("notify", {
             action: "send",
@@ -191,13 +187,12 @@ export default function InputBar({
         setLastMessages(newMessage);
         console.error("發送訊息失敗:", error);
       }
-      containerEnd.current?.scrollIntoView({ behavior: "smooth" });
     },
     [
       channel,
       messageText,
       setCurrentMessage,
-      containerEnd,
+
       userId,
       roomId,
       reply,
@@ -211,7 +206,7 @@ export default function InputBar({
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
       if (!edit || !room || messageText.trim().length === 0) return;
-      const newMessage: MessageInterface = {
+      const newMessage: ClientMessageInterface = {
         ...edit,
         text: messageText,
         status: "pending",
@@ -263,12 +258,12 @@ export default function InputBar({
             return;
           }
 
-          const newMessage: MessageInterface = {
+          const newMessage: ClientMessageInterface = {
             id: uuidv4(),
             sender: userId || "",
             room: roomId,
             is_read: [userId || ""],
-            reply: reply?.id,
+            reply: reply!,
             status: "pending",
             text: file.name,
             type: fromType,
@@ -282,7 +277,7 @@ export default function InputBar({
           };
           try {
             setCurrentMessage((prev) => [...prev, newMessage]);
-            containerEnd.current?.scrollIntoView({ behavior: "smooth" });
+
             setLastMessages(newMessage);
             setReply(null);
             const res = await uploadFile(file);
@@ -330,7 +325,7 @@ export default function InputBar({
       reply,
       roomId,
       setCurrentMessage,
-      containerEnd,
+
       setReply,
       userId,
       setLastMessages,
@@ -343,15 +338,15 @@ export default function InputBar({
 
       if (!audioFile || !userId || isMobile) return;
 
-      const newMessage: MessageInterface = {
+      const newMessage: ClientMessageInterface = {
         id: uuidv4(),
         text: audioFile.name,
         room: roomId,
         is_read: [userId],
-        reply: reply?.id,
+        reply: reply!,
         status: "pending",
         sender: userId,
-        type: "media",
+        type: "audio",
         meta_data: {
           type: audioFile.type,
           size: audioFile.size,
@@ -435,9 +430,14 @@ export default function InputBar({
       }}
       className="z-20 w-full"
     >
-      <div className="sticky bottom-0 px-2 py-1 m-2 rounded bg-white/10 backdrop-blur-3xl">
+      <div
+        className={twMerge(
+          "sticky bottom-0 px-2 py-1 m-2 rounded-3xl transition-all bg-white/10 backdrop-blur-3xl",
+          reply && "rounded-md"
+        )}
+      >
         {reply && (
-          <div className="border-l-[3px] px-2  border-blue-600 bg-white/5 rounded-e-sm shadow-md  ">
+          <div className="p-2 border-b dark:border-none">
             <div className="flex justify-between font-semibold dark:text-white ">
               <p className="text-lg text-blue-500">
                 {currentUser.find((user) => user.id === reply.sender)?.name}
@@ -566,7 +566,7 @@ export default function InputBar({
               {isRecord ? (
                 <CircleX className="text-red-500" />
               ) : (
-                <Mic className="text-gray-500 hover:dark:text-white" />
+                <Mic className=" dark:text-white" />
               )}
             </button>
             {isRecord && (
@@ -584,7 +584,7 @@ export default function InputBar({
               <button
                 type="button"
                 onClick={() => handleFile("image/*,video/*", "media")}
-                className="p-1 text-gray-500 hover:dark:text-white hover:scale-110"
+                className="p-1 dark:text-white "
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -611,19 +611,19 @@ export default function InputBar({
               onClick={() => setEmojiOpen((prev) => !prev)}
               className="p-1 mx-1 "
             >
-              <Laugh className="text-gray-500 hover:dark:text-white hover:scale-110" />
+              <Laugh className=" dark:text-white" />
             </button>
           )}
 
           {!isRecord && messageText !== "" && (
             <button
               type="submit"
-              className="p-1 transition-all bg-blue-600 rounded-lg active:bg-blue-300 zoom-in animate-in "
+              className="px-3 py-1 transition-all bg-blue-600 rounded-3xl active:bg-blue-300 zoom-in animate-in "
             >
               {edit ? (
-                <Pencil className="text-white hover:text-white" />
+                <Pencil className="text-white hover:text-white " />
               ) : (
-                <Send className="text-white hover:text-white " />
+                <Send className="text-white hover:text-white rotate-12" />
               )}
             </button>
           )}

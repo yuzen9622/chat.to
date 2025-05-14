@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import {
-  MessageInterface,
+  ClientMessageInterface,
   NotifyInterface,
   RoomInterface,
   UserInterface,
@@ -11,21 +11,24 @@ interface ChatStore {
   currentChat: RoomInterface | null;
   rooms: RoomInterface[];
   currentUser: UserInterface[];
-  currentMessage: MessageInterface[];
-  cachedMessages: Map<string, MessageInterface[]>;
+  currentMessage: ClientMessageInterface[];
+  cachedMessages: Map<string, ClientMessageInterface[]>;
   loading: boolean;
-  newMessage: MessageInterface | null;
-  reply: MessageInterface | null;
+  newMessage: ClientMessageInterface | null;
+  reply: ClientMessageInterface | null;
   newNotify: NotifyInterface | null;
   typingUsers: Record<string, Array<{ userId: string; typing: boolean }>>;
-  edit: MessageInterface | null;
+  edit: ClientMessageInterface | null;
   chatInfoOpen: boolean;
   setChatInfoOpen: (isOpen: boolean) => void;
-  notify: MessageInterface[];
-  lastMessages: Record<string, MessageInterface | null>;
+  notify: ClientMessageInterface[];
+  lastMessages: Record<string, ClientMessageInterface | null>;
   onboardingUsers: Set<string>;
   sidebarOpen: boolean;
-  setCachedMessages: (roomId: string, messages: MessageInterface[]) => void;
+  setCachedMessages: (
+    roomId: string,
+    messages: ClientMessageInterface[]
+  ) => void;
   setLoading: (load: boolean) => void;
   setRoom: (
     roomOrFn: RoomInterface | ((prev: RoomInterface[]) => RoomInterface[])
@@ -33,23 +36,23 @@ interface ChatStore {
   setCurrentChat: (currentChat: RoomInterface | null) => void;
   setCurrentMessage: (
     msgOrFn:
-      | MessageInterface
-      | ((prev: MessageInterface[]) => MessageInterface[])
+      | ClientMessageInterface
+      | ((prev: ClientMessageInterface[]) => ClientMessageInterface[])
   ) => void;
-  setReply: (msg: MessageInterface | null) => void;
-  setEdit: (msg: MessageInterface | null) => void;
+  setReply: (msg: ClientMessageInterface | null) => void;
+  setEdit: (msg: ClientMessageInterface | null) => void;
   setNotify: (
     notifyOrFn:
-      | MessageInterface
-      | ((prev: MessageInterface[]) => MessageInterface[])
+      | ClientMessageInterface
+      | ((prev: ClientMessageInterface[]) => ClientMessageInterface[])
   ) => void;
   setCurrentUsers: (newUser: UserInterface) => void;
   setLastMessages: (
     newLastMsg:
-      | MessageInterface
+      | ClientMessageInterface
       | ((
-          prev: Record<string, MessageInterface | null>
-        ) => Record<string, MessageInterface | null>)
+          prev: Record<string, ClientMessageInterface | null>
+        ) => Record<string, ClientMessageInterface | null>)
   ) => void;
   addOnboardingUser: (userId: string) => void;
   removeOnboardingUser: (userId: string) => void;

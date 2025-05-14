@@ -31,6 +31,11 @@ export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
     if (!wavesurfer) return;
     wavesurfer.playPause();
   }, [wavesurfer]);
+  useEffect(() => {
+    return () => {
+      wavesurfer?.destroy();
+    };
+  }, [wavesurfer]);
 
   useEffect(() => {
     const formatProgress = () => {
@@ -68,7 +73,7 @@ export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
   return (
     <div
       className={twMerge(
-        "flex w-48 p-1 px-2 bg-blue-500 rounded-md",
+        "flex w-48 p-1 px-2 bg-blue-500 rounded-3xl",
         backgroundColor && backgroundColor
       )}
     >

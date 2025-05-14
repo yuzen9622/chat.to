@@ -8,15 +8,19 @@ import {
   handleDownload,
   messageType,
 } from "../lib/util";
-import { MessageInterface } from "../lib/type";
+import { ClientMessageInterface } from "../lib/type";
+
 import { useChatStore } from "../store/ChatStore";
 import { LucideIcon } from "lucide-react";
 import PreviewMediaModal from "./ui/PreviewMediaModal";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 type Type = "media" | "url" | "file";
 
 export default function ChatInfoList() {
   const [isLoading, setIsLoading] = useState(false);
-  const [filterMessages, setFilterMessages] = useState<MessageInterface[]>([]);
+  const [filterMessages, setFilterMessages] = useState<
+    ClientMessageInterface[]
+  >([]);
   const [filterType, setFilterType] = useState<Type>("file");
   const [isOpen, setIsOpen] = useState(false);
   const [previewMedia, setPreviewMedia] = useState<{
@@ -41,7 +45,7 @@ export default function ChatInfoList() {
         }),
       });
       if (res.ok) {
-        const data: MessageInterface[] = await res.json();
+        const data: ClientMessageInterface[] = await res.json();
         const filterData = data.filter((msg) => {
           if (messageType(msg.meta_data!) === "audio") return null;
           return msg;
@@ -55,7 +59,7 @@ export default function ChatInfoList() {
     }
   }, [filterType, currentChat]);
 
-  const handlePreview = useCallback((message: MessageInterface) => {
+  const handlePreview = useCallback((message: ClientMessageInterface) => {
     const mediaType = messageType(message.meta_data!);
     if (!mediaType || !message.meta_data) return;
     setIsOpen(true);
@@ -77,6 +81,7 @@ export default function ChatInfoList() {
         onClose={() => setIsOpen(false)}
         media={previewMedia!}
       />
+
       <div className="flex flex-col items-center w-full h-full overflow-hidden ">
         <span className="flex w-full dark:text-white ">
           <button
@@ -167,19 +172,22 @@ export default function ChatInfoList() {
                     {message.meta_data && (
                       <>
                         {mediaType === "image" ? (
-                          <Image
-                            src={message?.meta_data.url}
-                            alt={message.text}
-                            width={50}
-                            height={50}
-                            className="object-cover w-full aspect-square"
-                            onClick={() => handlePreview(message)}
-                          />
+                          <PhotoProvider>
+                            <PhotoView src={message?.meta_data.url}>
+                              <Image
+                                src={message?.meta_data.url}
+                                alt={message.text}
+                                width={50}
+                                height={50}
+                                className="object-cover w-full aspect-square"
+                              />
+                            </PhotoView>
+                          </PhotoProvider>
                         ) : (
                           <video
                             src={message?.meta_data.url}
-                            className="object-cover w-full aspect-square"
                             onClick={() => handlePreview(message)}
+                            className="object-cover w-full aspect-square"
                           />
                         )}
                       </>

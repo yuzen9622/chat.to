@@ -19,7 +19,6 @@ export const useLastMessage = (roomId: string) => {
     let ignore = false;
 
     const fetchLastMessage = async () => {
-      console.log(cachedMessage);
       if (ignore) return;
       const controler = new AbortController();
       const { data, error } = await supabase

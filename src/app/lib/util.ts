@@ -588,3 +588,12 @@ export const handleDownload = async (fileUrl: string, fileName: string) => {
 export const isMobile = (userAgent: string): boolean => {
   return /android.+mobile|ip(hone|[oa]d)/i.test(userAgent);
 };
+
+export const Copy2ClipBoard = async (text: string) => {
+  const type = "text/plain";
+  const clipboardItemData = {
+    [type]: text,
+  };
+  const clipboardItem = new ClipboardItem(clipboardItemData);
+  await navigator.clipboard.write([clipboardItem]);
+};

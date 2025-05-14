@@ -28,10 +28,12 @@ export default async function Page({
   );
   headers.set("Pragma", "no-cache");
   headers.set("Expires", "0");
+
   const { roomId } = await params;
   const data = await getServerSession(authOptions);
 
   if (!data) return redirect("/chat");
+
   const { room } = (await getRoomById(roomId, data.userId!)) as {
     room: RoomInterface | null;
   };

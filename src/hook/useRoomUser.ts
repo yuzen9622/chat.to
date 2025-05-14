@@ -2,15 +2,27 @@
 
 import { supabase } from "@/app/lib/supabasedb";
 import { useChatStore } from "@/app/store/ChatStore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const useRoomUser = () => {
   const [users, setUsers] = useState<Record<
     string,
     { id: string; name: string; image: string }
   > | null>(null);
-  const { currentMessage, setCurrentUsers, currentUser, currentChat } =
-    useChatStore();
+  const { setCurrentUsers, currentUser, currentChat } = useChatStore();
+
+  const cachedUsers = useMemo(() => {
+    const userSet = currentChat?.room_members.map((rm) => rm.user_id);
+    if (!userSet) return;
+    const catchedUser = currentUser.reduce((result, cu) => {
+      if (userSet.includes(cu.id)) {
+        result[cu.id] = cu;
+      }
+      return result;
+    }, {} as Record<string, { id: string; name: string; image: string }>);
+    return catchedUser;
+  }, [currentChat, currentUser]);
+
   useEffect(() => {
     const userSet = currentChat?.room_members.map((rm) => rm.user_id);
     if (!userSet) return;
@@ -44,6 +56,7 @@ export const useRoomUser = () => {
     if (!users) {
       fetchUsers();
     }
-  }, [currentMessage, setCurrentUsers, users, currentChat]);
-  return users;
+  }, [setCurrentUsers, users, currentChat]);
+
+  return cachedUsers || users;
 };

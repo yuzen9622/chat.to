@@ -92,11 +92,12 @@ export default function SideBar() {
     >
       <div
         className={twMerge(
-          " h-full   z-50 transition-all border-r dark:border-none"
+          " h-full    z-50 transition-all border-r dark:border-none bg-transparent dark:bg-neutral-900 ",
+          sideStyle.size === "xl" && "p-2"
         )}
         ref={sidebarRef}
       >
-        <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white sm:flex-col dark:bg-stone-800 backdrop-blur-3xl">
+        <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white rounded-md sm:flex-col dark:bg-stone-800 backdrop-blur-3xl">
           <div className="box-border items-center justify-between hidden w-full p-4 h-fit sm:flex">
             <span className="inline-flex items-center px-2 space-x-2 text-3xl text-blue-400">
               <Image

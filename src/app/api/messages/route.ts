@@ -11,19 +11,16 @@ export async function POST(request: NextRequest) {
     const message = await request.json();
 
     message.status = "send";
+    if (message.reply) {
+      message.reply = message.reply.id;
+    }
     const { data, error } = await supabase
       .from("messages")
       .insert([message])
-      .select("*")
+      .select("*,reply(*)")
       .limit(1)
       .maybeSingle();
-    // const count = await redis.llen(`room:${message.room}`);
-    // if (count) {
-    //   if (count >= 20) {
-    //     await redis.lpop(`room:${message.room}`);
-    //   }
-    //   await redis.rpushx(`room:${message.room}`, message);
-    // }
+
     if (error) {
       console.log(error);
       return NextResponse.json({ error: error.message }, { status: 500 });

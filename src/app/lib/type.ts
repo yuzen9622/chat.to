@@ -6,7 +6,7 @@ export type MetaData = {
 };
 export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
-export type MessageType = "text" | "media" | "file" | "url";
+export type MessageType = "text" | "media" | "file" | "url" | "audio";
 export type ProviderType = "google" | "github" | "credentials";
 
 export interface TypingInterface {
@@ -16,7 +16,7 @@ export interface TypingInterface {
 
 export interface NotifyMessage {
   type: "message";
-  data: MessageInterface;
+  data: ClientMessageInterface;
 }
 
 export interface NotifyFriend {
@@ -26,7 +26,19 @@ export interface NotifyFriend {
 
 export type NotifyInterface = NotifyMessage | NotifyFriend;
 
-export interface MessageInterface {
+export interface ClientMessageInterface {
+  id?: string;
+  text: string;
+  meta_data?: MetaData;
+  reply?: ClientMessageInterface;
+  sender: string;
+  room: string;
+  created_at: string;
+  status: MessageStatus;
+  is_read: Array<string>;
+  type: MessageType;
+}
+export interface ServerMessageInterface {
   id?: string;
   text: string;
   meta_data?: MetaData;
@@ -38,6 +50,7 @@ export interface MessageInterface {
   is_read: Array<string>;
   type: MessageType;
 }
+
 export interface NoteInterface {
   id: number;
   text: string;
