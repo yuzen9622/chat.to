@@ -1,6 +1,6 @@
 import {
   FriendRequestInterface,
-  MessageInterface,
+  ClientMessageInterface,
   MetaData,
   RoomInterface,
   UserInterface,
@@ -142,7 +142,7 @@ export const readMessage = async (roomId: string, userId: string | null) => {
   }
 };
 
-export const sendUserMessage = async (message: MessageInterface) => {
+export const sendUserMessage = async (message: ClientMessageInterface) => {
   try {
     const response = await fetch("/api/messages", {
       method: "POST",
@@ -163,7 +163,7 @@ export const sendUserMessage = async (message: MessageInterface) => {
   }
 };
 
-export const editUserMessage = async (message: MessageInterface) => {
+export const editUserMessage = async (message: ClientMessageInterface) => {
   try {
     const response = await fetch("/api/messages/edit", {
       method: "POST",
@@ -463,7 +463,7 @@ export const messageType = (metaData: MetaData | null) => {
   }
   return "file";
 };
-export const replyText = (reply: MessageInterface) => {
+export const replyText = (reply: ClientMessageInterface) => {
   if (!reply) return "";
   if (messageType(reply.meta_data!) === "audio") return "語音";
   if (messageType(reply.meta_data!) === "image") return "圖片";

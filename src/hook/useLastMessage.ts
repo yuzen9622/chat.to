@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/app/lib/supabasedb";
-import { MessageInterface } from "@/app/lib/type";
+import { ClientMessageInterface } from "@/app/lib/type";
 import { roomSort } from "@/app/lib/util";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useEffect, useMemo, useState } from "react";
@@ -9,7 +9,7 @@ export const useLastMessage = (roomId: string) => {
   const { lastMessages, setLastMessages } = useChatStore();
 
   const [lastMessageFromDB, setLastMessageFromDB] =
-    useState<MessageInterface | null>(null);
+    useState<ClientMessageInterface | null>(null);
 
   const cachedMessage = useMemo(() => {
     return lastMessages[roomId];

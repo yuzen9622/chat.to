@@ -1,6 +1,6 @@
 "use client";
 import {
-  MessageInterface,
+  ClientMessageInterface,
   NoteInterface,
   RoomInterface,
   UserInterface,
@@ -152,7 +152,7 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
       const {
         action,
         newMessage,
-      }: { action: string; newMessage: MessageInterface } = message.data;
+      }: { action: string; newMessage: ClientMessageInterface } = message.data;
 
       const messageRoom = rooms.find(
         (r) =>
