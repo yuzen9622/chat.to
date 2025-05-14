@@ -22,7 +22,7 @@ import { twMerge } from "tailwind-merge";
 import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
 import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
-import { ClientMessageInterface } from "../lib/type";
+import { ClientMessageInterface } from "../../types/type";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;

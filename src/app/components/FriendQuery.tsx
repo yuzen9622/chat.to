@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/AuthStore";
-import { UserInterface } from "../lib/type";
+import { UserInterface } from "../../types/type";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";

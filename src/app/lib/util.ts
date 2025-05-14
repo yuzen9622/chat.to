@@ -4,7 +4,7 @@ import {
   MetaData,
   RoomInterface,
   UserInterface,
-} from "./type";
+} from "../../types/type";
 import { useChatStore } from "../store/ChatStore";
 
 import { useAuthStore } from "../store/AuthStore";

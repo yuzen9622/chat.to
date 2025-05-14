@@ -2,8 +2,8 @@
 import NextAuth, { DefaultSession } from "next-auth";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { type JWT } from "next-auth/jwt";
-import { NoteInterface, UserInterface } from "@/app/lib/type";
-import { ProviderType } from "@/app/lib/type";
+import { NoteInterface, UserInterface } from "@/types/type";
+import { ProviderType } from "@/types/type";
 declare module "next-auth" {
   // Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
   interface Session {

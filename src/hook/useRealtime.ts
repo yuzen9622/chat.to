@@ -4,14 +4,14 @@ import {
   NoteInterface,
   RoomInterface,
   UserInterface,
-} from "@/app/lib/type";
+} from "@/types/type";
 
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { InboundMessage, RealtimeChannel } from "ably";
-import { RoomMemberInterface } from "@/app/lib/type";
+import { RoomMemberInterface } from "@/types/type";
 
 export const useFriendListner = (channel: RealtimeChannel) => {
   const { setFriendRequest, setFriends } = useAuthStore();

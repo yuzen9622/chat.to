@@ -5,7 +5,7 @@ import {
   NoteInterface,
   SystemAlertInterface,
   UserInterface,
-} from "../lib/type";
+} from "../../types/type";
 import {
   fetchFriendNote,
   fetchFriendRequests,

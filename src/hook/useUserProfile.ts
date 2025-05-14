@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/app/lib/supabasedb";
-import { UserInterface } from "@/app/lib/type";
+import { UserInterface } from "@/types/type";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useEffect, useState } from "react";
 

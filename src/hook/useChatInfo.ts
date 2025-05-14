@@ -1,5 +1,5 @@
 "use client";
-import { RoomInterface } from "@/app/lib/type";
+import { RoomInterface } from "@/types/type";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useMemo } from "react";
 export const useChatInfo = (

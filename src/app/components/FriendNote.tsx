@@ -4,7 +4,7 @@ import React from "react";
 import NoteCard from "./ui/NoteCard";
 import { useAuthStore } from "../store/AuthStore";
 
-import { NoteInterface } from "../lib/type";
+import { NoteInterface } from "../../types/type";
 
 export default function FriendNote({
   userNote,

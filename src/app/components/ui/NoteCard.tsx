@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { NoteInterface } from "../../lib/type";
+import { NoteInterface } from "../../../types/type";
 
 import BadgeAvatar from "./Avatar";
 import { useUserProfile } from "@/hook/useUserProfile";

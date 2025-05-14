@@ -1,4 +1,4 @@
-import { ClientMessageInterface, MetaData } from "@/app/lib/type";
+import { ClientMessageInterface, MetaData } from "@/types/type";
 import React, {
   memo,
   useCallback,

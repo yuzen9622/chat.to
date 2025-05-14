@@ -17,7 +17,7 @@ import { CircularProgress } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 import { redirect } from "next/navigation";
 import { useAuthStore } from "../store/AuthStore";
-import { RoomInterface } from "../lib/type";
+import { RoomInterface } from "../../types/type";
 import { useSession } from "next-auth/react";
 import UploadAvatar from "./ui/UploadAvatar";
 function JoinModal() {

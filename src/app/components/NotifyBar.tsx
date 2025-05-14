@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Snackbar } from "@mui/material";
 import { useChatStore } from "../store/ChatStore";
-import { RoomInterface } from "../lib/type";
+import { RoomInterface } from "../../types/type";
 import { useUserProfile } from "@/hook//useUserProfile";
 import { replyText } from "@/app/lib/util";
 import { redirect } from "next/navigation";

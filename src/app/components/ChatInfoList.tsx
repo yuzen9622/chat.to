@@ -8,7 +8,7 @@ import {
   handleDownload,
   messageType,
 } from "../lib/util";
-import { ClientMessageInterface } from "../lib/type";
+import { ClientMessageInterface } from "../../types/type";
 
 import { useChatStore } from "../store/ChatStore";
 import { LucideIcon } from "lucide-react";

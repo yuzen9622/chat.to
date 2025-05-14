@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/app/lib/supabasedb";
-import { ClientMessageInterface } from "@/app/lib/type";
+import { ClientMessageInterface } from "@/types/type";
 import { roomSort } from "@/app/lib/util";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useEffect, useMemo, useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { RoomInterface, UserInterface } from "../../lib/type";
+import { RoomInterface, UserInterface } from "../../../types/type";
 import { useChatStore } from "../../store/ChatStore";
 import { createRoom } from "../../lib/util";
 

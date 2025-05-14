@@ -4,7 +4,7 @@ import { CirclePlus } from "lucide-react";
 import { Send } from "lucide-react";
 import { useAblyStore } from "../../store/AblyStore";
 import { useChatStore } from "../../store/ChatStore";
-import { ClientMessageInterface, MessageType } from "../../lib/type";
+import { ClientMessageInterface, MessageType } from "../../../types/type";
 
 import { X, Laugh, Pencil, Paperclip, Mic, CircleX } from "lucide-react";
 import {

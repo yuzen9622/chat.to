@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import BadgeAvatar from "./Avatar";
 import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
-import { RoomInterface } from "../../lib/type";
+import { RoomInterface } from "../../../types/type";
 import { useChatInfo } from "@/hook/useChatInfo";
 import { useLastMessage } from "@/hook/useLastMessage";
 import { useRoomNotify } from "@/hook/useRoomNotify";

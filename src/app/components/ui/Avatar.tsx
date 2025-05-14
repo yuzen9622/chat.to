@@ -6,7 +6,7 @@ import { Skeleton } from "@mui/material";
 
 import { useUserProfile } from "@/hook/useUserProfile";
 import { useSession } from "next-auth/react";
-import { RoomInterface } from "@/app/lib/type";
+import { RoomInterface } from "@/types/type";
 import { useAblyStore } from "@/app/store/AblyStore";
 
 export default function BadgeAvatar({

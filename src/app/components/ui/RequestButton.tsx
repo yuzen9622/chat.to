@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { FriendRequestInterface, friendStatus } from "@/app/lib/type";
+import { FriendRequestInterface, friendStatus } from "@/types/type";
 import { useUserProfile } from "@/hook/useUserProfile";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";

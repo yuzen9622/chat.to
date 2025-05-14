@@ -4,7 +4,7 @@ import CredentialProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import bcrypt from "bcryptjs";
 import { createClient } from "@supabase/supabase-js";
-import { NoteInterface } from "@/app/lib/type";
+import { NoteInterface } from "@/types/type";
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_SECRET_ROLE_KEY!

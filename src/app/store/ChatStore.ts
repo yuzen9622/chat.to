@@ -5,7 +5,7 @@ import {
   NotifyInterface,
   RoomInterface,
   UserInterface,
-} from "../lib/type";
+} from "../../types/type";
 
 interface ChatStore {
   currentChat: RoomInterface | null;

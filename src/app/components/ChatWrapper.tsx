@@ -1,5 +1,5 @@
 "use client"; // 表示這是一個 Client Component
-import { RoomInterface } from "../lib/type";
+import { RoomInterface } from "../../types/type";
 import { ChannelProvider } from "ably/react";
 import ChatRoom from "./ChatRoom";
 import { useEffect } from "react";

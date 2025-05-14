@@ -5,7 +5,7 @@ import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
-import { NoteInterface } from "../lib/type";
+import { NoteInterface } from "../../types/type";
 import { useAblyStore } from "../store/AblyStore";
 
 export default function NoteButton({ note }: { note: NoteInterface | null }) {
