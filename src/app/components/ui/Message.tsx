@@ -329,18 +329,18 @@ const UrlMessage = memo(function TextMessage({
   isOwn: boolean;
 }) {
   return (
-    <a
-      href={message.text}
-      target="_BLANK"
+    <div
       className={twMerge(
-        " py-2 px-3  underline underline-offset-2 rounded-3xl text-start h-full break-words  text-pretty  w-fit max-w-full  text-ellipsis  backdrop-blur-3xl ",
+        "h-full max-w-full px-3 py-2 underline break-all text-wrap underline-offset-2 rounded-3xl text-start text-ellipsis w-fit  backdrop-blur-3xl ",
         isOwn
           ? " bg-blue-500 text-white "
           : "dark:bg-neutral-700/70   bg-stone-200/70 text-stone-900 dark:text-white"
       )}
     >
-      {message.text}
-    </a>
+      <a href={message.text} target="_BLANK">
+        {message.text}
+      </a>
+    </div>
   );
 });
 
@@ -524,7 +524,6 @@ const MessageItem = memo(function MessageItem({
         isOwn && " items-end"
       )}
     >
-      {/** reply message component */}
       {message.reply && (
         <ReplyMessage
           scrollToMessage={scrollToMessage}
@@ -546,7 +545,7 @@ const MessageItem = memo(function MessageItem({
 
         <div
           className={twMerge(
-            "text-end w-full   flex flex-col gap-1 ",
+            "text-end w-full    flex flex-col gap-1 ",
             isOwn && " justify-end items-end"
           )}
         >
@@ -557,18 +556,20 @@ const MessageItem = memo(function MessageItem({
           )}
           <div
             className={twMerge(
-              "flex gap-1 relative  w-full max-w-[80%] ",
+              "flex gap-1 relative  w-full  ",
               isOwn ? "flex-row-reverse" : ""
             )}
           >
-            <Message />
-
-            {message.status === "send" ? (
+            <div className="max-w-[80%] relative">
+              <Message />
+              {message.status === "pending" && (
+                <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">
+                  <Send size={12} />
+                </div>
+              )}
+            </div>
+            {message.status === "send" && (
               <SettingBar message={message} isOwn={isOwn} />
-            ) : (
-              <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">
-                <Send size={12} />
-              </div>
             )}
           </div>
         </div>

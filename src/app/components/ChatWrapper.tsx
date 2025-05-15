@@ -38,7 +38,6 @@ export default function ChatRoomWrapper({
     const getRoomMessages = async () => {
       try {
         const data = await fetchRoomMessage(room.id, 0, 20);
-
         setCurrentMessage(() => data);
       } catch (error) {
         console.log(error);
