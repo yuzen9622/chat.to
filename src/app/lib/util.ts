@@ -519,10 +519,10 @@ export const roomSort = () => {
   const { rooms, setRoom } = useChatStore.getState();
   if (!rooms) return;
 
-  rooms.sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  // rooms.sort(
+  //   (a, b) =>
+  //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  // );
   setRoom((prev) => {
     const newPrev = prev.sort(
       (a, b) =>

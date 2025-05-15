@@ -10,7 +10,7 @@ import React, {
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import { CldImage } from "next-cloudinary";
+
 import {
   Copy2ClipBoard,
   deleteMessage,
@@ -30,6 +30,7 @@ import {
   Clipboard,
   LucideIcon,
   Reply,
+  Send,
 } from "lucide-react";
 import { Popover } from "@mui/material";
 import { PhotoProvider, PhotoView } from "react-photo-view";
@@ -270,7 +271,7 @@ const MediaMessage = memo(function MediaMessage({
           {type === "image" && (
             <PhotoProvider>
               <PhotoView src={metaData.url}>
-                <CldImage
+                <Image
                   width={300}
                   height={300}
                   src={metaData.url}
@@ -310,14 +311,36 @@ const TextMessage = memo(function TextMessage({
   return (
     <p
       className={twMerge(
-        " py-1 px-3 rounded-3xl h-full  w-fit backdrop-blur-3xl max-w-full",
+        " py-2 px-3 rounded-3xl text-start h-full break-words  text-pretty  w-fit max-w-full  text-ellipsis  backdrop-blur-3xl ",
         isOwn
           ? " bg-blue-500 text-white "
-          : "dark:bg-neutral-700/70  bg-stone-200/70 text-stone-900 dark:text-white"
+          : "dark:bg-neutral-700/70   bg-stone-200/70 text-stone-900 dark:text-white"
       )}
     >
       {message.text}
     </p>
+  );
+});
+const UrlMessage = memo(function TextMessage({
+  message,
+  isOwn,
+}: {
+  message: ClientMessageInterface;
+  isOwn: boolean;
+}) {
+  return (
+    <a
+      href={message.text}
+      target="_BLANK"
+      className={twMerge(
+        " py-2 px-3  underline underline-offset-2 rounded-3xl text-start h-full break-words  text-pretty  w-fit max-w-full  text-ellipsis  backdrop-blur-3xl ",
+        isOwn
+          ? " bg-blue-500 text-white "
+          : "dark:bg-neutral-700/70   bg-stone-200/70 text-stone-900 dark:text-white"
+      )}
+    >
+      {message.text}
+    </a>
   );
 });
 
@@ -407,7 +430,7 @@ const ReplyMessage = memo(function ReplyMessage({
       text: <TextMessage message={message} isOwn={replyOwn} />,
       media: <MediaMessage message={message} />,
       file: <FileMessage message={message} isOwn={replyOwn} />,
-      url: <></>,
+      url: <UrlMessage message={message} isOwn={replyOwn} />,
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={replyOwn} />
       ),
@@ -419,7 +442,7 @@ const ReplyMessage = memo(function ReplyMessage({
   return (
     <div
       className={twMerge(
-        " flex flex-col gap-2 pb-2 pl-7 w-fit ",
+        " flex flex-col gap-2 pb-2 pl-7 w-fit max-w-[80%] ",
         isOwn && "items-end pr-2"
       )}
       onClick={() => message.id && scrollToMessage(message.id)}
@@ -432,7 +455,7 @@ const ReplyMessage = memo(function ReplyMessage({
 
       <span
         className={twMerge(
-          " relative rounded-3xl w-fit ",
+          " relative rounded-3xl w-fit  ",
           isOwn ? " text-end" : "text-start"
         )}
       >
@@ -460,7 +483,7 @@ const MessageItem = memo(function MessageItem({
       text: <TextMessage message={message} isOwn={isOwn} />,
       media: <MediaMessage message={message} />,
       file: <FileMessage message={message} isOwn={isOwn} />,
-      url: <></>,
+      url: <UrlMessage message={message} isOwn={isOwn} />,
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={isOwn} />
       ),
@@ -510,7 +533,7 @@ const MessageItem = memo(function MessageItem({
           message={message.reply}
         />
       )}
-      <div className="flex items-start gap-1 w-fit">
+      <div className="flex items-start w-full gap-1 ">
         {!isOwn && (
           <Image
             className="w-6 h-6 rounded-full bg-neutral-900"
@@ -523,18 +546,30 @@ const MessageItem = memo(function MessageItem({
 
         <div
           className={twMerge(
-            " w-fit flex flex-col gap-1 ",
-            isOwn && " justify-end"
+            "text-end w-full   flex flex-col gap-1 ",
+            isOwn && " justify-end items-end"
           )}
         >
           {!isOwn && !message.reply && (
-            <span className="text-xs dark:text-white/80">
+            <span className="text-xs w-fit dark:text-white/80">
               {messageUser?.name}
             </span>
           )}
-          <div className={twMerge("flex ", isOwn ? "flex-row-reverse" : "")}>
+          <div
+            className={twMerge(
+              "flex gap-1 relative  w-full max-w-[80%] ",
+              isOwn ? "flex-row-reverse" : ""
+            )}
+          >
             <Message />
-            <SettingBar message={message} isOwn={isOwn} />
+
+            {message.status === "send" ? (
+              <SettingBar message={message} isOwn={isOwn} />
+            ) : (
+              <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">
+                <Send size={12} />
+              </div>
+            )}
           </div>
         </div>
       </div>

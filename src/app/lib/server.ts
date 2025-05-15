@@ -4,7 +4,7 @@ export const getRoomById = async (roomId: string, userId: string) => {
   try {
     const { data, error } = await supabase
       .from("room_members")
-      .select("rooms(*, room_members(*))")
+      .select("rooms(*, room_members(*,users(id,name,image)))")
       .eq("user_id", userId)
       .eq("room_id", roomId)
       .limit(1);

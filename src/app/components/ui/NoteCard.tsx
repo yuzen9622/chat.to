@@ -3,10 +3,10 @@ import React from "react";
 import { NoteInterface } from "../../../types/type";
 
 import BadgeAvatar from "./Avatar";
-import { useUserProfile } from "@/hook/useUserProfile";
+
 import { TimeAgo } from "../TimeAgo";
 export default function NoteCard({ note }: { note: NoteInterface }) {
-  const user = useUserProfile(note.user_id);
+  const user = note.user;
   return (
     <span className="flex items-center w-full max-w-md gap-2 px-3 py-2 mb-2 text-black rounded-md bg-stone-100 min-h-fit dark:text-white dark:bg-white/5">
       <BadgeAvatar user={note.user_id} width={65} height={65} />

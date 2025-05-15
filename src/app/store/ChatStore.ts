@@ -7,6 +7,7 @@ import {
   UserInterface,
 } from "../../types/type";
 
+type LastMessageType = ClientMessageInterface & { isFetching: boolean };
 interface ChatStore {
   currentChat: RoomInterface | null;
   rooms: RoomInterface[];
@@ -22,7 +23,7 @@ interface ChatStore {
   chatInfoOpen: boolean;
   setChatInfoOpen: (isOpen: boolean) => void;
   notify: ClientMessageInterface[];
-  lastMessages: Record<string, ClientMessageInterface | null>;
+  lastMessages: Record<string, LastMessageType>;
   onboardingUsers: Set<string>;
   sidebarOpen: boolean;
   setCachedMessages: (
@@ -49,10 +50,10 @@ interface ChatStore {
   setCurrentUsers: (newUser: UserInterface) => void;
   setLastMessages: (
     newLastMsg:
-      | ClientMessageInterface
+      | LastMessageType
       | ((
-          prev: Record<string, ClientMessageInterface | null>
-        ) => Record<string, ClientMessageInterface | null>)
+          prev: Record<string, LastMessageType>
+        ) => Record<string, LastMessageType>)
   ) => void;
   addOnboardingUser: (userId: string) => void;
   removeOnboardingUser: (userId: string) => void;
@@ -234,20 +235,22 @@ export const useChatStore = create<ChatStore>((set) => ({
         const n = newLastMsgOrFn(state.lastMessages);
         return { ...state, lastMessages: n };
       }
+
       const newLastMessages = { ...state.lastMessages };
+      newLastMsgOrFn.isFetching = true;
       newLastMessages[newLastMsgOrFn.room] = newLastMsgOrFn;
       const room = state.rooms.find((r) => r.id === newLastMsgOrFn.room);
 
       if (room) {
         room.created_at = newLastMsgOrFn.created_at;
         const newRooms = state.rooms.map((r) => (r.id === room.id ? room : r));
-        const sortRooms = newRooms.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
+        // const sortRooms = newRooms.sort(
+        //   (a, b) =>
+        //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        // );
         return {
           ...state,
-          rooms: sortRooms,
+          rooms: newRooms,
           lastMessages: newLastMessages,
         };
       }

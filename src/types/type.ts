@@ -38,24 +38,14 @@ export interface ClientMessageInterface {
   is_read: Array<string>;
   type: MessageType;
 }
-export interface ServerMessageInterface {
-  id?: string;
-  text: string;
-  meta_data?: MetaData;
-  reply?: string;
-  sender: string;
-  room: string;
-  created_at: string;
-  status: MessageStatus;
-  is_read: Array<string>;
-  type: MessageType;
-}
 
 export interface NoteInterface {
   id: number;
   text: string;
   user_id: string;
+  user: UserInterface;
   created_at: Date;
+
   public: boolean;
   updated_at: string;
 }
@@ -74,6 +64,7 @@ export interface RoomMemberInterface {
   user_id: string;
   is_deleted: boolean;
   created_at?: string;
+  users?: UserInterface;
 }
 
 export interface RoomInterface {
@@ -83,6 +74,7 @@ export interface RoomInterface {
   room_members: Array<RoomMemberInterface>;
   room_type: "personal" | "group";
   room_img?: { url: string; public_id: "" };
+
   updated_at?: Date;
 }
 export interface FriendInterface {

@@ -35,11 +35,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
   const [target, setTarget] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<VirtuosoHandle>(null);
-  const userMap = useRoomUser();
   const [hasOldMessage, setHasOldMessage] = useState(true);
   const [downBtnAppear, setDownBtnAppear] = useState(false);
   const [shouldScroll, setShouldScroll] = useState(true);
+
+  const findRef = useRef("");
+  const scrollRef = useRef<VirtuosoHandle>(null);
+
+  const userMap = useRoomUser();
   useAblyRoom(roomId);
 
   const { dateCounts, flatMessages, dates, isRended } = useMemo(() => {
@@ -105,10 +108,13 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       setCurrentMessage((prev) => {
         return [...data, ...prev];
       });
-      scrollRef.current?.scrollToIndex({
-        index: data.length,
-        align: "start",
-      });
+
+      if (findRef.current === "") {
+        scrollRef.current?.scrollToIndex({
+          index: data.length,
+          align: "start",
+        });
+      }
     }
     setIsLoading(false);
     return data as ClientMessageInterface[];
@@ -118,6 +124,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     setCurrentMessage,
     hasOldMessage,
     currentMessage,
+
     isLoading,
   ]);
 
@@ -125,6 +132,8 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     if (!messageId) return;
     let index = currentMessage.findIndex((v) => v.id === messageId);
     const current = currentMessage;
+
+    findRef.current = messageId;
     if (index !== -1) {
       scrollRef.current?.scrollToIndex(index);
     } else {
@@ -138,6 +147,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       }
       scrollRef.current?.scrollToIndex(index);
     }
+    findRef.current = "";
     setTarget(messageId);
   };
 
@@ -226,11 +236,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in border-y dark:border-none "
               )}
             >
-              {flatMessages.length > 0 && userMap && dates ? (
+              {userMap ? (
                 <GroupedVirtuoso
+                  increaseViewportBy={1500}
                   ref={scrollRef}
-                  increaseViewportBy={{ top: 1000, bottom: 500 }}
                   className="h-full overflow-x-hidden fade-in animate-in"
+                  atBottomStateChange={(atBottom) =>
+                    setDownBtnAppear(!atBottom)
+                  }
                   atTopStateChange={(atTop: boolean) => {
                     if (atTop && !isLoading && !shouldScroll) {
                       loadMoreMessages();
@@ -245,9 +258,6 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                       loadMoreMessages();
                     }
                   }}
-                  atBottomStateChange={(atBottom) =>
-                    setDownBtnAppear(!atBottom)
-                  }
                   followOutput={(atBottom) => {
                     const lastMessage = flatMessages[flatMessages.length - 1];
                     if (
@@ -255,11 +265,10 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                       atBottom &&
                       !downBtnAppear
                     ) {
-                      return true;
+                      return "smooth";
                     }
                     return false;
                   }}
-                  alignToBottom
                   initialTopMostItemIndex={
                     flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
                   }

@@ -63,7 +63,7 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
     if (!channel) return;
     const handleCreate = (message: InboundMessage) => {
       const { newRoom, newRoomMembers } = message.data;
-      console.log(newRoomMembers, newRoom);
+
       if (!userId) return;
 
       setRoom((prev) => {
@@ -172,13 +172,13 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
       const lastMessage = lastMessages[newMessage.room];
 
       if (action === "send") {
-        setLastMessages(newMessage);
+        setLastMessages({ ...newMessage, isFetching: true });
         if (newMessage.room !== currentChat?.id || !currentChat) {
           setNewNotify({ type: "message", data: newMessage });
         }
       } else if (action === "edit") {
         if (!lastMessage || lastMessage.id !== newMessage.id) return;
-        setLastMessages(newMessage);
+        setLastMessages({ ...newMessage, isFetching: true });
         if (newMessage.room !== currentChat?.id) {
           setNewNotify({ type: "message", data: newMessage });
         }

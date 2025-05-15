@@ -89,10 +89,12 @@ export default function ChatButton({
                 `你：`}
             </span>
             <p className="truncate ">{messageContent && messageContent}</p>
-            <span className="flex-shrink-0">
-              {lastMessage && "．"}
-              {lastMessage && <TimeAgo date={lastMessage.created_at!} />}
-            </span>
+            {lastMessage && lastMessage.id !== "" && (
+              <span className="flex-shrink-0">
+                ．
+                <TimeAgo date={lastMessage.created_at!} />
+              </span>
+            )}
           </span>
         </div>
         {roomNotify > 0 && (

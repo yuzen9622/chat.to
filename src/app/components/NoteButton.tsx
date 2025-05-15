@@ -53,10 +53,10 @@ export default function NoteButton({ note }: { note: NoteInterface | null }) {
   }, []);
 
   return (
-    <div className="absolute right-0 rounded-md shadow-md -top-8">
+    <div className="absolute right-0 shadow-md rounded-2xl -top-8">
       <button
         onClick={() => setIsOpen((p) => !p)}
-        className="p-2 text-xs truncate rounded-md bg-stone-100 max-w-24 dark:bg-stone-700 dark:text-white/40"
+        className="p-2 text-xs truncate rounded-2xl text-start min-w-20 bg-stone-100 max-w-24 dark:bg-stone-700 dark:text-white/40"
       >
         {note ? note.text : "便利貼......"}
       </button>

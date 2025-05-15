@@ -29,8 +29,9 @@ export default function BadgeAvatar({
       <Skeleton
         animation="wave"
         sx={{ bgcolor: "grey.900" }}
-        width={width || 45}
-        height={height || 45}
+        className=" aspect-square"
+        width={width}
+        height={height}
         variant="circular"
       />
     );

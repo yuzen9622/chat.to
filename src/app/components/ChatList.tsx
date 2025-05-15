@@ -17,7 +17,7 @@ import { CircularProgress } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 import { redirect } from "next/navigation";
 import { useAuthStore } from "../store/AuthStore";
-import { RoomInterface } from "../../types/type";
+import { ClientMessageInterface, RoomInterface } from "../../types/type";
 import { useSession } from "next-auth/react";
 import UploadAvatar from "./ui/UploadAvatar";
 function JoinModal() {
@@ -353,7 +353,7 @@ export function LoadingList() {
 export default function ChatList() {
   const userId = useSession()?.data?.userId;
 
-  const { setRoom, rooms, setNotify } = useChatStore();
+  const { setRoom, rooms, setNotify, setLastMessages } = useChatStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -362,13 +362,21 @@ export default function ChatList() {
 
       try {
         setIsLoading(true);
-        const roomsData: RoomInterface[] = await fetchUserRooms();
+        const {
+          rooms: roomsData,
+          lastMessages,
+        }: { rooms: RoomInterface[]; lastMessages: ClientMessageInterface[] } =
+          await fetchUserRooms();
         const inRooms = roomsData.filter((r) =>
           r.room_members.some((m) => m.user_id === userId)
         );
+
         if (roomsData.length > 0) {
           setRoom(() => inRooms);
         }
+        lastMessages.forEach((lm) => {
+          setLastMessages({ ...lm, isFetching: true });
+        });
         const notifiesData = await fetchUsersNotify(userId, inRooms);
         setNotify(() => notifiesData);
       } catch (error) {
@@ -379,7 +387,7 @@ export default function ChatList() {
     };
 
     loadRooms();
-  }, [userId, setRoom, setNotify, rooms]);
+  }, [userId, setRoom, setNotify, rooms, setLastMessages]);
 
   return (
     <div className="flex flex-col w-full h-full p-2 overflow-hidden border-t-gray-500">

@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   try {
     const { data, error } = await supabase
       .from("user_note")
-      .select("*")
+      .select("*,user:users(id,name,image)")
       .in("user_id", ids)
       .order("created_at");
     if (error) {

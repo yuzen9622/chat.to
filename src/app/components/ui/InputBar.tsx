@@ -158,7 +158,7 @@ export default function InputBar() {
 
       setCurrentMessage((prev) => [...prev, newMessage]);
 
-      setLastMessages(newMessage);
+      setLastMessages({ ...newMessage,isFetching:true });
       setMessageText("");
       setReply(null);
       if (inputRef.current) {
@@ -184,7 +184,7 @@ export default function InputBar() {
         setCurrentMessage((prev) =>
           prev.map((msg) => (msg.id === newMessage.id ? newMessage : msg))
         );
-        setLastMessages(newMessage);
+        setLastMessages({ ...newMessage,isFetching:true });
         console.error("發送訊息失敗:", error);
       }
     },
@@ -278,7 +278,7 @@ export default function InputBar() {
           try {
             setCurrentMessage((prev) => [...prev, newMessage]);
 
-            setLastMessages(newMessage);
+            setLastMessages({ ...newMessage,isFetching:true });
             setReply(null);
             const res = await uploadFile(file);
             if (newMessage.meta_data) {
@@ -311,7 +311,7 @@ export default function InputBar() {
                 msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
               )
             );
-            setLastMessages({ ...newMessage, status: "failed" });
+            setLastMessages({ ...newMessage, status: "failed",isFetching:true });
 
             console.error("發送訊息失敗:", error);
           }

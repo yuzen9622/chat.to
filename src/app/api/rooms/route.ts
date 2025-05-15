@@ -3,6 +3,7 @@ import { supabase } from "@/app/lib/supabasedb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { getToken } from "next-auth/jwt";
+import { RoomInterface } from "@/types/type";
 export async function GET() {
   const session = await getServerSession(authOptions);
 
@@ -15,9 +16,19 @@ export async function GET() {
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
-  const rooms = data.map((item) => item.rooms);
+  const rooms = data.map((item) => item.rooms) as unknown;
+  const roomIds = (rooms as RoomInterface[]).map(
+    (room: RoomInterface) => room.id
+  ) as string[];
 
-  return NextResponse.json(rooms, { status: 200 });
+  const { data: lastMessages, error: msgError } = await supabase.rpc(
+    "get_last_messages",
+    { room_ids: roomIds }
+  );
+  if (msgError)
+    return NextResponse.json({ error: msgError.message }, { status: 500 });
+
+  return NextResponse.json({ rooms, lastMessages }, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
