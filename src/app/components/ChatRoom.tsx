@@ -204,7 +204,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         setShouldScroll(false);
       }, 100);
     }
-  }, [userMap, shouldScroll]);
+  }, [userMap, shouldScroll, currentMessage]);
 
   const dateContent = useCallback(
     (index: number) => {
@@ -226,7 +226,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
   return (
     <>
-      {currentChat && currentChat.id === roomId && (
+      {currentChat && currentChat.id === roomId && userMap && isRended && (
         <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover max-h-dvh">
           <div className="box-border relative flex flex-col flex-1 overflow-hidden max-h-dvh ">
             <ChatHeader />
@@ -265,7 +265,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                       atBottom &&
                       !downBtnAppear
                     ) {
-                      return "smooth";
+                      return true;
                     }
                     return false;
                   }}
