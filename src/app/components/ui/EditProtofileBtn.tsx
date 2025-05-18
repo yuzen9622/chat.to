@@ -9,6 +9,7 @@ import { useAblyStore } from "@/app/store/AblyStore";
 import { uploadFile } from "@/app/lib/util";
 import Input from "./Input";
 import UploadAvatar from "./UploadAvatar";
+import { useAuthStore } from "@/app/store/AuthStore";
 export default function EditProtofileBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, update } = useSession();
@@ -19,6 +20,7 @@ export default function EditProtofileBtn() {
     imgUrl: string;
     imgFile: File;
   } | null>(null);
+  const { setSystemAlert } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEditProfofile = useCallback(async () => {
@@ -26,6 +28,15 @@ export default function EditProtofileBtn() {
       setIsLoading(true);
       let image = editProfile?.image;
       if (userImage) {
+        if (userImage.imgFile.size > 1024 * 1024 * 8) {
+          setSystemAlert({
+            serverity: "error",
+            variant: "filled",
+            text: "檔案大小需低於8MB",
+            open: true,
+          });
+          return;
+        }
         const imageData: { url: string; public_id: string } = await uploadFile(
           userImage.imgFile
         );
