@@ -14,8 +14,8 @@ export const useRoomUser = () => {
     > | null = {};
 
     currentChat.room_members.map((rm) => {
-      if (rm.users) {
-        roomInfo[rm.user_id] = rm.users;
+      if (rm.user) {
+        roomInfo[rm.user_id] = rm.user;
       }
     });
     return roomInfo;

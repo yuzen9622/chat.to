@@ -29,25 +29,26 @@ export const POST = async (request: NextRequest) => {
         user_id: id,
       })) || [];
     roomMembers.push({ room_id: data.id, user_id: userId });
+
     if (error) {
       console.log(error);
       return NextResponse.json({ error }, { status: 500 });
     }
+
     await supabase.from("room_members").insert(roomMembers);
     const { data: memberData, error: memberError } = await supabase
       .from("room_members")
       .select("rooms(*,room_members(*))")
       .eq("room_id", data.id)
-      .eq("user_id", userId);
-
-    console.log(memberData);
+      .eq("user_id", userId)
+      .limit(1);
 
     if (memberError) {
       console.log(memberError);
       return NextResponse.json({ memberError }, { status: 500 });
     }
-    const rooms = memberData.map((item) => item.rooms);
-    return NextResponse.json(rooms, { status: 200 });
+
+    return NextResponse.json(memberData[0].rooms, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error }, { status: 500 });

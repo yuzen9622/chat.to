@@ -1,8 +1,8 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { RoomInterface, UserInterface } from "../../../types/type";
+import { FriendInterface, RoomInterface } from "../../../types/type";
 import { useChatStore } from "../../store/ChatStore";
-import { createRoom } from "../../lib/util";
+import { getPersonalRoom } from "../../lib/util";
 
 import { useRouter } from "next/navigation";
 import { useAblyStore } from "../../store/AblyStore";
@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
 import WarningButton from "./WarningButton";
 import { Trash2 } from "lucide-react";
-export default function FriendButton({ friend }: { friend: UserInterface }) {
+export default function FriendButton({ friend }: { friend: FriendInterface }) {
   const { rooms } = useChatStore();
   const { setFriends } = useAuthStore();
   const { channel } = useAblyStore();
@@ -27,21 +27,18 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
   const handleClick = useCallback(async () => {
     if (!channel) return;
     const friendRoom = rooms.find(
-      (room) =>
-        room?.room_members.some((member) => member.user_id === friend.id) &&
-        room.room_type === "personal"
+      (room) => room.id === friend.personal_room_id
     );
     if (!friendRoom) {
       if (isLoading.create) return;
       setIsloading((prev) => ({ ...prev, create: true }));
-      const newRoom: RoomInterface = await createRoom(
+      const newRoom: RoomInterface = await getPersonalRoom(
+        friend.personal_room_id,
         userId!,
-        "",
-        [friend.id],
-        "personal"
+        friend.friend_id
       );
       const roomMembers = newRoom.room_members.map((rm) => rm.user_id);
-
+      console.log(newRoom);
       channel.publish("room_action", {
         action: "create",
         newRoom,
@@ -50,6 +47,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
       setIsloading((prev) => ({ ...prev, create: false }));
       router.push(`/chat/${newRoom.id}`);
     } else {
+      //await getPersonalRoom(friend.personal_room_id, userId!, friend.friend_id);
       if (
         friendRoom.room_members.some(
           (rm) => rm.user_id === userId && rm.is_deleted
@@ -66,6 +64,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, roomId: friendRoom.id }),
         });
+
         const data = await res.json();
         if (data.error) {
           console.log(data.error);
@@ -87,7 +86,7 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
       const response = await fetch("/api/friends/delete", {
         headers: { "Content-Type": "application/json" },
         method: "post",
-        body: JSON.stringify({ friend_id: friend.id, user_id: userId }),
+        body: JSON.stringify({ friend_id: friend.friend_id, user_id: userId }),
       });
       if (response.ok) {
         setFriends((prev) => {
@@ -105,8 +104,8 @@ export default function FriendButton({ friend }: { friend: UserInterface }) {
   return (
     <div className="flex items-center justify-between p-1 bg-gray-100 rounded-lg opacity-0 dark:bg-white/10 animate-slide-in">
       <div className="flex items-center w-full gap-2 overflow-hidden cursor-pointer">
-        <BadgeAvatar width={40} height={40} user={friend.id} />
-        <p className="truncate text-nowrap">{friend.name}</p>
+        <BadgeAvatar width={40} height={40} user={friend.user.id} />
+        <p className="truncate text-nowrap">{friend.user.name}</p>
       </div>
 
       <div className="inline-flex gap-4 p-2 text-nowrap">

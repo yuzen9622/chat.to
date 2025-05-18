@@ -158,7 +158,7 @@ export default function InputBar() {
 
       setCurrentMessage((prev) => [...prev, newMessage]);
 
-      setLastMessages({ ...newMessage,isFetching:true });
+      setLastMessages({ ...newMessage, isFetching: true });
       setMessageText("");
       setReply(null);
       if (inputRef.current) {
@@ -184,7 +184,7 @@ export default function InputBar() {
         setCurrentMessage((prev) =>
           prev.map((msg) => (msg.id === newMessage.id ? newMessage : msg))
         );
-        setLastMessages({ ...newMessage,isFetching:true });
+        setLastMessages({ ...newMessage, isFetching: true });
         console.error("發送訊息失敗:", error);
       }
     },
@@ -278,7 +278,7 @@ export default function InputBar() {
           try {
             setCurrentMessage((prev) => [...prev, newMessage]);
 
-            setLastMessages({ ...newMessage,isFetching:true });
+            setLastMessages({ ...newMessage, isFetching: true });
             setReply(null);
             const res = await uploadFile(file);
             if (newMessage.meta_data) {
@@ -311,7 +311,11 @@ export default function InputBar() {
                 msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
               )
             );
-            setLastMessages({ ...newMessage, status: "failed",isFetching:true });
+            setLastMessages({
+              ...newMessage,
+              status: "failed",
+              isFetching: true,
+            });
 
             console.error("發送訊息失敗:", error);
           }
@@ -451,7 +455,7 @@ export default function InputBar() {
               </button>
             </div>
             <div className="flex items-center justify-between w-full py-1">
-              <span className=" text-stone-800 dark:text-white/50">
+              <span className="truncate text-stone-800 dark:text-white/50">
                 {replyText()}
               </span>
               {reply.meta_data && messageType(reply.meta_data!) === "image" && (
@@ -526,7 +530,7 @@ export default function InputBar() {
                 inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
               }}
               placeholder="Type some message..."
-              className="w-full p-1 mx-2 text-base bg-transparent outline-none resize-none dark:text-white h-fit"
+              className="w-full p-1 mx-2 text-base bg-transparent outline-none resize-none max-h-52 dark:text-white h-fit"
             />
           )}
 

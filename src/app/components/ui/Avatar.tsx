@@ -51,7 +51,7 @@ export default function BadgeAvatar({
       >
         <Image
           className={twMerge(
-            "border-2 border-transparent rounded-full bg-white/10 aspect-square",
+            "border-2 border-transparent   object-cover rounded-full bg-white/10 aspect-square",
             `min-w-[40px] min-h-[40px]`
           )}
           src={

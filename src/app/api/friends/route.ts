@@ -10,12 +10,11 @@ export async function POST(request: NextRequest) {
     const { userId } = await request.json();
     const { data, error } = await supabase
       .from("friends")
-      .select("users:users!friends_friend_id_fkey(*)")
-      .eq("user_id", userId);
+      .select("*, user:users!friends_friend_id_fkey(id,name,image)")
+      .or(`user_id.eq.${userId}`);
 
-    const users = data?.map((item) => item.users);
     if (error) return NextResponse.json({ error }, { status: 500 });
-    return NextResponse.json(users, { status: 200 });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.log(error);
   }

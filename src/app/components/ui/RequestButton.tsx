@@ -53,16 +53,16 @@ export default function RequestButton({
               <span className="text-sm">{sender.name} 發送給你的朋友請求</span>
               <span className="flex flex-nowrap">
                 <button
-                  onClick={() => handleClick(friend.id, "declined")}
-                  className="px-2 py-1 mx-1 font-bold text-white bg-red-500 rounded-md whitespace-nowrap hover:bg-red-400 "
-                >
-                  拒絕
-                </button>
-                <button
                   onClick={() => handleClick(friend.id, "accepted")}
                   className="px-2 py-1 mx-1 font-bold bg-gray-200 rounded-md whitespace-nowrap dark:bg-white/10"
                 >
                   接受
+                </button>
+                <button
+                  onClick={() => handleClick(friend.id, "declined")}
+                  className="px-2 py-1 mx-1 font-bold text-white bg-red-500 rounded-md whitespace-nowrap hover:bg-red-400 "
+                >
+                  拒絕
                 </button>
               </span>
             </>

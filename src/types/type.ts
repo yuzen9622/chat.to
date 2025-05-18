@@ -64,7 +64,7 @@ export interface RoomMemberInterface {
   user_id: string;
   is_deleted: boolean;
   created_at?: string;
-  users?: UserInterface;
+  user: UserInterface;
 }
 
 export interface RoomInterface {
@@ -81,6 +81,8 @@ export interface FriendInterface {
   id: string;
   user_id: string;
   friend_id: string;
+  user: UserInterface;
+  personal_room_id: string;
 }
 
 export interface FriendRequestInterface {

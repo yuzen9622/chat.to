@@ -12,11 +12,9 @@ import { clearReadMessage, fetchRoomMessage } from "../lib/util";
 
 export default function ChatRoomWrapper({
   room,
-
   roomId,
 }: {
   room: RoomInterface;
-
   roomId: string;
 }) {
   const {

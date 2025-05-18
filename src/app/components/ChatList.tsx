@@ -216,7 +216,7 @@ function CreateRoomModal({
                     <button
                       key={friend.id}
                       type="button"
-                      onClick={() => handleRoomMember(friend.id)}
+                      onClick={() => handleRoomMember(friend.user.id)}
                       className={twMerge(
                         " relative flex flex-col items-center dark:text-white max-w-20 min-w-fit "
                       )}
@@ -228,10 +228,14 @@ function CreateRoomModal({
                           </div>
                         )}
 
-                        <BadgeAvatar width={55} height={55} user={friend.id} />
+                        <BadgeAvatar
+                          width={55}
+                          height={55}
+                          user={friend.user.id}
+                        />
                       </span>
 
-                      <p className="truncate">{friend.name}</p>
+                      <p className="truncate">{friend.user.name}</p>
                     </button>
                   ))}
               </div>

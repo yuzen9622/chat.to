@@ -1,10 +1,10 @@
 "use client";
 import { create } from "zustand";
 import {
+  FriendInterface,
   FriendRequestInterface,
   NoteInterface,
   SystemAlertInterface,
-  UserInterface,
 } from "../../types/type";
 import {
   fetchFriendNote,
@@ -14,7 +14,7 @@ import {
 
 import { isMobile } from "react-device-detect";
 interface AuthStore {
-  friends: UserInterface[] | null;
+  friends: FriendInterface[] | null;
   friendRequests: FriendRequestInterface[] | null;
   friendNote: NoteInterface[] | null;
   userNote: NoteInterface | null;
@@ -24,7 +24,7 @@ interface AuthStore {
   systemAlert: SystemAlertInterface;
   setSystemAlert: (alertInfo: SystemAlertInterface) => void;
   setFriends: (
-    friend: UserInterface | ((prev: UserInterface[]) => UserInterface[])
+    friend: FriendInterface | ((prev: FriendInterface[]) => FriendInterface[])
   ) => void;
   setFriendRequest: (
     requestOrFn:
@@ -67,10 +67,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
   friendNote: null,
   initialize: async (user: string) => {
     try {
-      const friendsData: UserInterface[] = await fetchUserFriends(user);
+      const friendsData: FriendInterface[] = await fetchUserFriends(user);
       const friendRequestData: FriendRequestInterface[] =
         await fetchFriendRequests(user);
-      const friendNote: NoteInterface[] = await fetchFriendNote(friendsData);
+      const userIds = friendsData.map((f) => f.friend_id);
+      const friendNote: NoteInterface[] = await fetchFriendNote(userIds);
       set({ isMobile: isMobile });
       set({ friends: friendsData || [] });
       set({ friendRequests: friendRequestData || [] });

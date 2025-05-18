@@ -3,7 +3,6 @@ import {
   ClientMessageInterface,
   MetaData,
   RoomInterface,
-  UserInterface,
 } from "../../types/type";
 import { useChatStore } from "../store/ChatStore";
 
@@ -208,12 +207,40 @@ export const createRoom = async (
     });
 
     const data = await response.json();
+    console.log(data);
+
     useChatStore.setState((state) => ({
-      rooms: [...state.rooms, data[0]],
+      rooms: [...state.rooms, data],
     }));
-    return data[0];
+    return data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getPersonalRoom = async (
+  id: string,
+  userId: string,
+  friendId: string
+) => {
+  try {
+    const data = fetch("/api/rooms/personal", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomId: id,
+        userId,
+        friendId,
+        room_type: "personal",
+      }),
+    });
+    const res = (await data).json();
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 
@@ -419,6 +446,7 @@ export const responseFriendRequest = async (id: string, status: string) => {
       }),
     });
     const data = await response.json();
+
     await channel.publish("friend_action", {
       action: "response",
       data: { id, status, friends: data },
@@ -554,9 +582,9 @@ export const getFileIcon = (fileName: string) => {
   return fileIcons[mimeType as keyof typeof fileIcons] || fileIcons.default;
 };
 
-export const fetchFriendNote = async (friends: UserInterface[]) => {
+export const fetchFriendNote = async (userIds: string[]) => {
   try {
-    const userIds = friends.map((f) => f.id);
+    // const userIds = friends.map((f) => f.user.id);
     const response = await fetch("/api/note", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -592,8 +620,10 @@ export const isMobile = (userAgent: string): boolean => {
 export const Copy2ClipBoard = async (text: string) => {
   const type = "text/plain";
   const clipboardItemData = {
-    [type]: text,
+    [type]: new Blob([text], { type: "text/plain" }),
   };
+
   const clipboardItem = new ClipboardItem(clipboardItemData);
+  console.log(clipboardItemData);
   await navigator.clipboard.write([clipboardItem]);
 };

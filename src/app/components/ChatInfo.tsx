@@ -19,22 +19,15 @@ import moment from "moment";
 import ChatInfoList from "./ChatInfoList";
 
 function RoomUsers() {
-  const { currentChat, currentUser } = useChatStore();
+  const { currentChat } = useChatStore();
   const [open, setOpen] = useState(false);
   const userId = useSession()?.data?.userId;
 
   const roomUsers = useMemo(() => {
     if (!currentChat) return [];
-    const members = currentChat.room_members;
-    const roomMembers = members.map((m) => {
-      const user = currentUser.find((cu) => cu.id === m.user_id);
-      if (user) {
-        const userMember = { ...m, user };
-        return userMember;
-      }
-    });
+    const roomMembers = currentChat.room_members;
     return roomMembers;
-  }, [currentChat, currentUser]);
+  }, [currentChat]);
   return (
     <>
       <button
@@ -53,18 +46,21 @@ function RoomUsers() {
           <h1 className="text-xl text-center dark:text-white">成員</h1>
 
           <div className="flex flex-col max-h-full gap-2 overflow-auto dark:text-white">
-            {roomUsers &&
-              roomUsers.map((rm) => (
+            {roomUsers.length > 0 &&
+              roomUsers.map((roomUser) => (
                 <button
                   className="flex flex-row items-center gap-4 p-2 rounded-md hover:dark:bg-white/10"
-                  key={rm?.id}
+                  key={roomUser?.id}
                 >
-                  <BadgeAvatar user={rm?.user_id} />
+                  <BadgeAvatar user={roomUser.user_id} />
                   <span className="text-start">
-                    <p>{userId === rm?.user_id ? "你" : rm?.user.name}</p>
+                    <p>
+                      {userId === roomUser.user_id ? "你" : roomUser.user?.name}
+                    </p>
                     <p className="text-xs dark:text-white/40">
                       加入日期:
-                      {rm?.created_at && moment(rm.created_at).format("LL")}
+                      {roomUser?.created_at &&
+                        moment(roomUser.created_at).format("LL")}
                     </p>
                   </span>
                 </button>
@@ -201,7 +197,7 @@ export default function ChatInfo() {
                             height={55}
                             user={friend.id}
                           />
-                          <p className="truncate">{friend.name}</p>
+                          <p className="truncate">{friend.user.name}</p>
                         </button>
                       );
                     })}

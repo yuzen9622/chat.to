@@ -37,6 +37,7 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import moment from "moment";
 import "react-photo-view/dist/react-photo-view.css";
 import WavesurferAudio from "./Audio";
+import { useDarkMode } from "@/hook/useDarkMode";
 type MessageItemProps = {
   index: number;
   message: ClientMessageInterface;
@@ -160,8 +161,9 @@ const SettingBar = memo(function SettingBar({
               className={twMerge(
                 "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
               )}
-              onClick={() => {
-                Copy2ClipBoard(message.text);
+              onClick={async () => {
+                await Copy2ClipBoard(message.text);
+                handleClose();
               }}
             >
               <Clipboard size={20} />
@@ -351,15 +353,14 @@ const AudioMessage = memo(function AudioMessage({
   metaData: MetaData;
   isOwn: boolean;
 }) {
+  const isDark = useDarkMode();
   return (
     <WavesurferAudio
       url={metaData.url}
+      isOwn={isOwn}
+      isDark={isDark}
       backgroundColor={
-        isOwn
-          ? "bg-blue-500"
-          : document.documentElement.classList.contains("dark")
-          ? "bg-stone-800"
-          : "bg-gray-400/20"
+        isOwn ? "bg-blue-500" : isDark ? "bg-stone-800" : "bg-gray-400/20"
       }
     />
   );
@@ -455,7 +456,7 @@ const ReplyMessage = memo(function ReplyMessage({
 
       <span
         className={twMerge(
-          " relative rounded-3xl w-fit  ",
+          " relative rounded-3xl w-fit  z-0",
           isOwn ? " text-end" : "text-start"
         )}
       >
@@ -506,7 +507,7 @@ const MessageItem = memo(function MessageItem({
           }, 500);
         });
       },
-      { threshold: 1 }
+      { threshold: 0.5 }
     );
 
     observer.observe(messageRef.current);

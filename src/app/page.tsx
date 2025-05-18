@@ -21,7 +21,7 @@ export default function Home() {
     const getNote = async () => {
       if (!session?.user) return;
       try {
-        const data = await fetchFriendNote([session.user]);
+        const data = await fetchFriendNote([session.userId!]);
         setUserNote(data[0]);
       } catch (error) {
         console.log(error);

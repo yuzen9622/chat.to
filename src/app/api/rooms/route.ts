@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json({ error: "No Authentication" }, { status: 500 });
   const { data, error } = await supabase
     .from("room_members")
-    .select("rooms(*, room_members(*))")
+    .select("rooms(*, room_members(*,user:users(id,name,image)))")
     .eq("user_id", session.userId);
 
   if (error)

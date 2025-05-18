@@ -1,6 +1,7 @@
 "use client";
 import {
   ClientMessageInterface,
+  FriendInterface,
   NoteInterface,
   RoomInterface,
   UserInterface,
@@ -39,12 +40,13 @@ export const useFriendListner = (channel: RealtimeChannel) => {
         });
         if (data.status !== "accepted") return;
         const currentFriend = data.friends.find(
-          (friend: UserInterface) => friend.id !== userId
+          (friend: FriendInterface) => friend.user_id === userId
         );
+
         setFriends(currentFriend);
       } else if (action === "delete") {
         setFriends((prev) => {
-          return prev.filter((f) => f.id !== data);
+          return prev.filter((f) => f.friend_id !== data);
         });
       }
     };

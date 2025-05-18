@@ -6,8 +6,15 @@ import { twMerge } from "tailwind-merge";
 type AudioProps = {
   url: string;
   backgroundColor?: string;
+  isDark?: boolean;
+  isOwn: boolean;
 };
-export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
+export default function WavesurferAudio({
+  url,
+  backgroundColor,
+  isDark,
+  isOwn,
+}: AudioProps) {
   const audioRef = useRef<HTMLDivElement>(null);
 
   const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
@@ -19,11 +26,12 @@ export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
     barHeight: 2,
     barRadius: 6,
     height: "auto",
-    waveColor: backgroundColor?.trim() === "bg-gray-400/20" ? "black" : "white",
-    progressColor:
-      backgroundColor?.trim() === "bg-gray-400/20"
-        ? "rgb(0,0,0,0.5)"
-        : "rgb(255,255,255,0.5)",
+    waveColor: isOwn ? "white" : isDark ? "white" : "rgb(59, 130, 246)",
+    progressColor: isOwn
+      ? "#93c5fd"
+      : isDark
+      ? "rgba(64, 64, 64, 0.7)"
+      : "#93c5fd",
     width: "100%",
   });
   const [time, setTime] = useState("");
@@ -79,13 +87,32 @@ export default function WavesurferAudio({ url, backgroundColor }: AudioProps) {
     >
       <button type="button" onClick={handlePlayPause} className="px-1">
         {!isPlaying ? (
-          <Play size={20} className="text-blue-300 dark:text-white" />
+          <Play
+            size={20}
+            className={twMerge(
+              "text-blue-500 dark:text-white",
+              isOwn && " text-white"
+            )}
+          />
         ) : (
-          <Pause size={20} className="text-blue-300 dark:text-white" />
+          <Pause
+            size={20}
+            className={twMerge(
+              "text-blue-500 dark:text-white",
+              isOwn && " text-white"
+            )}
+          />
         )}
       </button>
       <div className="w-full" ref={audioRef}></div>
-      <div className="p-2 text-xs text-blue-300 dark:text-white">{time}</div>
+      <div
+        className={twMerge(
+          "text-blue-500 p-2 text-xs dark:text-white",
+          isOwn && " text-white"
+        )}
+      >
+        {time}
+      </div>
     </div>
   );
 }
