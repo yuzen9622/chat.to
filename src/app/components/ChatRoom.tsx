@@ -109,7 +109,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         return [...data, ...prev];
       });
 
-      if (findRef.current !== "") {
+      if (findRef.current === "") {
         scrollRef.current?.scrollToIndex({
           index: data.length,
           align: "start",

@@ -67,7 +67,7 @@ export default function EditProtofileBtn() {
       setIsLoading(false);
       setUserImage(null);
     }
-  }, [editProfile, update, channel, userImage]);
+  }, [editProfile, update, channel, userImage,setSystemAlert]);
 
   // const handleImageUpload = async () => {
   //   const input = document.createElement("input");
