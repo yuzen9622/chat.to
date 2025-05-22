@@ -1,7 +1,7 @@
 import React from "react";
 import FriendRequest from "../components/FriendRequest";
 import FriendList from "../components/FriendList";
-import NavBar from "../components/NavBar";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
