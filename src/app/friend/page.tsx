@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <div className="relative flex-1 max-h-full p-2 m-2 overflow-y-hidden transition-all rounded-lg ">
       <span className="flex flex-col w-full h-full gap-2 lg:flex-row">
-        <NavBar />
+        {/* <NavBar /> */}
         <FriendRequest />
         <FriendList />
       </span>

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import BadgeAvatar from "@/app/components/ui/Avatar";
-import { AlignLeft, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { useChatStore } from "../store/ChatStore";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -12,13 +12,8 @@ import { useSession } from "next-auth/react";
 import { useChatInfo } from "@/hook/useChatInfo";
 
 export default function ChatHeader() {
-  const {
-    currentChat,
-    sidebarOpen,
-    setSidebarOpen,
-    setChatInfoOpen,
-    chatInfoOpen,
-  } = useChatStore();
+  const { currentChat, sidebarOpen, setChatInfoOpen, chatInfoOpen } =
+    useChatStore();
   const { onlineUsers } = useAblyStore();
 
   const userId = useSession()?.data?.userId;
@@ -38,14 +33,7 @@ export default function ChatHeader() {
             size={"30px"}
           />
         </Link>
-        <button
-          className={twMerge(
-            "mr-2 lg:hidden max-sm:hidden p-1 rounded-md hover:dark:bg-white/10"
-          )}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          <AlignLeft className=" dark:text-white text-stone-800" size={25} />
-        </button>
+
         <span className="flex items-center">
           <button
             onClick={() => setChatInfoOpen(!sidebarOpen)}
@@ -87,7 +75,7 @@ export default function ChatHeader() {
       </span>
       <button
         onClick={() => setChatInfoOpen(true)}
-        className={twMerge("xl:hidden", chatInfoOpen && "hidden")}
+        className={twMerge(chatInfoOpen && "hidden")}
       >
         <Info className="text-gray-400 hover:dark:text-white hover:text-stone-800 " />
       </button>

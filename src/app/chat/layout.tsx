@@ -2,21 +2,21 @@
 import React from "react";
 import ChatList from "../components/ChatList";
 import { usePathname } from "next/navigation";
-import NavBar from "../components/NavBar";
+import { twMerge } from "tailwind-merge";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden">
-      {path === "/chat" && (
-        <div className="flex-1 w-full h-full overflow-hidden sm:hidden">
+    <div className="flex w-full h-full gap-2 overflow-hidden sm:py-2">
+      {path.startsWith("/chat") && (
+        <div
+          className={twMerge(
+            "  h-full w-full sm:min-w-80 sm:max-w-80  max-sm:w-full  m-2 max-sm:m-0 flex-1",
+            path.startsWith("/chat/") && "max-sm:hidden",
+            !path.startsWith("/chat") && "max-sm:hidden"
+          )}
+        >
           <ChatList />
-        </div>
-      )}
-
-      {path === "/chat" && (
-        <div>
-          <NavBar />
         </div>
       )}
 

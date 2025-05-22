@@ -27,8 +27,7 @@ import { ClientMessageInterface } from "../../types/type";
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
 
-  const { currentMessage, setCurrentMessage, currentChat, reply } =
-    useChatStore();
+  const { currentMessage, setCurrentMessage, currentChat } = useChatStore();
 
   const { room } = useAblyStore();
   const [page, setPage] = useState(1);
@@ -227,8 +226,8 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && userMap && isRended && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover max-h-dvh">
-          <div className="box-border relative flex flex-col flex-1 overflow-hidden max-h-dvh ">
+        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover border border-l dark:border-none sm:rounded-l-md dark:bg-neutral-800 max-h-dvh">
+          <div className="box-border relative flex flex-col flex-1 py-2 oyerflow-hidden max-h-dvh ">
             <ChatHeader />
 
             <main
@@ -312,8 +311,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 <button
                   onClick={() => scrollToBottom()}
                   className={twMerge(
-                    "fixed z-10 p-1 my-1 text-sm bottom-20  bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl",
-                    reply && "sticky bottom-0"
+                    " absolute z-10 p-1   text-sm bottom-2  bg-gray-100  rounded-md shadow-md  text-stone-700  w-fit dark:text-white dark:bg-white/10 backdrop-blur-2xl right-2"
                   )}
                 >
                   <ChevronDown />

@@ -360,7 +360,7 @@ const AudioMessage = memo(function AudioMessage({
       isOwn={isOwn}
       isDark={isDark}
       backgroundColor={
-        isOwn ? "bg-blue-500" : isDark ? "bg-stone-800" : "bg-gray-400/20"
+        isOwn ? "bg-blue-500" : isDark ? "bg-white/10" : "bg-gray-400/20"
       }
     />
   );

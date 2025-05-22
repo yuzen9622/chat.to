@@ -81,7 +81,7 @@ export default function WavesurferAudio({
   return (
     <div
       className={twMerge(
-        "flex w-48 p-1 px-2 bg-blue-500 rounded-3xl",
+        "flex w-48  px-2 py-2 bg-blue-500 rounded-3xl",
         backgroundColor && backgroundColor
       )}
     >

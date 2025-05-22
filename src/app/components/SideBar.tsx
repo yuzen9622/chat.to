@@ -1,60 +1,26 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AlignLeft } from "lucide-react";
+
 import BarList from "./BarList";
-import ChatList from "./ChatList";
 import { twMerge } from "tailwind-merge";
 import { useChatStore } from "../store/ChatStore";
-import { Drawer } from "@mui/material";
 
-type SideType = {
-  anchor: "bottom" | "left" | "right" | "top";
-  variant: "permanent" | "temporary" | "persistent";
-  size: "xl" | "lg" | "sm";
-};
+import { usePathname } from "next/navigation";
+
+import { useSession } from "next-auth/react";
+import ListItem from "./ui/ListItem";
 
 export default function SideBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { sidebarOpen, setSidebarOpen } = useChatStore();
+  const { data: session } = useSession();
   const [isRwd, setIsRwd] = useState(false);
-  const [sideStyle, setSideStyle] = useState<SideType>({
-    anchor: "left",
-    variant: "permanent",
-    size: "xl",
-  });
 
+  const pathName = usePathname();
   useEffect(() => {
     const observer = new ResizeObserver((el) => {
       el.forEach((e) => {
-        const width = e.contentRect.width;
-
-        // 根據目前寬度判斷應該設定哪種樣式
-        let newStyle: SideType = {
-          anchor: "left",
-          variant: "permanent",
-          size: "xl",
-        };
-        if (width >= 1024) {
-          newStyle = { anchor: "left", variant: "permanent", size: "xl" };
-        } else if (width > 640) {
-          newStyle = { anchor: "left", variant: "temporary", size: "lg" };
-        } else {
-          newStyle = { anchor: "bottom", variant: "permanent", size: "sm" };
-        }
-
-        // 避免重複設定相同 style
-        setSideStyle((prev) => {
-          if (
-            prev.anchor !== newStyle.anchor ||
-            prev.variant !== newStyle.variant ||
-            prev.size !== newStyle.size
-          ) {
-            return newStyle;
-          }
-          return prev;
-        });
-
         if (e.contentRect.width >= 1024 && !sidebarOpen) {
           setSidebarOpen(true);
 
@@ -72,78 +38,59 @@ export default function SideBar() {
   }, [setSidebarOpen, sidebarOpen, isRwd]);
 
   return (
-    <Drawer
-      sx={{
-        width: sideStyle.size === "sm" ? "auto" : 300,
-        height: 40,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: sideStyle.size === "sm" ? "auto" : 300,
-          border: "none",
-          boxSizing: "border-box",
-        },
-        border: "none",
-      }}
-      open={sidebarOpen}
-      onClose={() => setSidebarOpen(false)}
-      className="w-full"
-      anchor={sideStyle.anchor}
-      variant={sideStyle.variant}
+    <div
+      className={twMerge(
+        " h-full  xl:w-72 max-sm:w-full min-w-16  z-50 transition-all border-r dark:border-none bg-transparent dark:bg-transparent "
+      )}
+      ref={sidebarRef}
     >
-      <div
-        className={twMerge(
-          " h-full    z-50 transition-all border-r dark:border-none bg-transparent dark:bg-neutral-900 ",
-          sideStyle.size === "xl" && "p-2"
-        )}
-        ref={sidebarRef}
-      >
-        <nav className="flex flex-row items-center w-full h-full overflow-auto bg-white rounded-md sm:flex-col dark:bg-stone-800 backdrop-blur-3xl">
-          <div className="box-border items-center justify-between hidden w-full p-4 h-fit sm:flex">
-            <span className="inline-flex items-center px-2 space-x-2 text-3xl text-blue-400">
-              <Image
-                src="/chat.png"
-                className=" w-9 h-9"
-                width={35}
-                height={35}
-                priority={true}
-                alt="logo"
-              />
-              <Image
-                src="/icon.png"
-                width={100}
-                height={100}
-                priority={true}
-                alt="logo"
-              />
-            </span>
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+      <nav className="flex justify-between w-full h-full p-2 overflow-auto bg-white sm:flex-col dark:bg-transparent backdrop-blur-3xl">
+        <div className="flex flex-row items-center w-full gap-2 sm:flex-col">
+          <div className="relative flex gap-2 p-2 transition-colors rounded-lg max-sm:hidden lg:justify-start">
+            <Image
+              src="/chat.png"
+              className={twMerge("w-7 h-7 aspect-square ")}
+              width={35}
+              height={35}
+              priority={true}
+              alt="logo"
+            />
+            <span
               className={twMerge(
-                " sticky top-8 left-4 p-1 text-3xl rounded-lg hover:bg-stone-900/10 hover:dark:bg-white/10 active:dark:bg-white/10   lg:hidden"
+                "hidden xl:block text-blue-500 text-xl",
+                pathName.startsWith("/chat") && "hidden sm:hidden"
               )}
             >
-              <AlignLeft className="dark:text-white text-stone-900" size={25} />
-            </button>
+              Chat.to
+            </span>
           </div>
-          <BarList />
-
-          <div className="hidden w-full overflow-auto sm:block">
-            <ChatList />
+          <div className="flex flex-row items-center flex-1 w-full gap-2 sm:flex-col">
+            <BarList />
           </div>
+        </div>
 
-          {/* <div className="w-full p-2 text-white rounded-lg bg-white/10">
-          <UserButton>
-            <UserButton.MenuItems>
-              <UserButton.Action
-                label="Open chat"
-                open=""
-                labelIcon={<DotIcon />}
+        {session?.user && (
+          <ListItem href="/" className="max-sm:hidden">
+            <div>
+              <Image
+                alt="user"
+                width={35}
+                height={35}
+                className=" rounded-2xl"
+                src={session?.user.image}
               />
-            </UserButton.MenuItems>
-          </UserButton>
-        </div> */}
-        </nav>
-      </div>
-    </Drawer>
+            </div>
+            <div className="flex flex-col max-xl:hidden">
+              <span className="text-black dark:text-white">
+                {session?.user.name}
+              </span>
+              <span className="text-sm dark:text-neutral-400">
+                {session?.user.email}
+              </span>
+            </div>
+          </ListItem>
+        )}
+      </nav>
+    </div>
   );
 }

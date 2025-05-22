@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import NoteButton from "./components/NoteButton";
-import NavBar from "./components/NavBar";
 import EditProtofileBtn from "@/app/components/ui/EditProtofileBtn";
 import FriendNote from "./components/FriendNote";
 
@@ -33,7 +32,6 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-2 overflow-hidden flex-nowrap">
       <section className="flex flex-col items-center justify-start w-full p-3 px-4 rounded-md min-w-fit h-fit ">
-        <NavBar />
         <span className="flex items-center gap-8 mt-3 dark:text-white">
           <div className="relative w-fit h-fit">
             <Image

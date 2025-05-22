@@ -17,6 +17,7 @@ import {
   useUserListner,
 } from "@/hook/useRealtime";
 
+
 moment.locale("zh-tw");
 export default function ClientLayout({
   children,
@@ -71,6 +72,7 @@ export default function ClientLayout({
       <div className={twMerge("flex", isChatRoom && " hidden sm:block")}>
         {!pathname.includes("/auth") && <SideBar />}
       </div>
+     
 
       {children}
     </div>

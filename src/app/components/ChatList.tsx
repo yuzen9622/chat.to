@@ -216,13 +216,13 @@ function CreateRoomModal({
                     <button
                       key={friend.id}
                       type="button"
-                      onClick={() => handleRoomMember(friend.user.id)}
+                      onClick={() => handleRoomMember(friend.friend_id)}
                       className={twMerge(
                         " relative flex flex-col items-center dark:text-white max-w-20 min-w-fit "
                       )}
                     >
                       <span className="relative ">
-                        {roomMembers.includes(friend.id) && (
+                        {roomMembers.includes(friend.friend_id) && (
                           <div className="absolute z-20 p-1 bg-blue-500 rounded-full -right-1 animate-in zoom-in-0">
                             <Check size={15} />
                           </div>
@@ -270,7 +270,7 @@ function CreateRoomModal({
 export function LoadingList() {
   return (
     <div>
-      <div className="flex items-center w-full mb-3 ">
+      <div className="flex items-center min-w-[300px] mb-3 ">
         <Skeleton
           variant="circular"
           className=" dark:bg:white/10 bg-stone-900/10"
@@ -394,8 +394,8 @@ export default function ChatList() {
   }, [userId, setRoom, setNotify, rooms, setLastMessages]);
 
   return (
-    <div className="flex flex-col w-full h-full p-2 overflow-hidden border-t-gray-500">
-      <div className="flex justify-between">
+    <div className="flex flex-col h-full p-2 sm:rounded-lg sm:dark:bg-neutral-800 border-t-gray-500">
+      <div className="flex justify-between ">
         <span className="text-lg font-semibold text-blue-400">Chats</span>
         <span>
           <button
@@ -406,20 +406,22 @@ export default function ChatList() {
           </button>
         </span>
       </div>
-      <div className="flex flex-col h-full gap-2 overflow-auto ">
-        {!isLoading ? (
-          rooms.length > 0 ? (
-            rooms.map((room) => {
-              return <ChatButton key={room.id} room={room} />;
-            })
+      <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-col gap-2 ">
+          {!isLoading ? (
+            rooms.length > 0 ? (
+              rooms.map((room) => {
+                return <ChatButton key={room.id} room={room} />;
+              })
+            ) : (
+              <span className="text-center dark:text-blue-500">
+                快去新增好友或加入群組吧!
+              </span>
+            )
           ) : (
-            <span className="text-center dark:text-blue-500">
-              快去新增好友或加入群組吧!
-            </span>
-          )
-        ) : (
-          <LoadingList />
-        )}
+            <LoadingList />
+          )}
+        </div>
       </div>
 
       <CreateRoomModal isOpen={isOpen} setIsOpen={setIsOpen} />

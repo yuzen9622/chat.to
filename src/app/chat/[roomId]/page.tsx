@@ -45,7 +45,7 @@ export default async function Page({
     return redirect("/chat");
 
   return (
-    <div className="flex flex-row flex-1 overflow-y-hidden transition-all max-h-dvh">
+    <div className="flex flex-row flex-1 h-full overflow-y-hidden transition-all max-h-dvh">
       <ChatRoomWrapper room={room} roomId={roomId} />
     </div>
   );

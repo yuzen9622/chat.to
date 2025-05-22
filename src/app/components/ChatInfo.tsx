@@ -146,14 +146,14 @@ export default function ChatInfo() {
   return (
     <div
       className={twMerge(
-        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-gray-white/20 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden  xl:scale-100 xl:relative xl:flex xl:flex-col absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
+        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-gray-white/20 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden   absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
         chatInfoOpen && "flex flex-col overflow-hidden"
       )}
     >
       {currentChat && (
         <>
           <button
-            className="absolute xl:hidden top-4 right-2"
+            className="absolute top-4 right-2"
             onClick={() => setChatInfoOpen(false)}
           >
             <X className="text-gray-400 hover:dark:text-white" />

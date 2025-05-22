@@ -50,7 +50,7 @@ export default function LoginPage() {
             serverity: "info",
             open: true,
           });
-          router.push("/");
+          router.push("/chat");
         }
 
         if (res && res.error) {
