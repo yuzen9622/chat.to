@@ -1,9 +1,10 @@
 import { TypingInterface } from "@/types/type";
-import React, { Fragment, useMemo } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
+
 export default function TypingBar({
   typingUsers,
   roomId,
@@ -18,6 +19,7 @@ export default function TypingBar({
     const isTyping = typingUsers.filter(
       (tu) => tu.typing && tu.user.id !== userId
     );
+    console.log(isTyping);
     return isTyping;
   }, [typingUsers, userId]);
   const roomType = useMemo(() => {
@@ -26,28 +28,26 @@ export default function TypingBar({
   }, [rooms, roomId]);
   return (
     <>
-      {isTypingUsers && isTypingUsers.length > 0 && (
+      {isTypingUsers && (
         <div className="flex items-center gap-1 ">
-          <span className="relative flex">
-            {isTypingUsers &&
-              isTypingUsers.map((itu, index) => (
-                <Fragment key={index}>
-                  {roomType && roomType === "group" && (
-                    <Image
-                      className={twMerge(
-                        " rounded-full outline outline-2 outline-white dark:outline-neutral-800 aspect-square",
-                        `-translate-x-${index}`
-                      )}
-                      alt={itu.user.name}
-                      width={20}
-                      height={20}
-                      src={itu.user?.image || "/user.png"}
-                      key={index}
-                    />
-                  )}
-                </Fragment>
-              ))}
-          </span>
+          {roomType && roomType === "group" && (
+            <span className="relative flex">
+              {isTypingUsers &&
+                isTypingUsers.map((itu, index) => (
+                  <Image
+                    className={twMerge(
+                      " rounded-full   ring-2 ring-white dark:ring-neutral-800 aspect-square",
+                      `-translate-x-[${index + 2}px]`
+                    )}
+                    alt={itu.user.name}
+                    width={20}
+                    height={20}
+                    src={itu.user?.image || "/user.png"}
+                    key={index}
+                  />
+                ))}
+            </span>
+          )}
 
           <span className="font-bold ">
             {roomType && roomType === "personal" && "對方"}

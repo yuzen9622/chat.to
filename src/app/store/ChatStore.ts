@@ -271,16 +271,20 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((state) => {
       const current = { ...state.typingUsers };
       const currentTypingUsers = current[typingUsers.roomId];
-      if (
-        currentTypingUsers?.find((ctu) => ctu.user.id === typingUsers.user.id)
-      ) {
-        const newTypingUsers = currentTypingUsers.map((ctu) => {
-          if (ctu.user.id === typingUsers.user.id) {
-            return typingUsers;
-          }
-          return ctu;
-        });
-        current[typingUsers.roomId] = newTypingUsers;
+      if (currentTypingUsers) {
+        if (
+          currentTypingUsers.find((ctu) => ctu.user.id === typingUsers.user.id)
+        ) {
+          const newTypingUsers = currentTypingUsers.map((ctu) => {
+            if (ctu.user.id === typingUsers.user.id) {
+              return typingUsers;
+            }
+            return ctu;
+          });
+          current[typingUsers.roomId] = newTypingUsers;
+        } else {
+          current[typingUsers.roomId].push(typingUsers);
+        }
       } else {
         current[typingUsers.roomId] = [typingUsers];
       }
