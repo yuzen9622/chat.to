@@ -77,7 +77,7 @@ export default function SideBar() {
                 width={35}
                 height={35}
                 className=" rounded-2xl"
-                src={session?.user.image}
+                src={session?.user.image || "/user.png"}
               />
             </div>
             <div className="flex flex-col max-xl:hidden">
