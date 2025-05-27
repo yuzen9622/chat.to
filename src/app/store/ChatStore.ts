@@ -4,6 +4,7 @@ import {
   ClientMessageInterface,
   NotifyInterface,
   RoomInterface,
+  TypingInterface,
   UserInterface,
 } from "../../types/type";
 
@@ -18,7 +19,7 @@ interface ChatStore {
   newMessage: ClientMessageInterface | null;
   reply: ClientMessageInterface | null;
   newNotify: NotifyInterface | null;
-  typingUsers: Record<string, Array<{ userId: string; typing: boolean }>>;
+  typingUsers: Record<string, TypingInterface[]>;
   edit: ClientMessageInterface | null;
   chatInfoOpen: boolean;
   setChatInfoOpen: (isOpen: boolean) => void;
@@ -58,9 +59,7 @@ interface ChatStore {
   addOnboardingUser: (userId: string) => void;
   removeOnboardingUser: (userId: string) => void;
   setSidebarOpen: (isOpen: boolean) => void;
-  setTypingUsers: (
-    typingUsers: Record<string, Array<{ userId: string; typing: boolean }>>
-  ) => void;
+  setTypingUsers: (typingUsers: TypingInterface) => void;
   setNewNotify: (
     notify:
       | NotifyInterface
@@ -269,7 +268,25 @@ export const useChatStore = create<ChatStore>((set) => ({
     });
   },
   setTypingUsers: (typingUsers) => {
-    return typingUsers;
+    set((state) => {
+      const current = { ...state.typingUsers };
+      const currentTypingUsers = current[typingUsers.roomId];
+      if (
+        currentTypingUsers?.find((ctu) => ctu.user.id === typingUsers.user.id)
+      ) {
+        const newTypingUsers = currentTypingUsers.map((ctu) => {
+          if (ctu.user.id === typingUsers.user.id) {
+            return typingUsers;
+          }
+          return ctu;
+        });
+        current[typingUsers.roomId] = newTypingUsers;
+      } else {
+        current[typingUsers.roomId] = [typingUsers];
+      }
+
+      return { ...state, typingUsers: current };
+    });
   },
   setNewNotify: (notifyOrFn) => {
     set((state) => {

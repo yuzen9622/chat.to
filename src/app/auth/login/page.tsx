@@ -21,15 +21,15 @@ export default function LoginPage() {
 
   const { status } = useSession();
 
-  useEffect(() => {
-    const getAuthSession = async () => {
-      const sessoin = await getSession();
-      if (sessoin) {
-        router.push("/");
-      }
-    };
-    getAuthSession();
-  }, [router]);
+  // useEffect(() => {
+  //   const getAuthSession = async () => {
+  //     const sessoin = await getSession();
+  //     if (sessoin) {
+  //       router.push("/");
+  //     }
+  //   };
+  //   getAuthSession();
+  // }, [router]);
 
   const handleLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {

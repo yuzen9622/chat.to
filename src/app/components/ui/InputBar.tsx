@@ -1,10 +1,21 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CirclePlus } from "lucide-react";
 import { Send } from "lucide-react";
 import { useAblyStore } from "../../store/AblyStore";
 import { useChatStore } from "../../store/ChatStore";
-import { ClientMessageInterface, MessageType } from "../../../types/type";
+import {
+  ClientMessageInterface,
+  MessageType,
+  TypingInterface,
+} from "../../../types/type";
+import _ from "lodash";
 
 import { X, Laugh, Pencil, Paperclip, Mic, CircleX } from "lucide-react";
 import {
@@ -109,8 +120,47 @@ export default function InputBar() {
   const { setSystemAlert, isMobile } = useAuthStore();
 
   const userId = useSession().data?.userId;
+  const user = useSession()?.data?.user;
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const isTyping = useRef(false);
+
+  const debouncedStopTyping = useCallback(
+    _.debounce(async () => {
+      if (!user || !channel || !isTyping.current) return;
+
+      const typingUser: TypingInterface = {
+        roomId: roomId,
+        user: user,
+        typing: false,
+      };
+      await channel.publish("typing_action", typingUser);
+      isTyping.current = false;
+    }, 500),
+    [channel, roomId, user]
+  );
+
+  const handleChange = useCallback(
+    async (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setMessageText(e.target.value);
+
+      if (!isTyping.current && user && channel) {
+        isTyping.current = true;
+        const typingUser: TypingInterface = {
+          roomId: roomId,
+          user: user,
+          typing: true,
+        };
+        await channel.publish("typing_action", typingUser);
+      }
+
+      debouncedStopTyping();
+      if (!inputRef.current) return;
+      inputRef.current.style.height = "auto"; // 先重設高度，避免內容刪減後高度無法縮小
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    },
+    [channel, roomId, user, debouncedStopTyping]
+  );
 
   const handleCompositionEnd = () => {
     setIsComposing(false);
@@ -436,7 +486,7 @@ export default function InputBar() {
     >
       <div
         className={twMerge(
-          "sticky bottom-0 px-2 py-1 m-2 rounded-3xl transition-all bg-white/10 backdrop-blur-3xl",
+          "sticky bottom-0 px-2 py-1 m-2 border border-t dark:border-none rounded-3xl transition-all bg-white/10 backdrop-blur-3xl",
           reply && "rounded-md"
         )}
       >
@@ -523,12 +573,7 @@ export default function InputBar() {
                   target.style.height = `${target.scrollHeight}px`; // 設定新高度
                 }
               }}
-              onChange={(e) => {
-                setMessageText(e.target.value);
-                if (!inputRef.current) return;
-                inputRef.current.style.height = "auto"; // 先重設高度，避免內容刪減後高度無法縮小
-                inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-              }}
+              onChange={handleChange}
               placeholder="Type some message..."
               className="w-full p-1 mx-2 text-base bg-transparent outline-none resize-none max-h-52 dark:text-white h-fit"
             />

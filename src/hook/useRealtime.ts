@@ -287,3 +287,18 @@ export const useUserListner = (channel: RealtimeChannel) => {
     };
   }, [channel, setCurrentUsers, currentUser]);
 };
+
+export const useTypingListner = (channel: RealtimeChannel) => {
+  const { setTypingUsers } = useChatStore();
+  useEffect(() => {
+    const handleTyping = async (message: InboundMessage) => {
+      const { data } = message;
+      //console.log(data);
+      setTypingUsers(data);
+    };
+    channel.subscribe("typing_action", handleTyping);
+    return () => {
+      channel.unsubscribe("typing_action");
+    };
+  }, [channel, setTypingUsers]);
+};

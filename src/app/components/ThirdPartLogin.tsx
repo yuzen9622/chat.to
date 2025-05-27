@@ -9,12 +9,14 @@ export default function ThirdPartLogin() {
     google: false,
     github: false,
   });
+
   const handleLogin = useCallback(async (provider: string) => {
     setLoginStatus((prev) => ({ ...prev, [provider]: true }));
-    await signIn(provider);
+    await signIn(provider, { callbackUrl: "/chat" });
+
     setLoginStatus((prev) => ({ ...prev, [provider]: false }));
   }, []);
-  console.log(loginStatus);
+
   return (
     <div>
       <div className="flex items-center justify-center w-full h-full gap-2 p-2 max-sm:flex-col">

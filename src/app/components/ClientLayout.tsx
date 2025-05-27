@@ -14,9 +14,9 @@ import {
   useNoteListner,
   useNotifyListner,
   useRoomActionListner,
+  useTypingListner,
   useUserListner,
 } from "@/hook/useRealtime";
-
 
 moment.locale("zh-tw");
 export default function ClientLayout({
@@ -58,6 +58,7 @@ export default function ClientLayout({
   useUserListner(channel);
   useNotifyListner(channel);
   useNoteListner(channel);
+  useTypingListner(channel);
 
   const { presenceData } = usePresenceListener("chatta-chat-channel");
   useEffect(() => {
@@ -72,7 +73,6 @@ export default function ClientLayout({
       <div className={twMerge("flex", isChatRoom && " hidden sm:block")}>
         {!pathname.includes("/auth") && <SideBar />}
       </div>
-     
 
       {children}
     </div>

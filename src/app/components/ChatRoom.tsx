@@ -23,11 +23,13 @@ import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
 import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
 import { ClientMessageInterface } from "../../types/type";
+import TypingBar from "./ui/TypingBar";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
 
-  const { currentMessage, setCurrentMessage, currentChat } = useChatStore();
+  const { currentMessage, setCurrentMessage, currentChat, typingUsers } =
+    useChatStore();
 
   const { room } = useAblyStore();
   const [page, setPage] = useState(1);
@@ -43,7 +45,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
   const userMap = useRoomUser();
   useAblyRoom(roomId);
-
+  const typingUser = useMemo(() => {
+    return typingUsers[roomId];
+  }, [roomId, typingUsers]);
   const { dateCounts, flatMessages, dates, isRended } = useMemo(() => {
     const dateCounts: number[] = [];
     const flatMessages: ClientMessageInterface[] = [];
@@ -232,7 +236,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
             <main
               className={twMerge(
-                " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in border-y dark:border-none "
+                " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in  dark:border-none "
               )}
             >
               {userMap ? (
@@ -318,6 +322,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 </button>
               )}
             </main>
+            <div className="px-2 dark:text-white">
+              <TypingBar roomId={roomId} typingUsers={typingUser} />
+            </div>
 
             <InputBar />
           </div>

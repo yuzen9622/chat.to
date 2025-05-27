@@ -10,8 +10,9 @@ export type MessageType = "text" | "media" | "file" | "url" | "audio";
 export type ProviderType = "google" | "github" | "credentials";
 
 export interface TypingInterface {
-  userId: string;
+  roomId: string;
   typing: boolean;
+  user: UserInterface;
 }
 
 export interface NotifyMessage {

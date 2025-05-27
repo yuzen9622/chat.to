@@ -14,6 +14,8 @@ import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 
 import { useSession } from "next-auth/react";
+import TypingBar from "./TypingBar";
+import { useChatStore } from "@/app/store/ChatStore";
 type ButtonProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ChatButton({
   room,
@@ -27,7 +29,7 @@ export default function ChatButton({
   const isActive = pathname === `/chat/${room.id}`;
 
   const userId = useSession()?.data?.userId;
-
+  const { typingUsers } = useChatStore();
   const { recipentUser, displayName } = useChatInfo(room, userId!);
 
   const messageContent = useMemo(() => {
@@ -43,6 +45,14 @@ export default function ChatButton({
 
     return msgType ? type[msgType] : lastMessage.text;
   }, [lastMessage]);
+  const typingUser = useMemo(() => {
+    let roomTyping = typingUsers[room.id];
+
+    if (!roomTyping || roomTyping.every((tu) => tu.typing === false))
+      return null;
+    roomTyping = roomTyping.filter((tu) => tu.user.id !== userId);
+    return roomTyping;
+  }, [room, typingUsers, userId]);
 
   if (
     room.room_members.find((rm) => rm.user_id === userId && rm.is_deleted) ||
@@ -81,19 +91,25 @@ export default function ChatButton({
               roomNotify > 0 && "dark:text-white/80 text-gray-500 font-bold"
             )}
           >
-            <span className="flex-shrink-0 ">
-              {user &&
-                lastMessage &&
-                user.id === lastMessage.sender &&
-                lastMessage.status === "send" &&
-                `你：`}
-            </span>
-            <p className="truncate ">{messageContent && messageContent}</p>
-            {lastMessage && lastMessage.id !== "" && (
-              <span className="flex-shrink-0">
-                ．
-                <TimeAgo date={lastMessage.created_at!} />
-              </span>
+            {typingUser && typingUser.length > 0 ? (
+              <TypingBar typingUsers={typingUser} roomId={room.id} />
+            ) : (
+              <>
+                <span className="flex-shrink-0 ">
+                  {user &&
+                    lastMessage &&
+                    user.id === lastMessage.sender &&
+                    lastMessage.status === "send" &&
+                    `你：`}
+                </span>
+                <p className="truncate ">{messageContent && messageContent}</p>
+                {lastMessage && lastMessage.id !== "" && (
+                  <span className="flex-shrink-0">
+                    ．
+                    <TimeAgo date={lastMessage.created_at!} />
+                  </span>
+                )}
+              </>
             )}
           </span>
         </div>

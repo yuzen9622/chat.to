@@ -30,7 +30,7 @@ export default function BarList() {
     return friendRequests.filter((fr) => fr.receiver_id === userId).length;
   }, [friendRequests, userId]);
   const pathName = usePathname();
-  console.log(pathName);
+
   return (
     <>
       <ListItem href="/">

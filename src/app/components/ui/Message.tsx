@@ -460,7 +460,7 @@ const ReplyMessage = memo(function ReplyMessage({
           isOwn ? " text-end" : "text-start"
         )}
       >
-        <div className="absolute inset-0 z-10 rounded-3xl opacity-40 bg-stone-900" />
+        <div className="absolute inset-0 z-10 rounded-3xl opacity-10 dark:opacity-40 bg-stone-900 " />
         <Message />
       </span>
     </div>
