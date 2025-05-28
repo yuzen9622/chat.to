@@ -28,7 +28,7 @@ export default function TypingBar({
   }, [rooms, roomId]);
   return (
     <>
-      {isTypingUsers && (
+      {isTypingUsers && isTypingUsers.length > 0 && (
         <div className="flex items-center gap-1 ">
           {roomType && roomType === "group" && (
             <span className="relative flex">
