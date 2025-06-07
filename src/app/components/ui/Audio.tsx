@@ -210,8 +210,10 @@ export function WavesurferRecord({
             url,
             public_id,
           };
-          await sendUserMessage(audioMessage);
-          await sendAblyMessage(ably, audioMessage);
+          await Promise.all([
+            sendUserMessage(audioMessage),
+            sendAblyMessage(ably, audioMessage),
+          ]);
         }
       } catch (error) {
         console.log(error);
@@ -241,7 +243,7 @@ export function WavesurferRecord({
     const handleEnd = async (blob: Blob) => {
       if (!blob) return;
       const file = new File([blob], `audio-${Date.now()}`, {
-        type: blob.type || "audio/webm",
+        type: "audio/mp3",
       });
       await handleSend(file);
     };
