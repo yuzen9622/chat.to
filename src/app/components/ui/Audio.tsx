@@ -9,6 +9,7 @@ import { useChatStore } from "@/app/store/ChatStore";
 import { sendUserMessage, uploadFile } from "@/app/lib/util";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
+import { useAuthStore } from "@/app/store/AuthStore";
 type AudioProps = {
   url: string;
   backgroundColor?: string;
@@ -137,6 +138,7 @@ export function WavesurferRecord({
   const [recordOver, setRecordOver] = useState(true);
   const [time, setTime] = useState("00:00");
   const { ably } = useAblyStore();
+  const { setSystemAlert } = useAuthStore();
 
   const userId = useSession()?.data?.userId;
 
@@ -227,22 +229,36 @@ export function WavesurferRecord({
   const handleSend = useCallback(
     async (file: File) => {
       if (!userId || !currentChat || !ably) return;
-      const audioMessage = createFileMessage(
-        userId!,
-        currentChat?.id,
-        file,
-        reply!
-      );
-      setCurrentMessage((prev) => [...prev, audioMessage]);
-      const filesResponse = await uploadFile([file]);
-      if (filesResponse && audioMessage.meta_data) {
-        const { url, public_id } = filesResponse[0];
-        audioMessage.meta_data = { ...audioMessage.meta_data, url, public_id };
-        await sendUserMessage(audioMessage);
-        await sendAblyMessage(ably, audioMessage);
+      try {
+        const audioMessage = createFileMessage(
+          userId!,
+          currentChat?.id,
+          file,
+          reply!
+        );
+        setCurrentMessage((prev) => [...prev, audioMessage]);
+        const filesResponse = await uploadFile([file]);
+        if (filesResponse && audioMessage.meta_data) {
+          const { url, public_id } = filesResponse[0];
+          audioMessage.meta_data = {
+            ...audioMessage.meta_data,
+            url,
+            public_id,
+          };
+          await sendUserMessage(audioMessage);
+          await sendAblyMessage(ably, audioMessage);
+        }
+      } catch (error) {
+        console.log(error);
+        setSystemAlert({
+          open: true,
+          text: "語音傳送失敗",
+          variant: "filled",
+          serverity: "error",
+        });
       }
     },
-    [userId, currentChat, reply, setCurrentMessage, ably]
+    [userId, currentChat, reply, setCurrentMessage, ably, setSystemAlert]
   );
 
   const handleAudio = useCallback(() => {
@@ -256,7 +272,7 @@ export function WavesurferRecord({
           if (!blob) return;
 
           const file = new File([blob], `audio-${Date.now()}`, {
-            type: "audio/mp3",
+            type: "audio/webm",
           });
           handleSend(file);
         });
@@ -265,7 +281,7 @@ export function WavesurferRecord({
           if (!blob) return;
 
           const file = new File([blob], `audio-${Date.now()}`, {
-            type: "audio/mp3",
+            type: "audio/webm",
           });
           handleSend(file);
         });
