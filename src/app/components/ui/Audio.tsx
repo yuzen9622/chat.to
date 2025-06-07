@@ -262,6 +262,7 @@ export function WavesurferRecord({
   const handleAudio = useCallback(() => {
     const record = recordRef.current;
     if (!wavesurfer || !record) return;
+    record.pauseRecording();
     record.stopMic();
     record.stopRecording();
 
