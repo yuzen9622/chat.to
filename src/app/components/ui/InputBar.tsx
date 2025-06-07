@@ -328,23 +328,26 @@ export default function InputBar() {
       setMessageFiles([]);
       setCurrentMessage((prev) => [...prev, ...pendingMessagas]);
       try {
-        const filesResponse = await uploadFile(messageFiles);
-        if (filesResponse) {
-          const uploadFileMessages = newFilesMessages.map((msg, index) => {
-            if (msg.meta_data) {
-              const { url, public_id } = filesResponse[index];
-              msg.meta_data = {
-                ...msg.meta_data,
-                public_id,
-                url,
-              };
-            }
-            return msg;
-          });
-          await Promise.all(
-            uploadFileMessages.map((msg) => sendUserMessage(msg))
-          );
+        if (messageFiles.length > 0) {
+          const filesResponse = await uploadFile(messageFiles);
+          if (filesResponse) {
+            const uploadFileMessages = newFilesMessages.map((msg, index) => {
+              if (msg.meta_data) {
+                const { url, public_id } = filesResponse[index];
+                msg.meta_data = {
+                  ...msg.meta_data,
+                  public_id,
+                  url,
+                };
+              }
+              return msg;
+            });
+            await Promise.all(
+              uploadFileMessages.map((msg) => sendUserMessage(msg))
+            );
+          }
         }
+
         if (newMessage) await sendUserMessage(newMessage);
       } catch (error) {
         if (newMessage) {

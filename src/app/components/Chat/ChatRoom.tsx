@@ -165,6 +165,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
     const handleMessage = (message: InboundMessage) => {
       const { newMessage, action } = message.data;
+      console.log(newMessage);
       if (newMessage.room !== currentChat?.id) return;
 
       if (
