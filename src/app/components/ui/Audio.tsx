@@ -7,6 +7,8 @@ import { createFileMessage } from "@/app/lib/createMessage";
 import { useSession } from "next-auth/react";
 import { useChatStore } from "@/app/store/ChatStore";
 import { sendUserMessage, uploadFile } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 type AudioProps = {
   url: string;
   backgroundColor?: string;
@@ -134,6 +136,7 @@ export function WavesurferRecord({
   const [isPaused, setIsPaused] = useState(false);
   const [recordOver, setRecordOver] = useState(true);
   const [time, setTime] = useState("00:00");
+  const { ably } = useAblyStore();
 
   const userId = useSession()?.data?.userId;
 
@@ -223,7 +226,7 @@ export function WavesurferRecord({
 
   const handleSend = useCallback(
     async (file: File) => {
-      if (!userId || !currentChat) return;
+      if (!userId || !currentChat || !ably) return;
       const audioMessage = createFileMessage(
         userId!,
         currentChat?.id,
@@ -236,9 +239,10 @@ export function WavesurferRecord({
         const { url, public_id } = filesResponse[0];
         audioMessage.meta_data = { ...audioMessage.meta_data, url, public_id };
         await sendUserMessage(audioMessage);
+        await sendAblyMessage(ably, audioMessage);
       }
     },
-    [userId, currentChat, reply, setCurrentMessage]
+    [userId, currentChat, reply, setCurrentMessage, ably]
   );
 
   const handleAudio = useCallback(() => {
@@ -291,10 +295,10 @@ export function WavesurferRecord({
   return (
     <div
       className={twMerge(
-        "sticky flex bottom-0 text-white bg-blue-600 gap-2 px-1 py-1 m-2 border border-t dark:border-none rounded-3xl transition-all  backdrop-blur-3xl"
+        "sticky flex bottom-0  text-white bg-blue-600 gap-2 px-1 py-1 m-2 border border-t dark:border-none rounded-3xl transition-all  backdrop-blur-3xl"
       )}
     >
-      <div className="flex items-center flex-1 overflow-hidden [&::-webkit-scrollbar]:w-0 ">
+      <div className="flex  items-center flex-1 overflow-hidden [&::-webkit-scrollbar]:w-0 ">
         {isPaused ? (
           <button onClick={handlePlay} type="button" className="p-1">
             {isPlaying ? <Pause /> : <CirclePlay />}
@@ -310,10 +314,7 @@ export function WavesurferRecord({
         )}
 
         <div
-          className={twMerge(
-            "flex-1 w-full h-8 overflow-hidden animate-in",
-            isRecord && "zoom-in"
-          )}
+          className={twMerge("flex-1 w-full h-8 overflow-hidden  ")}
           ref={audioRef}
         ></div>
 

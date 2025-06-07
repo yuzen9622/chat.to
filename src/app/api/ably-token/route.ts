@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { ably } from "@/app/lib/ably-server";
+import { ably } from "@/app/lib/ably/ably-server";
 export async function POST(req: NextRequest) {
   const body = await req.formData();
   const clientId = body.get("clientId") as string;

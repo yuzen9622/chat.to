@@ -33,7 +33,7 @@ import { useAuthStore } from "@/app/store/AuthStore";
 import { Popover } from "@mui/material";
 import { WavesurferRecord } from "./Audio";
 import { createFileMessage, createTextMessage } from "@/app/lib/createMessage";
-
+import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 function SendBar({
   handleFile,
 }: {
@@ -177,7 +177,7 @@ export default function InputBar() {
     setEdit,
     setLastMessages,
   } = useChatStore();
-  const { roomId, room } = useAblyStore();
+  const { roomId, room, ably } = useAblyStore();
   const { setSystemAlert } = useAuthStore();
 
   const userId = useSession().data?.userId;
@@ -298,7 +298,7 @@ export default function InputBar() {
   const handleSendMessage = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      if (!room) return;
+      if (!ably) return;
       const pendingMessagas: ClientMessageInterface[] = [];
       const newMessage: ClientMessageInterface | null = createTextMessage(
         userId!,
@@ -343,12 +343,18 @@ export default function InputBar() {
               return msg;
             });
             await Promise.all(
-              uploadFileMessages.map((msg) => sendUserMessage(msg))
+              uploadFileMessages.map(async (msg) => {
+                await sendUserMessage(msg);
+                await sendAblyMessage(ably, msg);
+              })
             );
           }
         }
 
-        if (newMessage) await sendUserMessage(newMessage);
+        if (newMessage) {
+          await sendUserMessage(newMessage);
+          await sendAblyMessage(ably, newMessage);
+        }
       } catch (error) {
         if (newMessage) {
           newMessage.status = "failed";
@@ -364,7 +370,7 @@ export default function InputBar() {
     },
     [
       setCurrentMessage,
-      room,
+      ably,
       setReply,
       setLastMessages,
       userId,
@@ -414,7 +420,7 @@ export default function InputBar() {
   const handleFile = useCallback(
     async (accept: string) => {
       const input = document.createElement("input");
-      const MAX_FILE_SIZE = 1024 * 1024 * 10;
+      const MAX_FILE_SIZE = 1024 * 1024 * 8;
       input.type = "file";
       input.accept = accept;
       input.multiple = true;
@@ -544,7 +550,7 @@ export default function InputBar() {
               </div>
             )}
             {edit && (
-              <div className="px-2 rounded-e-sm ">
+              <div className="px-3 py-1 rounded-e-sm ">
                 <div className="flex justify-between font-semibold dark:text-white">
                   <p className="text-sm text-white/80">編輯訊息</p>
                   <button

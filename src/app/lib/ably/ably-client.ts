@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import * as Ably from "ably";
 import { useSession } from "next-auth/react";
+import { useAblyStore } from "../../store/AblyStore";
 
 let ablyInstance: Ably.Realtime;
 
@@ -23,13 +24,15 @@ export const useAbly = () => {
   const [ablyClient, setAblyClient] = useState<Ably.Realtime | null>(null);
   const { data: session } = useSession();
   const userId = session?.userId;
+  const { setAbly } = useAblyStore();
 
   useEffect(() => {
     if (userId && !ablyClient) {
       const client = getAblyClient(userId);
       setAblyClient(client);
+      setAbly(client);
     }
-  }, [userId, ablyClient]);
+  }, [userId, ablyClient, setAbly]);
 
   return ablyClient;
 };
