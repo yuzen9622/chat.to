@@ -166,41 +166,6 @@ export function WavesurferRecord({
     setTime(formattedTime);
   }, [currentTime]);
 
-  const handleRecord = useCallback(async () => {
-    if (!wavesurfer) return;
-
-    const record = wavesurfer.registerPlugin(
-      RecordPlugin.create({
-        renderRecordedAudio: true,
-        continuousWaveform: true,
-        continuousWaveformDuration: 5,
-      })
-    );
-
-    recordRef.current = record;
-
-    setIsRecord(true);
-    setRecordOver(false);
-    if (!record) return;
-
-    if (record.isRecording()) {
-      record.stopRecording();
-      setRecordOver(true);
-      setIsRecord(false);
-      return;
-    }
-    const devicedId = await RecordPlugin.getAvailableAudioDevices();
-    console.log(devicedId);
-    record.startRecording({ deviceId: devicedId[0].deviceId });
-
-    return () => {
-      record.destroy();
-    };
-  }, [wavesurfer, setIsRecord]);
-
-  useEffect(() => {
-    handleRecord();
-  }, [handleRecord]);
   useEffect(() => {
     updateProgress();
   }, [updateProgress]);
@@ -261,38 +226,47 @@ export function WavesurferRecord({
     [userId, currentChat, reply, setCurrentMessage, ably, setSystemAlert]
   );
 
+  useEffect(() => {
+    if (!wavesurfer) return;
+
+    const record = wavesurfer.registerPlugin(
+      RecordPlugin.create({
+        renderRecordedAudio: true,
+        continuousWaveform: true,
+        continuousWaveformDuration: 5,
+      })
+    );
+    recordRef.current = record;
+
+    const handleEnd = async (blob: Blob) => {
+      if (!blob) return;
+      const file = new File([blob], `audio-${Date.now()}`, {
+        type: blob.type || "audio/webm",
+      });
+      await handleSend(file);
+    };
+
+    record.on("record-end", handleEnd);
+    (async () => {
+      const devices = await RecordPlugin.getAvailableAudioDevices();
+      if (devices.length > 0) {
+        await record.startRecording({ deviceId: devices[0].deviceId });
+        setIsRecord(true);
+        setRecordOver(false);
+      } else {
+        console.warn("找不到音訊裝置");
+      }
+    })();
+  }, [wavesurfer, handleSend, setIsRecord]);
+
   const handleAudio = useCallback(() => {
     const record = recordRef.current;
     if (!wavesurfer || !record) return;
+    record.stopMic();
+    record.stopRecording();
 
-    try {
-      if (!record.isPaused()) {
-        record.pauseRecording();
-        record.on("record-pause", async (blob) => {
-          if (!blob) return;
-
-          const file = new File([blob], `audio-${Date.now()}`, {
-            type: "audio/webm",
-          });
-          handleSend(file);
-        });
-      } else if (record.isPaused()) {
-        record.once("record-end", async (blob) => {
-          if (!blob) return;
-
-          const file = new File([blob], `audio-${Date.now()}`, {
-            type: "audio/webm",
-          });
-          handleSend(file);
-        });
-      }
-      record.stopRecording();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsRecord(false);
-    }
-  }, [recordRef, wavesurfer, setIsRecord, handleSend]);
+    setIsRecord(false);
+  }, [wavesurfer, setIsRecord]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
