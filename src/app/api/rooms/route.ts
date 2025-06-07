@@ -17,8 +17,9 @@ export async function GET() {
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
   const rooms = data.map((item) => item.rooms) as unknown;
+
   const roomIds = (rooms as RoomInterface[]).map(
-    (room: RoomInterface) => room.id
+    (room: RoomInterface) => room?.id
   ) as string[];
 
   const { data: lastMessages, error: msgError } = await supabase.rpc(

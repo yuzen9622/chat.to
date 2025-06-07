@@ -4,22 +4,23 @@ import {
   fetchUserRooms,
   fetchUsersNotify,
   joinRoom,
-} from "../lib/util";
+} from "../../lib/util";
 
-import { useChatStore } from "../store/ChatStore";
-import ChatButton from "./ui/ChatButton";
+import { useChatStore } from "../../store/ChatStore";
+import ChatButton from "../ui/ChatButton";
 import { Skeleton, Modal } from "@mui/material";
 import { SquarePen, Check } from "lucide-react";
-import { useAblyStore } from "../store/AblyStore";
+import { useAblyStore } from "../../store/AblyStore";
 
 import { twMerge } from "tailwind-merge";
 import { CircularProgress } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 import { redirect } from "next/navigation";
-import { useAuthStore } from "../store/AuthStore";
-import { ClientMessageInterface, RoomInterface } from "../../types/type";
+import { useAuthStore } from "../../store/AuthStore";
+import { ClientMessageInterface, RoomInterface } from "../../../types/type";
 import { useSession } from "next-auth/react";
-import UploadAvatar from "./ui/UploadAvatar";
+import UploadAvatar from "../ui/UploadAvatar";
+import FriendNote from "../Friend/FriendNote";
 function JoinModal() {
   const [open, setOpen] = React.useState(false);
   const [roomId, setRoomId] = useState("");
@@ -359,6 +360,7 @@ export default function ChatList() {
 
   const { setRoom, rooms, setNotify, setLastMessages } = useChatStore();
   const [isLoading, setIsLoading] = useState(false);
+  const { userNote } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const loadRooms = async () => {
@@ -395,6 +397,9 @@ export default function ChatList() {
 
   return (
     <div className="flex flex-col h-full p-2 sm:rounded-lg sm:dark:bg-neutral-800 border-t-gray-500">
+      <div>
+        <FriendNote userNote={userNote} />
+      </div>
       <div className="flex justify-between ">
         <span className="text-lg font-semibold text-blue-400">Chats</span>
         <span>

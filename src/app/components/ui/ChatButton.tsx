@@ -9,7 +9,7 @@ import { useChatInfo } from "@/hook/useChatInfo";
 import { useLastMessage } from "@/hook/useLastMessage";
 import { useRoomNotify } from "@/hook/useRoomNotify";
 import { messageType } from "../../lib/util";
-import { TimeAgo } from "../TimeAgo";
+import { TimeAgo } from "./TimeAgo";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 
@@ -45,12 +45,14 @@ export default function ChatButton({
 
     return msgType ? type[msgType] : lastMessage.text;
   }, [lastMessage]);
+
   const typingUser = useMemo(() => {
     let roomTyping = typingUsers[room.id];
 
     if (!roomTyping || roomTyping.every((tu) => tu.typing === false))
       return null;
-    roomTyping = roomTyping.filter((tu) => tu.user.id !== userId);
+    roomTyping = roomTyping.filter((tu) => tu.user.id !== userId && tu.typing);
+
     return roomTyping;
   }, [room, typingUsers, userId]);
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useAuthStore } from "../store/AuthStore";
-import { UserInterface } from "../../types/type";
+import { useAuthStore } from "../../store/AuthStore";
+import { UserInterface } from "../../../types/type";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { useChatStore } from "../store/ChatStore";
-import { useAblyStore } from "../store/AblyStore";
-import { createRoom, sendFriendRequest, queryFriend } from "../lib/util";
+import { useChatStore } from "../../store/ChatStore";
+import { useAblyStore } from "../../store/AblyStore";
+import { createRoom, sendFriendRequest, queryFriend } from "../../lib/util";
 import { Skeleton } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 

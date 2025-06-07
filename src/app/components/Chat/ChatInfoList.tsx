@@ -7,12 +7,12 @@ import {
   getFileIcon,
   handleDownload,
   messageType,
-} from "../lib/util";
-import { ClientMessageInterface } from "../../types/type";
+} from "../../lib/util";
+import { ClientMessageInterface } from "../../../types/type";
 
-import { useChatStore } from "../store/ChatStore";
+import { useChatStore } from "../../store/ChatStore";
 import { LucideIcon } from "lucide-react";
-import PreviewMediaModal from "./ui/PreviewMediaModal";
+import PreviewMediaModal from "../ui/PreviewMediaModal";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 type Type = "media" | "url" | "file";
 

@@ -20,8 +20,9 @@ export default function TypingBar({
       (tu) => tu.typing && tu.user.id !== userId
     );
     console.log(isTyping);
-    return isTyping;
+    return isTyping.slice(0, 3);
   }, [typingUsers, userId]);
+
   const roomType = useMemo(() => {
     const room = rooms.find((r) => r.id === roomId);
     return room?.room_type;

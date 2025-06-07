@@ -2,11 +2,11 @@
 import React from "react";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 import { Info } from "lucide-react";
-import { useChatStore } from "../store/ChatStore";
+import { useChatStore } from "@/app/store/ChatStore";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
-import { useAblyStore } from "../store/AblyStore";
+import { useAblyStore } from "@/app/store/AblyStore";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
 import { useChatInfo } from "@/hook/useChatInfo";

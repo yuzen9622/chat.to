@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
-import { useAuthStore } from "../store/AuthStore";
+import { useAuthStore } from "../../store/AuthStore";
 
-import FriendButton from "./ui/FriendButton";
+import FriendButton from "../ui/FriendButton";
 import { Skeleton } from "@mui/material";
-import { fetchUserFriends } from "../lib/util";
+import { fetchUserFriends } from "../../lib/util";
 import { useSession } from "next-auth/react";
 
 export default function FriendList() {

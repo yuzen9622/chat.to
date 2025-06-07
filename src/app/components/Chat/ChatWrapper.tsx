@@ -1,14 +1,14 @@
 "use client"; // 表示這是一個 Client Component
-import { RoomInterface } from "../../types/type";
+import { RoomInterface } from "../../../types/type";
 import { ChannelProvider } from "ably/react";
 import ChatRoom from "./ChatRoom";
 import { useEffect } from "react";
-import { useChatStore } from "../store/ChatStore";
-import { useAblyStore } from "../store/AblyStore";
+import { useChatStore } from "../../store/ChatStore";
+import { useAblyStore } from "../../store/AblyStore";
 
 import ChatInfo from "./ChatInfo";
 import { useSession } from "next-auth/react";
-import { clearReadMessage, fetchRoomMessage } from "../lib/util";
+import { clearReadMessage, fetchRoomMessage } from "../../lib/util";
 
 export default function ChatRoomWrapper({
   room,

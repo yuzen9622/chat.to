@@ -28,7 +28,60 @@
   box-sizing: border-box;
 }
 
-.input {}
+.swiper-button-next,
+.swiper-button-prev {
+  color: black !important;
+  background-color: white;
+
+  border-radius: 50%;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 5px !important;
+  top: 50% !important;
+  /* 垂直置中 */
+  transform: translateY(-50%) !important;
+  /* 確保完全置中 */
+  margin-top: 0 !important;
+  /* 移除預設的 margin */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700;
+}
+
+.swiper-button-prev {
+  left: 10px !important;
+  /* 調整左側按鈕位置 */
+}
+
+.swiper-button-next {
+  right: 10px !important;
+  /* 調整右側按鈕位置 */
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.swiper-button-disabled {
+  display: none !important;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    background-color: rgb(64 64 64) !important;
+    /* 深色模式背景色 */
+    color: rgb(255 255 255 / 0.7) !important;
+    /* 深色模式圖示顏色 */
+  }
+}
 
 
 /* body {

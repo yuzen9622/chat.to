@@ -1,6 +1,5 @@
-import * as Ably from "ably";
 import { NextResponse, NextRequest } from "next/server";
-
+import { ably } from "@/app/lib/ably-server";
 export async function POST(req: NextRequest) {
   const body = await req.formData();
   const clientId = body.get("clientId") as string;
@@ -11,7 +10,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
   const tokenRequestData = await ably.auth.createTokenRequest({
     clientId: clientId,
   });

@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import NoteButton from "./components/NoteButton";
+import NoteButton from "./components/ui/NoteButton";
 import EditProtofileBtn from "@/app/components/ui/EditProtofileBtn";
-import FriendNote from "./components/FriendNote";
 
 import LogoutBtn from "./components/ui/LogoutBtn";
 import { useSession } from "next-auth/react";
@@ -30,7 +29,7 @@ export default function Home() {
   }, [session, setUserNote]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-2 overflow-hidden flex-nowrap">
+    <div className="flex flex-col items-center w-full h-full gap-2 p-2 overflow-hidden flex-nowrap">
       <section className="flex flex-col items-center justify-start w-full p-3 px-4 rounded-md min-w-fit h-fit ">
         <span className="flex items-center gap-8 mt-3 dark:text-white">
           <div className="relative w-fit h-fit">
@@ -62,12 +61,6 @@ export default function Home() {
             </span>
           </div>
         </span>
-      </section>
-      <section className="flex w-full h-full p-3 px-4 overflow-hidden text-white rounded-md ">
-        <div className="flex flex-col w-full h-full">
-          <p className="mb-2">便利貼</p>
-          <FriendNote userNote={userNote!} />
-        </div>
       </section>
     </div>
   );

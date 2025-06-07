@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useCallback, useState } from "react";
-import ThirdPartLogin from "@/app/components/ThirdPartLogin";
+import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";

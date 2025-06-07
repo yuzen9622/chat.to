@@ -381,7 +381,7 @@ const FileMessage = memo(function FileMessage({
       title={message.text}
       onClick={() => handleDownload(metaData.url, message.text)}
       className={twMerge(
-        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-gray-500/20 gap-x-1 dark:bg-stone-800",
+        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-gray-500/20 gap-x-1 dark:bg-stone-700/70",
         isOwn && "dark:bg-blue-500 bg-blue-500 text-white"
       )}
     >
@@ -561,7 +561,12 @@ const MessageItem = memo(function MessageItem({
               isOwn ? "flex-row-reverse" : ""
             )}
           >
-            <div className="max-w-[80%] relative">
+            <div
+              className={twMerge(
+                "max-w-[80%] relative ",
+                message.status === "deleting" && " hidden"
+              )}
+            >
               <Message />
               {message.status === "pending" && (
                 <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">

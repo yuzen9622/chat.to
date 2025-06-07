@@ -190,7 +190,13 @@ export const createRoom = async (
   room_img?: File
 ) => {
   try {
-    const room_img_url: string = await uploadFile(room_img!);
+    let roomImageUrl;
+    if (room_img) {
+      const roomImage = await uploadFile([room_img]);
+      if (roomImage) {
+        roomImageUrl = roomImage[0].url;
+      }
+    }
 
     const response = await fetch("/api/rooms/create/", {
       method: "POST",
@@ -202,7 +208,7 @@ export const createRoom = async (
         userId,
         room_type: room_type || "personal",
         room_members,
-        room_img: room_img_url || null,
+        room_img: roomImageUrl || null,
       }),
     });
 
@@ -456,11 +462,16 @@ export const responseFriendRequest = async (id: string, status: string) => {
   }
 };
 
-export async function uploadFile(file: File) {
+export async function uploadFile(
+  files: File[]
+): Promise<Array<{ url: string; public_id: string }> | null> {
   try {
-    if (!file) return "";
+    if (!files) return null;
     const formData = new FormData();
-    formData.append("file", file);
+    for (const file of files) {
+      formData.append("files", file);
+    }
+
     const response = await fetch("/api/upload", {
       method: "POST",
       body: formData,
@@ -469,7 +480,8 @@ export async function uploadFile(file: File) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    return data;
+
+    return data.data;
   } catch (error) {
     console.error("Error uploading file:", error);
     throw error;
@@ -626,4 +638,16 @@ export const Copy2ClipBoard = async (text: string) => {
   const clipboardItem = new ClipboardItem(clipboardItemData);
   console.log(clipboardItemData);
   await navigator.clipboard.write([clipboardItem]);
+};
+
+export const fileType = (mineType: string) => {
+  const type = mineType.split("/")[0];
+
+  if (type === "image" || type === "video") {
+    return "media";
+  }
+  if (type === "audio") {
+    return type;
+  }
+  return "file";
 };

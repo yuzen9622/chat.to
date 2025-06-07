@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useWavesurfer } from "@wavesurfer/react";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
-import { CirclePlay, Play, Pause, AudioLines } from "lucide-react";
+import { CirclePlay, Play, Pause, AudioLines, CircleX } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+import { createFileMessage } from "@/app/lib/createMessage";
+import { useSession } from "next-auth/react";
+import { useChatStore } from "@/app/store/ChatStore";
+import { sendUserMessage, uploadFile } from "@/app/lib/util";
 type AudioProps = {
   url: string;
   backgroundColor?: string;
@@ -120,21 +124,18 @@ export default function WavesurferAudio({
 export function WavesurferRecord({
   setIsRecord,
   isRecord,
-  setAudioFile,
-  formRef,
 }: {
   setIsRecord: React.Dispatch<React.SetStateAction<boolean>>;
   isRecord: boolean;
-  setAudioFile: React.Dispatch<React.SetStateAction<File | null>>;
-
-  formRef: React.RefObject<HTMLFormElement | null>;
 }) {
+  const { currentChat, reply, setCurrentMessage } = useChatStore();
   const audioRef = useRef<HTMLDivElement>(null);
   const recordRef = useRef<RecordPlugin>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [recordOver, setRecordOver] = useState(true);
-
   const [time, setTime] = useState("00:00");
+
+  const userId = useSession()?.data?.userId;
 
   const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: audioRef,
@@ -143,8 +144,9 @@ export function WavesurferRecord({
     barHeight: 4,
     barRadius: 5,
     height: "auto",
-    waveColor: "rgb(59 130 246)",
-    progressColor: "rgb(59 130 246  /0.5)",
+    waveColor: "rgba(255,255,255)",
+    cursorColor: "white",
+    progressColor: "white",
     cursorWidth: 0,
     width: "100%",
   });
@@ -185,12 +187,11 @@ export function WavesurferRecord({
     const devicedId = await RecordPlugin.getAvailableAudioDevices();
     console.log(devicedId);
     record.startRecording({ deviceId: devicedId[0].deviceId });
-  }, [wavesurfer, setIsRecord]);
 
-  useEffect(() => {
-    const record = recordRef.current;
-    if (!record) return;
-  }, [isPaused, setAudioFile]);
+    return () => {
+      record.destroy();
+    };
+  }, [wavesurfer, setIsRecord]);
 
   useEffect(() => {
     handleRecord();
@@ -208,10 +209,7 @@ export function WavesurferRecord({
       setIsPaused(false);
     } else {
       record.pauseRecording();
-      // record.once("record-pause", (blob) => {
-      //   const url = URL.createObjectURL(blob);
-      //   setAudioFile(url);
-      // });
+
       wavesurfer.setTime(0);
       setIsPaused(true);
     }
@@ -223,7 +221,27 @@ export function WavesurferRecord({
     wavesurfer.playPause();
   }, [wavesurfer]);
 
-  const handleSendAudio = useCallback(() => {
+  const handleSend = useCallback(
+    async (file: File) => {
+      if (!userId || !currentChat) return;
+      const audioMessage = createFileMessage(
+        userId!,
+        currentChat?.id,
+        file,
+        reply!
+      );
+      setCurrentMessage((prev) => [...prev, audioMessage]);
+      const filesResponse = await uploadFile([file]);
+      if (filesResponse && audioMessage.meta_data) {
+        const { url, public_id } = filesResponse[0];
+        audioMessage.meta_data = { ...audioMessage.meta_data, url, public_id };
+        await sendUserMessage(audioMessage);
+      }
+    },
+    [userId, currentChat, reply, setCurrentMessage]
+  );
+
+  const handleAudio = useCallback(() => {
     const record = recordRef.current;
     if (!wavesurfer || !record) return;
 
@@ -236,60 +254,58 @@ export function WavesurferRecord({
           const file = new File([blob], `audio-${Date.now()}`, {
             type: "audio/mp3",
           });
-          setAudioFile(file);
+          handleSend(file);
         });
       } else if (record.isPaused()) {
-        record.on("record-end", async (blob) => {
+        record.once("record-end", async (blob) => {
           if (!blob) return;
 
           const file = new File([blob], `audio-${Date.now()}`, {
             type: "audio/mp3",
           });
-          setAudioFile(file);
+          handleSend(file);
         });
       }
       record.stopRecording();
     } catch (error) {
       console.log(error);
     } finally {
-      formRef.current?.requestSubmit();
       setIsRecord(false);
     }
-  }, [recordRef, wavesurfer, setIsRecord, setAudioFile, formRef]);
+  }, [recordRef, wavesurfer, setIsRecord, handleSend]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        console.log(e.key);
         if (!recordRef.current) return;
         e.preventDefault();
-        recordRef.current?.stopRecording();
-        recordRef.current?.once("record-end", (blob) => {
-          const file = new File([blob], `audio-${Date.now()}`, {
-            type: "audio/mp3",
-          });
-          setAudioFile(file);
-        });
-
-        handleSendAudio();
+        handleAudio();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleSendAudio, recordRef, setAudioFile]);
+  }, [handleAudio, recordRef]);
 
   return (
-    <>
+    <div
+      className={twMerge(
+        "sticky flex bottom-0 text-white bg-blue-600 gap-2 px-1 py-1 m-2 border border-t dark:border-none rounded-3xl transition-all  backdrop-blur-3xl"
+      )}
+    >
       <div className="flex items-center flex-1 overflow-hidden [&::-webkit-scrollbar]:w-0 ">
-        {isRecord && isPaused && (
+        {isPaused ? (
           <button onClick={handlePlay} type="button" className="p-1">
-            {isPlaying ? (
-              <Pause className="text-blue-400" />
-            ) : (
-              <CirclePlay className="text-blue-400" />
-            )}
+            {isPlaying ? <Pause /> : <CirclePlay />}
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsRecord(false)}
+            type="button"
+            className="p-1"
+          >
+            <CircleX />
           </button>
         )}
 
@@ -301,24 +317,20 @@ export function WavesurferRecord({
           ref={audioRef}
         ></div>
 
-        {isRecord && <span className="text-xs text-blue-400">{time}</span>}
+        {isRecord && <span className="text-xs ">{time}</span>}
       </div>
-      {isRecord && !recordOver && (
+      {!recordOver && (
         <button type="button" onClick={handleRecordStatus} className="p-1">
-          {isPaused ? (
-            <Pause className="text-blue-400" />
-          ) : (
-            <Play className="text-blue-400" />
-          )}
+          {isPaused ? <Pause /> : <Play />}
         </button>
       )}
       <button
         type="button"
-        onClick={handleSendAudio}
-        className="p-1 transition-all bg-blue-600 rounded-lg active:bg-blue-300 zoom-in animate-in "
+        onClick={handleAudio}
+        className="p-1 px-3 transition-all bg-white rounded-3xl active:bg-blue-300 zoom-in animate-in "
       >
-        <AudioLines className="text-white " />
+        <AudioLines className="text-blue-600 " />
       </button>
-    </>
+    </div>
   );
 }

@@ -2,7 +2,7 @@
 import React from "react";
 import { AblyProvider, ChannelProvider } from "ably/react";
 import { CircularProgress } from "@mui/material";
-import { useAbly } from "../../lib/ably";
+import { useAbly } from "../../lib/ably-client";
 
 import { useSession } from "next-auth/react";
 

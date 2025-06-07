@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import ThirdPartLogin from "@/app/components/ThirdPartLogin";
+import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
 import Link from "next/link";
 import { uploadFile } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
@@ -57,8 +57,10 @@ export default function RegisterPage() {
         setIsLoading(true);
         let avatar_url = "";
         if (userImage) {
-          const avatarData = await uploadFile(userImage.imgFile);
-          avatar_url = avatarData.url;
+          const avatarData = await uploadFile([userImage.imgFile]);
+          if (avatarData) {
+            avatar_url = avatarData[0].url;
+          }
         }
 
         const res = await fetch("/api/auth/register", {

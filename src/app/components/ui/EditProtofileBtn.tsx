@@ -37,15 +37,15 @@ export default function EditProtofileBtn() {
           });
           return;
         }
-        const imageData: { url: string; public_id: string } = await uploadFile(
-          userImage.imgFile
-        );
-        image = imageData.url;
+        const imageData = await uploadFile([userImage.imgFile]);
+        if (imageData) {
+          image = imageData[0].url;
 
-        setEditProfile((prev) => {
-          if (!prev) return prev;
-          return { ...prev, image: imageData.url };
-        });
+          setEditProfile((prev) => {
+            if (!prev) return prev;
+            return { ...prev, image: imageData[0].url };
+          });
+        }
       }
       const res = await fetch("/api/users/edit", {
         method: "post",
@@ -67,7 +67,7 @@ export default function EditProtofileBtn() {
       setIsLoading(false);
       setUserImage(null);
     }
-  }, [editProfile, update, channel, userImage,setSystemAlert]);
+  }, [editProfile, update, channel, userImage, setSystemAlert]);
 
   // const handleImageUpload = async () => {
   //   const input = document.createElement("input");

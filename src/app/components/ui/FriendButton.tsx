@@ -48,11 +48,11 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
       router.push(`/chat/${newRoom.id}`);
     } else {
       //await getPersonalRoom(friend.personal_room_id, userId!, friend.friend_id);
-      if (
-        friendRoom.room_members.some(
-          (rm) => rm.user_id === userId && rm.is_deleted
-        )
-      ) {
+      const isFriendRoomDelete = friendRoom.room_members.some(
+        (rm) => rm.user_id === userId && rm.is_deleted
+      );
+      console.log(isFriendRoomDelete);
+      if (isFriendRoomDelete) {
         friendRoom.room_members = friendRoom.room_members.map((rm) => {
           if (rm.user_id === userId) {
             return { ...rm, is_deleted: false };

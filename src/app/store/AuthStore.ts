@@ -13,6 +13,7 @@ import {
 } from "../lib/util";
 
 import { isMobile } from "react-device-detect";
+
 interface AuthStore {
   friends: FriendInterface[] | null;
   friendRequests: FriendRequestInterface[] | null;
@@ -72,6 +73,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         await fetchFriendRequests(user);
       const userIds = friendsData.map((f) => f.friend_id);
       const friendNote: NoteInterface[] = await fetchFriendNote(userIds);
+      const data = await fetchFriendNote([user]);
+      set({ userNote: data[0] });
       set({ isMobile: isMobile });
       set({ friends: friendsData || [] });
       set({ friendRequests: friendRequestData || [] });
