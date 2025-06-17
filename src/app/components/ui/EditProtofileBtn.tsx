@@ -88,7 +88,7 @@ export default function EditProtofileBtn() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-1 px-4 text-sm rounded-md outline outline-2 outline-black dark:outline dark:outline-2 dark:outline-white"
+        className="p-1 px-4 text-sm text-blue-500 bg-white rounded-md outline outline-2 outline-white dark:outline dark:outline-2 dark:outline-white"
       >
         編輯個人檔案
       </button>

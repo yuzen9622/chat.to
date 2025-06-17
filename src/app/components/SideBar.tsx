@@ -70,7 +70,10 @@ export default function SideBar() {
         </div>
 
         {session?.user && (
-          <ListItem href="/" className="max-sm:hidden">
+          <ListItem
+            href={`/profile/${session.userId}`}
+            className="max-sm:hidden"
+          >
             <div>
               <Image
                 alt="user"

@@ -72,7 +72,7 @@ export default function BarList() {
       </ListItem> */}
       {session?.user && (
         <ListItem
-          href="/"
+          href={`/profile/${session.userId}`}
           className="sm:hidden"
           // className="flex items-center justify-center w-full gap-2 p-2 rounded-md sm:hidden hover:bg-stone-900/5 hover:dark:bg-white/5"
         >

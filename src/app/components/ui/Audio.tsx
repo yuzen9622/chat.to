@@ -297,11 +297,7 @@ export function WavesurferRecord({
             {isPlaying ? <Pause /> : <CirclePlay />}
           </button>
         ) : (
-          <button
-            onClick={() => setIsRecord(false)}
-            type="button"
-            className="p-1"
-          >
+          <button onClick={() => setIsRecord(false)} type="button">
             <CircleX />
           </button>
         )}

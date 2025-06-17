@@ -1,17 +1,17 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { FriendInterface, RoomInterface } from "../../../types/type";
-import { useChatStore } from "../../store/ChatStore";
-import { getPersonalRoom } from "../../lib/util";
+import { FriendInterface, RoomInterface } from "../../../../types/type";
+import { useChatStore } from "../../../store/ChatStore";
+import { getPersonalRoom } from "../../../lib/util";
 
 import { useRouter } from "next/navigation";
-import { useAblyStore } from "../../store/AblyStore";
-import BadgeAvatar from "./Avatar";
-import { useAuthStore } from "../../store/AuthStore";
+import { useAblyStore } from "../../../store/AblyStore";
+
+import { useAuthStore } from "../../../store/AuthStore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
-import WarningButton from "./WarningButton";
+import WarningButton from "../../ui/WarningButton";
 import { Trash2 } from "lucide-react";
 export default function FriendButton({ friend }: { friend: FriendInterface }) {
   const { rooms } = useChatStore();
@@ -102,45 +102,38 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
   }, [friend, userId, channel, setFriends]);
 
   return (
-    <div className="flex items-center justify-between p-1 bg-gray-100 rounded-lg opacity-0 dark:bg-white/10 animate-slide-in">
-      <div className="flex items-center w-full gap-2 overflow-hidden cursor-pointer">
-        <BadgeAvatar width={40} height={40} user={friend.user.id} />
-        <p className="truncate text-nowrap">{friend.user.name}</p>
-      </div>
-
-      <div className="inline-flex gap-4 p-2 text-nowrap">
-        <button
-          onClick={handleClick}
-          disabled={isLoading.create}
-          title="發送訊息"
-          className="p-1 px-3 font-bold transition-colors rounded-md dark:text-white outline outline-2 outline-black dark:outline dark:outline-2 dark:outline-white "
-        >
-          {isLoading.create ? (
-            <CircularProgress
-              color="inherit"
-              size={20}
-              className="mx-1 text-sm text-black dark:text-white"
-            />
-          ) : (
-            <>
-              <p className="">發送訊息</p>
-            </>
-          )}
-        </button>
-        <WarningButton
-          onClick={deleteFriend}
-          className={twMerge(
-            "flex items-center font-bold px-1 ",
-            isLoading.delete && "outline-red-300 pointer-events-none"
-          )}
-        >
-          {isLoading.delete ? (
-            <CircularProgress color="inherit" size={20} className="text-sm " />
-          ) : (
-            <Trash2 />
-          )}
-        </WarningButton>
-      </div>
+    <div className="inline-flex gap-4 text-nowrap">
+      <button
+        onClick={handleClick}
+        disabled={isLoading.create}
+        title="發送訊息"
+        className="p-1 px-3 font-bold text-blue-600 transition-colors bg-white rounded-md dark:soutline dark:outline dark:outline-2 dark:outline-white dark:text-white dark:bg-transparent"
+      >
+        {isLoading.create ? (
+          <CircularProgress
+            color="inherit"
+            size={20}
+            className="mx-1 text-sm text-black dark:text-white"
+          />
+        ) : (
+          <>
+            <p className="">發送訊息</p>
+          </>
+        )}
+      </button>
+      <WarningButton
+        onClick={deleteFriend}
+        className={twMerge(
+          "flex items-center font-bold px-1 ",
+          isLoading.delete && "outline-red-300 pointer-events-none"
+        )}
+      >
+        {isLoading.delete ? (
+          <CircularProgress color="inherit" size={20} className="text-sm " />
+        ) : (
+          <Trash2 />
+        )}
+      </WarningButton>
     </div>
   );
 }

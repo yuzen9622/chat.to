@@ -1,18 +1,23 @@
 "use client";
 import { create } from "zustand";
 import {
+  ClientMessageInterface,
   FriendInterface,
   FriendRequestInterface,
   NoteInterface,
+  RoomInterface,
   SystemAlertInterface,
 } from "../../types/type";
 import {
   fetchFriendNote,
   fetchFriendRequests,
   fetchUserFriends,
+  fetchUserRooms,
+  fetchUsersNotify,
 } from "../lib/util";
 
 import { isMobile } from "react-device-detect";
+import { useChatStore } from "./ChatStore";
 
 interface AuthStore {
   friends: FriendInterface[] | null;
@@ -68,12 +73,30 @@ export const useAuthStore = create<AuthStore>((set) => ({
   friendNote: null,
   initialize: async (user: string) => {
     try {
+      const { setLastMessages, setRoom, setNotify } = useChatStore.getState();
       const friendsData: FriendInterface[] = await fetchUserFriends(user);
       const friendRequestData: FriendRequestInterface[] =
         await fetchFriendRequests(user);
       const userIds = friendsData.map((f) => f.friend_id);
       const friendNote: NoteInterface[] = await fetchFriendNote(userIds);
       const data = await fetchFriendNote([user]);
+      const {
+        rooms: roomsData,
+        lastMessages,
+      }: { rooms: RoomInterface[]; lastMessages: ClientMessageInterface[] } =
+        await fetchUserRooms();
+      const inRooms = roomsData.filter((r) =>
+        r.room_members.some((m) => m.user_id === user)
+      );
+
+      if (roomsData.length > 0) {
+        setRoom(() => inRooms);
+      }
+      lastMessages.forEach((lm) => {
+        setLastMessages({ ...lm, isFetching: true });
+      });
+      const notifiesData = await fetchUsersNotify(user, inRooms);
+      setNotify(() => notifiesData);
       set({ userNote: data[0] });
       set({ isMobile: isMobile });
       set({ friends: friendsData || [] });

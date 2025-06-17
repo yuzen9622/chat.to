@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 import { useAuthStore } from "../../store/AuthStore";
 
-import FriendButton from "../ui/FriendButton";
 import { Skeleton } from "@mui/material";
 import { fetchUserFriends } from "../../lib/util";
 import { useSession } from "next-auth/react";
+import FriendItem from "./FriendItem";
 
 export default function FriendList() {
   const { friends, setFriends } = useAuthStore();
@@ -26,7 +26,7 @@ export default function FriendList() {
           <span className="flex flex-col w-full gap-2 overflow-auto ">
             {Array.isArray(friends) && friends.length > 0 ? (
               friends.map((friend) => (
-                <FriendButton friend={friend} key={friend.id} />
+                <FriendItem friend={friend} key={friend.id} />
               ))
             ) : (
               <p className="font-bold text-center ">快來尋找你的好朋友吧!</p>
