@@ -271,6 +271,14 @@ export function WavesurferRecord({
     setIsRecord(false);
   }, [wavesurfer, setIsRecord]);
 
+  const handleClose = useCallback(() => {
+    const record = recordRef.current;
+    if (!record) return;
+    record.unAll();
+    record.destroy();
+    setIsRecord(false);
+  }, [setIsRecord]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -291,13 +299,13 @@ export function WavesurferRecord({
         "sticky flex bottom-0  text-white bg-blue-600 gap-2 px-1 py-1 m-2 border border-t dark:border-none rounded-3xl transition-all  backdrop-blur-3xl"
       )}
     >
-      <div className="flex  items-center flex-1 overflow-hidden [&::-webkit-scrollbar]:w-0 ">
+      <div className="flex  items-center flex-1 gap-2 overflow-hidden [&::-webkit-scrollbar]:w-0 ">
         {isPaused ? (
           <button onClick={handlePlay} type="button" className="p-1">
             {isPlaying ? <Pause /> : <CirclePlay />}
           </button>
         ) : (
-          <button onClick={() => setIsRecord(false)} type="button">
+          <button onClick={handleClose} className="p-1" type="button">
             <CircleX />
           </button>
         )}
