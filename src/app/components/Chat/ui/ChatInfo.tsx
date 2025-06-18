@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 
-import { useChatStore } from "../../store/ChatStore";
-import { useAblyStore } from "../../store/AblyStore";
+import { useChatStore } from "../../../store/ChatStore";
+import { useAblyStore } from "../../../store/AblyStore";
 
-import { deleteRoom } from "../../lib/util";
+import { deleteRoom } from "../../../lib/util";
 import { UserPlus, LogOut, X, Users } from "lucide-react";
 import BadgeAvatar from "@/app/components/ui/Avatar";
-import { joinRoom } from "../../lib/util";
+import { joinRoom } from "../../../lib/util";
 import { twMerge } from "tailwind-merge";
 
 import { Modal } from "@mui/material";
-import { useAuthStore } from "../../store/AuthStore";
+import { useAuthStore } from "../../../store/AuthStore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useChatInfo } from "@/hook/useChatInfo";

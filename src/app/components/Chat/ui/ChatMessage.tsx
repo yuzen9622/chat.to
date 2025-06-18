@@ -19,7 +19,7 @@ import {
   handleDownload,
   messageType,
 } from "@/app/lib/util";
-import PreviewMediaModal from "./PreviewMediaModal";
+import PreviewMediaModal from "../../ui/PreviewMediaModal";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useAblyStore } from "@/app/store/AblyStore";
 import {
@@ -36,8 +36,9 @@ import { Popover } from "@mui/material";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import moment from "moment";
 import "react-photo-view/dist/react-photo-view.css";
-import WavesurferAudio from "./Audio";
+import WavesurferAudio from "../../ui/Audio";
 import { useDarkMode } from "@/hook/useDarkMode";
+import { useRouter } from "next/navigation";
 type MessageItemProps = {
   index: number;
   message: ClientMessageInterface;
@@ -479,6 +480,7 @@ const MessageItem = memo(function MessageItem({
   const isOwn = userId === message.sender;
   const messageUser = roomUsers[message.sender];
   const messageRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const Message = useCallback(() => {
     const messageType = {
       text: <TextMessage message={message} isOwn={isOwn} />,
@@ -538,6 +540,7 @@ const MessageItem = memo(function MessageItem({
           <Image
             className="w-6 h-6 rounded-full bg-neutral-900"
             width={30}
+            onClick={() => router.push(`/profile/${messageUser?.id}`)}
             height={30}
             src={messageUser?.image || "/user.png"}
             alt={messageUser?.name || "user"}

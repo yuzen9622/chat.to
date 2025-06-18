@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ChatList from "../components/Chat/ChatList";
+import ChatList from "../components/Chat/ui/ChatList";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 

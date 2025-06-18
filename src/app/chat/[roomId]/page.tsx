@@ -1,6 +1,6 @@
 import { getRoomById } from "@/app/lib/server";
 import { redirect } from "next/navigation";
-import ChatRoomWrapper from "@/app/components/Chat/ChatWrapper";
+import ChatRoomWrapper from "@/app/components/Chat/ui/ChatWrapper";
 import { RoomInterface } from "@/types/type";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";

@@ -1,7 +1,7 @@
 import { FriendInterface } from "@/types/type";
 import React, { useCallback } from "react";
-import BadgeAvatar from "../ui/Avatar";
-import FriendButton from "./ui/FriendButton";
+import BadgeAvatar from "../../ui/Avatar";
+import FriendButton from "./FriendButton";
 import { useRouter } from "next/navigation";
 
 export default function FriendItem({ friend }: { friend: FriendInterface }) {

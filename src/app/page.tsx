@@ -12,7 +12,7 @@ export default function Home() {
         height={100}
         src={"/icon.png"}
       />
-      <p className="text-blue-400">甚麼都沒有唷~~</p>
+      <p className="text-white">開發者很懶 還沒開發~~</p>
     </div>
   );
 }

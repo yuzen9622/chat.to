@@ -9,9 +9,12 @@ import React, {
 } from "react";
 import { CirclePlus, CloudUpload, LucideIcon, Mic } from "lucide-react";
 import { Send } from "lucide-react";
-import { useAblyStore } from "../../store/AblyStore";
-import { useChatStore } from "../../store/ChatStore";
-import { ClientMessageInterface, TypingInterface } from "../../../types/type";
+import { useAblyStore } from "../../../store/AblyStore";
+import { useChatStore } from "../../../store/ChatStore";
+import {
+  ClientMessageInterface,
+  TypingInterface,
+} from "../../../../types/type";
 import _ from "lodash";
 
 import { X, Laugh, Pencil, Paperclip } from "lucide-react";
@@ -22,7 +25,7 @@ import {
   messageType,
   sendUserMessage,
   uploadFile,
-} from "../../lib/util";
+} from "../../../lib/util";
 import EmojiPicker from "emoji-picker-react";
 import { Theme, EmojiStyle } from "emoji-picker-react";
 import { twMerge } from "tailwind-merge";
@@ -31,7 +34,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { Popover } from "@mui/material";
-import { WavesurferRecord } from "./Audio";
+import { WavesurferRecord } from "../../ui/Audio";
 import { createFileMessage, createTextMessage } from "@/app/lib/createMessage";
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 function SendBar({
@@ -552,7 +555,7 @@ export default function InputBar() {
             {edit && (
               <div className="px-3 py-1 rounded-e-sm ">
                 <div className="flex justify-between font-semibold dark:text-white">
-                  <p className="text-sm text-white/80">編輯訊息</p>
+                  <p className="text-sm dark:text-white/80">編輯訊息</p>
                   <button
                     type="button"
                     className="p-1 rounded-full hover:bg-white/10"

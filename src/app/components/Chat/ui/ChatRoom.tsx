@@ -6,24 +6,24 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import Message from "../ui/Message";
+import Message from "./ChatMessage";
 
-import ChatHeader from "@/app/components/layout/Header/component";
-import InputBar from "../ui/InputBar";
-import { useAblyRoom, useAblyStore } from "../../store/AblyStore";
-import { useChatStore } from "../../store/ChatStore";
+import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
+import InputBar from "./ChatInputBar";
+import { useAblyRoom, useAblyStore } from "../../../store/AblyStore";
+import { useChatStore } from "../../../store/ChatStore";
 import { InboundMessage } from "ably";
-import { clearReadMessage, readMessage } from "../../lib/util";
+import { clearReadMessage, readMessage } from "../../../lib/util";
 import moment from "moment";
 import { ChevronDown } from "lucide-react";
-import { supabase } from "../../lib/supabasedb";
+import { supabase } from "../../../lib/supabasedb";
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
 import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
-import { ClientMessageInterface } from "../../../types/type";
-import TypingBar from "../ui/TypingBar";
+import { ClientMessageInterface } from "../../../../types/type";
+import TypingBar from "../../ui/TypingBar";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
@@ -207,7 +207,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         setShouldScroll(false);
       }, 100);
     }
-  }, [userMap, shouldScroll, currentMessage]);
+  }, [userMap, shouldScroll, currentMessage, scrollToBottom]);
 
   const dateContent = useCallback(
     (index: number) => {

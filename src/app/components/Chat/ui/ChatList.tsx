@@ -4,23 +4,23 @@ import {
   fetchUserRooms,
   fetchUsersNotify,
   joinRoom,
-} from "../../lib/util";
+} from "../../../lib/util";
 
-import { useChatStore } from "../../store/ChatStore";
-import ChatButton from "../ui/ChatButton";
+import { useChatStore } from "../../../store/ChatStore";
+import ChatButton from "../../ui/ChatButton";
 import { Skeleton, Modal } from "@mui/material";
 import { SquarePen, Check } from "lucide-react";
-import { useAblyStore } from "../../store/AblyStore";
+import { useAblyStore } from "../../../store/AblyStore";
 
 import { twMerge } from "tailwind-merge";
 import { CircularProgress } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 import { redirect } from "next/navigation";
-import { useAuthStore } from "../../store/AuthStore";
-import { ClientMessageInterface, RoomInterface } from "../../../types/type";
+import { useAuthStore } from "../../../store/AuthStore";
+import { ClientMessageInterface, RoomInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
-import UploadAvatar from "../ui/UploadAvatar";
-import FriendNote from "../Friend/FriendNote";
+import UploadAvatar from "../../ui/UploadAvatar";
+import FriendNote from "../../Friend/ui/FriendNote";
 function JoinModal() {
   const [open, setOpen] = React.useState(false);
   const [roomId, setRoomId] = useState("");

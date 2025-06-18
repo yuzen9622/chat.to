@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
-import RequestButton from "@/app/components/ui/RequestButton";
+import RequestButton from "@/app/components/Friend/ui/RequestButton";
 import FriendSearch from "./FriendSearch";
 
-import { useAuthStore } from "../../store/AuthStore";
+import { useAuthStore } from "../../../store/AuthStore";
 import { Skeleton } from "@mui/material";
-import { fetchFriendRequests } from "../../lib/util";
+import { fetchFriendRequests } from "../../../lib/util";
 import { useSession } from "next-auth/react";
 export default function FriendRequest() {
   const { friendRequests, setFriendRequest } = useAuthStore();

@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { useChannel, usePresenceListener } from "ably/react";
-import { useAblyStore } from "../store/AblyStore";
-import SideBar from "./SideBar";
-import { useAuthStore } from "../store/AuthStore";
+import { useAblyStore } from "../../store/AblyStore";
+import SideBar from "../SideBar";
+import { useAuthStore } from "../../store/AuthStore";
 import moment from "moment";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import NotifyBar from "./NotifyBar";
+import NotifyBar from "../NotifyBar";
 import { useSession } from "next-auth/react";
 import {
   useFriendListner,

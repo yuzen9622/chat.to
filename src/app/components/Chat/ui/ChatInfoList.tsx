@@ -7,13 +7,14 @@ import {
   getFileIcon,
   handleDownload,
   messageType,
-} from "../../lib/util";
-import { ClientMessageInterface } from "../../../types/type";
+} from "../../../lib/util";
+import { ClientMessageInterface } from "../../../../types/type";
 
-import { useChatStore } from "../../store/ChatStore";
+import { useChatStore } from "../../../store/ChatStore";
 import { LucideIcon } from "lucide-react";
-import PreviewMediaModal from "../ui/PreviewMediaModal";
+import PreviewMediaModal from "../../ui/PreviewMediaModal";
 import { PhotoProvider, PhotoView } from "react-photo-view";
+import moment from "moment";
 type Type = "media" | "url" | "file";
 
 export default function ChatInfoList() {
@@ -32,7 +33,7 @@ export default function ChatInfoList() {
   const { currentChat } = useChatStore();
   const handleFilterMessage = useCallback(async () => {
     if (!currentChat) return;
-    setFilterMessages([]);
+
     setIsLoading(true);
 
     try {
@@ -71,6 +72,7 @@ export default function ChatInfoList() {
   }, []);
 
   useEffect(() => {
+    setFilterMessages([]);
     handleFilterMessage();
   }, [handleFilterMessage]);
 
@@ -123,6 +125,7 @@ export default function ChatInfoList() {
           >
             {filterMessages.map((message) => {
               if (filterType === "file") {
+                if (message.type === "media") return null;
                 const Icon: LucideIcon = getFileIcon(message.text);
                 return (
                   <button
@@ -151,15 +154,22 @@ export default function ChatInfoList() {
                       </p>
                     </div>
                     <span className="flex flex-col justify-center w-full ">
-                      <p className="text-sm break-all text-start">
-                        {message.text}
-                      </p>
+                      <span className="flex justify-between gap-2">
+                        <p className="text-sm break-all text-start">
+                          {message.text}
+                        </p>
+                        <p className="px-3 py-1 text-xs text-center text-white h-fit dark:bg-white/5 outline-white rounded-3xl">
+                          {moment(message.created_at).calendar()}
+                        </p>
+                      </span>
+
                       <span className="flex items-center justify-between w-full gap-1 mt-1 text-xs">
                         <p>
                           大小:
                           {message.meta_data &&
                             formatSize(message.meta_data.size)}
                         </p>
+
                         <p>點擊下載</p>
                       </span>
                     </span>

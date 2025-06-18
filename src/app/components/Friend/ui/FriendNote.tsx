@@ -3,10 +3,10 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 
-import NoteCard from "../ui/NoteCard";
-import { useAuthStore } from "../../store/AuthStore";
+import NoteCard from "../../ui/NoteCard";
+import { useAuthStore } from "../../../store/AuthStore";
 
-import { NoteInterface } from "../../../types/type";
+import { NoteInterface } from "../../../../types/type";
 import "swiper/css";
 import "swiper/css/navigation";
 export default function FriendNote({

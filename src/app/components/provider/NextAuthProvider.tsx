@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import React, { useCallback } from "react";
 import ChatProvider from "./ChatProvider";
-import ClientLayout from "../ClientLayout";
+import ClientLayout from "../layout/ClientLayout";
 import { Alert, Snackbar } from "@mui/material";
 import { useAuthStore } from "@/app/store/AuthStore";
 

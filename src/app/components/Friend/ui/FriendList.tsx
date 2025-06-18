@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect } from "react";
-import { useAuthStore } from "../../store/AuthStore";
+import { useAuthStore } from "../../../store/AuthStore";
 
 import { Skeleton } from "@mui/material";
-import { fetchUserFriends } from "../../lib/util";
+import { fetchUserFriends } from "../../../lib/util";
 import { useSession } from "next-auth/react";
 import FriendItem from "./FriendItem";
 

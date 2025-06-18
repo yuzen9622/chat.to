@@ -1,6 +1,6 @@
 import React from "react";
-import FriendRequest from "@/app/components/Friend/FriendRequest";
-import FriendList from "@/app/components/Friend/FriendList";
+import FriendRequest from "@/app/components/Friend/ui/FriendRequest";
+import FriendList from "@/app/components/Friend/ui/FriendList";
 
 import { Metadata } from "next";
 

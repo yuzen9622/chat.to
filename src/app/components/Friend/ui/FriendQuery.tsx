@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useAuthStore } from "../../store/AuthStore";
-import { UserInterface } from "../../../types/type";
+import { useAuthStore } from "../../../store/AuthStore";
+import { UserInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-import { useChatStore } from "../../store/ChatStore";
-import { useAblyStore } from "../../store/AblyStore";
-import { createRoom, sendFriendRequest, queryFriend } from "../../lib/util";
+import { sendFriendRequest, queryFriend } from "../../../lib/util";
 import { Skeleton } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
 
@@ -64,9 +60,6 @@ function Loading() {
 export default function FriendQuery({ queryValue }: { queryValue: string }) {
   const userId = useSession()?.data?.userId;
 
-  const { rooms } = useChatStore();
-  const { channel } = useAblyStore();
-  const router = useRouter();
   const { friends, friendRequests } = useAuthStore();
   const [searchFriends, setSearchFriends] = useState<UserInterface[]>([]);
   const [isLoading, setIsloading] = useState(false);
@@ -83,23 +76,6 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
     getFriends();
   }, [queryValue, userId]);
 
-  const handleClick = useCallback(
-    async (friend: UserInterface) => {
-      if (!channel) return;
-      const friendRoom = rooms.find(
-        (room) =>
-          room.room_members.some((member) => member.user_id === friend.id) &&
-          room.room_type === "personal"
-      );
-      if (!friendRoom) {
-        const newRoom = await createRoom(userId!, "", []);
-        channel.publish("create_room", newRoom);
-      } else {
-        router.push(`/chat/${friendRoom.id}`);
-      }
-    },
-    [rooms, router, userId, channel]
-  );
   if (!userId || !queryValue) return null;
 
   if (isLoading) {
@@ -131,7 +107,7 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
             </div>
             {friends &&
               friendRequests &&
-              !friends.some((f) => f.id === friend.id) &&
+              !friends.find((f) => f.friend_id === friend.id) &&
               !friendRequests.some(
                 (request) => request.receiver_id === friend.id
               ) && (
@@ -161,14 +137,9 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
                   </button>
                 </div>
               )}
-            {friends && friends.some((f) => f.id === friend.id) && (
-              <div>
-                <button
-                  onClick={() => handleClick(friend)}
-                  className="p-1 text-sm font-bold text-white bg-blue-600 rounded-md hover:bg-blue-500"
-                >
-                  傳送訊息
-                </button>
+            {friends && friends.find((f) => f.friend_id === friend.id) && (
+              <div className="px-3 py-1 text-sm text-blue-500 bg-white dark:text-white dark:bg-white/10 rounded-3xl">
+                已成為好友
               </div>
             )}
           </div>
