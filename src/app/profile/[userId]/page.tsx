@@ -31,7 +31,7 @@ export default async function Page({
   const [user, friends] = await Promise.all([
     supabase
       .from("users")
-      .select("id,name,image,user_note(*,user:users(*))")
+      .select("id,name,image,email,user_note(*,user:users(*))")
       .eq("id", userId)
       .maybeSingle(),
     supabase
