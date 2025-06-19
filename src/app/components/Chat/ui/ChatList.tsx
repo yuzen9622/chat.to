@@ -7,7 +7,7 @@ import {
 } from "../../../lib/util";
 
 import { useChatStore } from "../../../store/ChatStore";
-import ChatButton from "../../ui/ChatButton";
+import ChatButton from "./ChatButton";
 import { Skeleton, Modal } from "@mui/material";
 import { SquarePen, Check } from "lucide-react";
 import { useAblyStore } from "../../../store/AblyStore";

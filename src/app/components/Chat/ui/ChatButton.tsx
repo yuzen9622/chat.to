@@ -1,20 +1,20 @@
 "use client";
 import * as React from "react";
 import { useMemo } from "react";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "../../ui/Avatar";
 import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
-import { RoomInterface } from "../../../types/type";
+import { RoomInterface } from "../../../../types/type";
 import { useChatInfo } from "@/hook/useChatInfo";
 import { useLastMessage } from "@/hook/useLastMessage";
 import { useRoomNotify } from "@/hook/useRoomNotify";
-import { messageType } from "../../lib/util";
-import { TimeAgo } from "./TimeAgo";
+import { messageType } from "../../../lib/util";
+import { TimeAgo } from "../../ui/TimeAgo";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 
 import { useSession } from "next-auth/react";
-import TypingBar from "./TypingBar";
+import TypingBar from "../../ui/TypingBar";
 import { useChatStore } from "@/app/store/ChatStore";
 type ButtonProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ChatButton({
@@ -68,15 +68,15 @@ export default function ChatButton({
       prefetch={true}
       {...props}
       className={twMerge(
-        "text-start w-full hover:dark:bg-white/5 transition-colors hover:bg-stone-900/10  p-3  rounded-lg text-gray-700 dark:text-white  flex items-center justify-between animate-in fade-in",
+        "text-start w-full hover:dark:bg-white/5 transition-colors hover:bg-stone-900/10  p-2  rounded-lg text-gray-700 dark:text-white  flex items-center justify-between animate-in fade-in",
         isActive && "dark:bg-white/5 bg-stone-900/10"
       )}
     >
       <div className="flex items-center w-full space-x-3">
         {room.room_type === "personal" ? (
-          <BadgeAvatar width={45} height={45} user={recipentUser?.user_id} />
+          <BadgeAvatar width={50} height={50} user={recipentUser?.user_id} />
         ) : (
-          <BadgeAvatar width={45} height={45} room={room} />
+          <BadgeAvatar width={50} height={50} room={room} />
         )}
 
         <div className="flex-1 min-w-0 overflow-hidden">

@@ -79,7 +79,7 @@ export default function SideBar() {
                 alt="user"
                 width={35}
                 height={35}
-                className=" rounded-2xl"
+                className=" rounded-2xl w-9 h-9"
                 src={session?.user.image || "/user.png"}
               />
             </div>

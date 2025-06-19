@@ -8,11 +8,15 @@ import NoteModal from "./NoteModal";
 export default function NoteCard({ note }: { note: NoteInterface }) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 阻止事件冒泡
+    setIsOpen((prev) => !prev);
+  };
   return (
     <div className="relative text-black min-w-16 max-w-fit h-fit mt-11 dark:text-white dark:bg-transparent">
       <span
         className="relative flex flex-col items-center "
-        onClick={() => setIsOpen((p) => !p)}
+        onClick={handleClick}
       >
         <BadgeAvatar user={note.user_id} width={65} height={65} />
         <p className="text-xs truncate">
@@ -20,7 +24,7 @@ export default function NoteCard({ note }: { note: NoteInterface }) {
         </p>
         <div className="absolute left-0 shadow-md rounded-2xl -top-8">
           <button
-            onClick={() => setIsOpen((p) => !p)}
+            onClick={handleClick}
             className="p-2 text-xs break-words max-w-16 rounded-2xl text-start bg-stone-100 dark:bg-stone-700 "
           >
             <p className="line-clamp-2 ">

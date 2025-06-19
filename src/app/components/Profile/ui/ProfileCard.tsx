@@ -1,14 +1,16 @@
+"use client";
 import { FriendInterface, NoteInterface, UserInterface } from "@/types/type";
 import Image from "next/image";
 import React from "react";
 import NoteButton from "../../ui/NoteButton";
-import EditProtofileBtn from "../../ui/EditProtofileBtn";
+
 import FriendBtn from "./FriendBtn";
 import FriendModal from "./FriendModal";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/auth";
 
-export default async function ProfileCard({
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+
+export default function ProfileCard({
   user,
   note,
   friends,
@@ -17,7 +19,7 @@ export default async function ProfileCard({
   note: NoteInterface;
   friends: FriendInterface[];
 }) {
-  const session = await getServerSession(authOptions);
+  const { data: session } = useSession();
   const isOwn = session?.userId === user.id;
   return (
     <section className="w-full max-w-2xl p-6 text-white shadow-lg shadow-blue-400/50 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 backdrop-blur-xl">
@@ -36,7 +38,14 @@ export default async function ProfileCard({
             <NoteButton note={note} />
           </div>
 
-          {isOwn && <EditProtofileBtn />}
+          {isOwn && (
+            <Link
+              href={`/profile/${user.id}/setting`}
+              className="px-3 py-1 text-sm text-center text-blue-500 bg-white rounded-md"
+            >
+              編輯個人頁面
+            </Link>
+          )}
         </div>
 
         <div className="flex flex-col items-center gap-3 sm:items-start">
