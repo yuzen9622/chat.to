@@ -95,7 +95,7 @@ export const authOptions: NextAuthOptions = {
           .maybeSingle();
         const { data: note } = await supabase
           .from("user_note")
-          .select("*,user:users(id,name,image)")
+          .select("*")
           .eq("user_id", thirdPartUser.id);
         if (note) {
           user.note = note[0];
@@ -107,7 +107,7 @@ export const authOptions: NextAuthOptions = {
       } else if (data) {
         const { data: note } = await supabase
           .from("user_note")
-          .select("*,user:users(id,name,image)")
+          .select("*")
           .eq("user_id", data.id);
         console.log(data);
 

@@ -9,7 +9,7 @@ export default function NoteCard({ note }: { note: NoteInterface }) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 阻止事件冒泡
+    e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
   return (

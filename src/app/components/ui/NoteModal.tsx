@@ -29,7 +29,7 @@ export default function NoteModal({
           <div className="relative flex flex-col items-center justify-center flex-1 w-full gap-2 ">
             <span className="relative w-fit h-fit">
               <Image
-                src={note?.user.image || "/user.png"}
+                src={note?.user?.image || "/user.png"}
                 alt={note?.user_id || "user"}
                 className="rounded-full w-44 h-44"
                 width={180}
