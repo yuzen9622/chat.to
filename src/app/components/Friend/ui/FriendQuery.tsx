@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { sendFriendRequest, queryFriend } from "../../../lib/util";
 import { Skeleton } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar";
+import { useRouter } from "next/navigation";
 
 function Loading() {
   return (
@@ -59,7 +60,7 @@ function Loading() {
 }
 export default function FriendQuery({ queryValue }: { queryValue: string }) {
   const userId = useSession()?.data?.userId;
-
+  const router = useRouter();
   const { friends, friendRequests } = useAuthStore();
   const [searchFriends, setSearchFriends] = useState<UserInterface[]>([]);
   const [isLoading, setIsloading] = useState(false);
@@ -97,6 +98,7 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
           <div
             className="flex items-center justify-between my-2"
             key={friend.id}
+            onClick={() => router.push(`/profile/${friend.id}`)}
           >
             <div className="flex items-center">
               <BadgeAvatar user={friend.id} />

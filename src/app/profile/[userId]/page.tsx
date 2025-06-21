@@ -4,6 +4,7 @@ import { authOptions } from "@/auth";
 import { supabase } from "@/app/lib/supabasedb";
 import { notFound } from "next/navigation";
 import ProfileCard from "@/app/components/Profile/ui/ProfileCard";
+import Loading from "./loading";
 export async function generateMetadata({
   params,
 }: {
