@@ -39,6 +39,9 @@ import "react-photo-view/dist/react-photo-view.css";
 import WavesurferAudio from "../../ui/Audio";
 import { useDarkMode } from "@/hook/useDarkMode";
 import { useRouter } from "next/navigation";
+import { usePopbox } from "@/hook/usePopbox";
+import UserPopbox from "../../ui/UserPopbox";
+import { useTheme } from "next-themes";
 type MessageItemProps = {
   index: number;
   message: ClientMessageInterface;
@@ -354,7 +357,9 @@ const AudioMessage = memo(function AudioMessage({
   metaData: MetaData;
   isOwn: boolean;
 }) {
-  const isDark = useDarkMode();
+  const { theme, systemTheme } = useTheme();
+  const isDark =
+    theme === "dark" || (theme === "system" && systemTheme === "dark");
   return (
     <WavesurferAudio
       url={metaData.url}
@@ -480,7 +485,8 @@ const MessageItem = memo(function MessageItem({
   const isOwn = userId === message.sender;
   const messageUser = roomUsers[message.sender];
   const messageRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+
+  const { anchorEl, handleClose, handleOpen } = usePopbox();
   const Message = useCallback(() => {
     const messageType = {
       text: <TextMessage message={message} isOwn={isOwn} />,
@@ -527,6 +533,11 @@ const MessageItem = memo(function MessageItem({
         isOwn && " items-end"
       )}
     >
+      <UserPopbox
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        user={messageUser}
+      />
       {message.reply && (
         <ReplyMessage
           scrollToMessage={scrollToMessage}
@@ -538,9 +549,9 @@ const MessageItem = memo(function MessageItem({
       <div className="flex items-start w-full gap-1 ">
         {!isOwn && (
           <Image
+            onClick={handleOpen}
             className="w-6 h-6 rounded-full bg-neutral-900"
             width={30}
-            onClick={() => router.push(`/profile/${messageUser?.id}`)}
             height={30}
             src={messageUser?.image || "/user.png"}
             alt={messageUser?.name || "user"}

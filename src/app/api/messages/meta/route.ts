@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
       .from("messages")
       .select("*")
       .eq("room", roomId)
-      .eq("type", metaType);
+      .eq("type", metaType)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 

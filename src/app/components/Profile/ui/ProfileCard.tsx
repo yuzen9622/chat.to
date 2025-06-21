@@ -16,8 +16,8 @@ export default function ProfileCard({
   friends,
 }: {
   user: UserInterface;
-  note: NoteInterface;
-  friends: FriendInterface[];
+  note?: NoteInterface;
+  friends?: FriendInterface[];
 }) {
   const { data: session } = useSession();
   const isOwn = session?.userId === user.id;
@@ -34,8 +34,7 @@ export default function ProfileCard({
               priority
               alt="avatar"
             />
-
-            <NoteButton note={note} />
+            {note && <NoteButton note={note} />}
           </div>
 
           {isOwn && (
@@ -54,10 +53,12 @@ export default function ProfileCard({
             {isOwn && <span className="ml-2 text-sm text-blue-100">(你)</span>}
           </h1>
           <h2 className=" dark:text-white"> {user.email}</h2>
+          {friends && (
+            <div className="flex gap-4">
+              <FriendModal friends={friends} />
+            </div>
+          )}
 
-          <div className="flex gap-4">
-            <FriendModal friends={friends} />
-          </div>
           {!isOwn && <FriendBtn id={user.id} />}
         </div>
       </div>

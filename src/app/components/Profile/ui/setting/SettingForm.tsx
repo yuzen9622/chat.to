@@ -11,13 +11,18 @@ import ProfileCard from "../ProfileCard";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop } from "@mui/material";
 import UploadAvatar from "@/app/components/ui/UploadAvatar";
-
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { signOut } from "next-auth/react";
 interface SettingsFormProps {
   user: UserInterface;
 }
 
 export default function SettingsForm({ user }: SettingsFormProps) {
   const { update } = useSession();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const isDark =
+    theme === "dark" || (theme === "system" && systemTheme === "dark");
   const [editProfile, setEditProfile] = useState(user);
   const { channel } = useAblyStore();
   const [userImage, setUserImage] = useState<{
@@ -72,6 +77,13 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       setUserImage(null);
     }
   }, [editProfile, update, channel, userImage, setSystemAlert]);
+
+  const handleLogout = useCallback(() => {
+    const check = window.confirm("確定登出?");
+    if (check) {
+      signOut();
+    }
+  }, []);
 
   useEffect(() => {
     if (!userImage) {
@@ -141,7 +153,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       </section>
 
       {/* 外觀設定 */}
-      {/* <section className="p-6 bg-white rounded-xl dark:bg-neutral-800/50">
+      <section className="p-6 bg-white rounded-xl dark:bg-neutral-800/50">
         <h2 className="mb-4 text-lg font-semibold dark:text-white">外觀</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -153,7 +165,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             <span className="dark:text-white">深色模式</span>
           </div>
           <button
-            onClick={() => setIsDark(!isDark)}
+            onClick={() => setTheme(isDark ? "light" : "dark")}
             className={`w-12 h-6 rounded-full transition-colors ${
               isDark ? "bg-blue-500" : "bg-gray-300"
             }`}
@@ -165,7 +177,16 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             />
           </button>
         </div>
-      </section> */}
+      </section>
+      <section className="p-6 bg-white rounded-xl dark:bg-neutral-800/50">
+        <h2 className="mb-4 font-bold">危險</h2>
+        <button
+          onClick={handleLogout}
+          className="px-3 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-300"
+        >
+          登出
+        </button>
+      </section>
     </div>
   );
 }

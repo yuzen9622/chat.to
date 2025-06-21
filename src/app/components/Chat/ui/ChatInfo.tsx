@@ -15,13 +15,13 @@ import { useAuthStore } from "../../../store/AuthStore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useChatInfo } from "@/hook/useChatInfo";
-import moment from "moment";
+
 import ChatInfoList from "./ChatInfoList";
+import RoomUser from "./RoomUser";
 
 function RoomUsers() {
   const { currentChat } = useChatStore();
   const [open, setOpen] = useState(false);
-  const userId = useSession()?.data?.userId;
 
   const roomUsers = useMemo(() => {
     if (!currentChat) return [];
@@ -48,22 +48,7 @@ function RoomUsers() {
           <div className="flex flex-col max-h-full gap-2 overflow-auto dark:text-white">
             {roomUsers.length > 0 &&
               roomUsers.map((roomUser) => (
-                <button
-                  className="flex flex-row items-center gap-4 p-2 rounded-md hover:dark:bg-white/10"
-                  key={roomUser?.id}
-                >
-                  <BadgeAvatar user={roomUser.user_id} />
-                  <span className="text-start">
-                    <p>
-                      {userId === roomUser.user_id ? "你" : roomUser.user?.name}
-                    </p>
-                    <p className="text-xs dark:text-white/40">
-                      加入日期:
-                      {roomUser?.created_at &&
-                        moment(roomUser.created_at).format("LL")}
-                    </p>
-                  </span>
-                </button>
+                <RoomUser key={roomUser.id} member={roomUser} />
               ))}
           </div>
         </div>

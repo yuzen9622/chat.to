@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge";
 import SessionProvider from "./components/provider/SessionProvider";
 import { authOptions } from "@/auth";
 import NextAuthProvider from "./components/provider/NextAuthProvider";
+import { ThemeProvider } from "./components/provider/ThemeProvider";
 
 export const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,7 +58,9 @@ export default async function RootLayout({
         )}
       >
         <SessionProvider session={session}>
-          <NextAuthProvider>{children}</NextAuthProvider>
+          <NextAuthProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </NextAuthProvider>
         </SessionProvider>
       </body>
     </html>
