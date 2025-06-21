@@ -37,8 +37,7 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import moment from "moment";
 import "react-photo-view/dist/react-photo-view.css";
 import WavesurferAudio from "../../ui/Audio";
-import { useDarkMode } from "@/hook/useDarkMode";
-import { useRouter } from "next/navigation";
+
 import { usePopbox } from "@/hook/usePopbox";
 import UserPopbox from "../../ui/UserPopbox";
 import { useTheme } from "next-themes";
