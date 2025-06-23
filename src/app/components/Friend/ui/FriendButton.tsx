@@ -38,7 +38,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         friend.friend_id
       );
       const roomMembers = newRoom.room_members.map((rm) => rm.user_id);
-      console.log(newRoom);
+
       channel.publish("room_action", {
         action: "create",
         newRoom,

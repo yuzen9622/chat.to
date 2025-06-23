@@ -408,6 +408,30 @@ const FileMessage = memo(function FileMessage({
     </button>
   );
 });
+const NoteMessage = memo(function NoteMessage({
+  message,
+
+  isOwn,
+}: {
+  message: ClientMessageInterface;
+  isOwn: boolean;
+}) {
+  return (
+    <div
+      className={twMerge(
+        "inline-block text-end my-2 bg-stone/10 dark:bg-white/10 max-w-48 p-2 rounded-2xl",
+        isOwn && "bg-blue-500"
+      )}
+    >
+      <div>
+        <p className="w-fit">{message?.reply_note?.user.name}的便利貼</p>
+        <p className="text-xs truncate dark:text-white/50">
+          {message?.reply_note?.text}
+        </p>
+      </div>
+    </div>
+  );
+});
 
 const ReplyMessage = memo(function ReplyMessage({
   message,
@@ -440,6 +464,7 @@ const ReplyMessage = memo(function ReplyMessage({
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={replyOwn} />
       ),
+      note: <TextMessage message={message} isOwn={replyOwn} />,
     };
 
     return messageType[message.type];
@@ -495,6 +520,7 @@ const MessageItem = memo(function MessageItem({
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={isOwn} />
       ),
+      note: <TextMessage message={message} isOwn={isOwn} />,
     };
 
     return messageType[message.type];
@@ -545,6 +571,7 @@ const MessageItem = memo(function MessageItem({
           message={message.reply}
         />
       )}
+      {message.reply_note && <NoteMessage message={message} isOwn={isOwn} />}
       <div className="flex items-start w-full gap-1 ">
         {!isOwn && (
           <Image

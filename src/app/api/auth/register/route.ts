@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       .from("users")
       .select("*")
       .eq("email", email)
-      .eq("provider", "credientials");
+      .eq("provider", "credentials");
     if (data && data.length > 0) {
       return NextResponse.json(
         { success: false, error: "電子郵件已被使用" },
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const { error } = await supabase.from("users").insert([
       {
         email,
-        image: image.url,
+        image: image,
         name,
         password: await bcrypt.hash(password, 10),
       },

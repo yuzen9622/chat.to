@@ -228,7 +228,7 @@ export const getPersonalRoom = async (
   id: string,
   userId: string,
   friendId: string
-) => {
+): Promise<RoomInterface> => {
   try {
     const data = fetch("/api/rooms/personal", {
       method: "POST",

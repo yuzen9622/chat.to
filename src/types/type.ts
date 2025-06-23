@@ -6,7 +6,7 @@ export type MetaData = {
 };
 export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
-export type MessageType = "text" | "media" | "file" | "url" | "audio";
+export type MessageType = "text" | "media" | "file" | "url" | "audio" | "note";
 export type ProviderType = "google" | "github" | "credentials";
 
 export interface TypingInterface {
@@ -37,6 +37,7 @@ export interface ClientMessageInterface {
   created_at: string;
   status: MessageStatus;
   is_read: Array<string>;
+  reply_note?: NoteInterface;
   type: MessageType;
 }
 

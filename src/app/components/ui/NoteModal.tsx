@@ -1,8 +1,18 @@
-import React from "react";
+"use client";
+import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { Modal } from "@mui/material";
 import { NoteInterface } from "@/types/type";
 import { twMerge } from "tailwind-merge";
+import { Send } from "lucide-react";
+import { getPersonalRoom, sendUserMessage } from "@/app/lib/util";
+import { createReplyNoteMessage } from "@/app/lib/createMessage";
+import { useSession } from "next-auth/react";
+import { v4 as uuid } from "uuid";
+
+import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
+import { useAblyStore } from "@/app/store/AblyStore";
+
 export default function NoteModal({
   note,
   isOpen,
@@ -12,6 +22,23 @@ export default function NoteModal({
   isOpen: boolean;
   setIsOpen: React.Dispatch<boolean>;
 }) {
+  const [replyText, setReplyText] = useState("");
+  const userId = useSession()?.data?.user.id;
+  const { ably } = useAblyStore();
+  const handleSend = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const room = await getPersonalRoom(uuid(), userId!, note.user_id);
+      const message = createReplyNoteMessage(userId!, room.id, replyText, note);
+      if (message && ably) {
+        await Promise.all([
+          sendUserMessage(message),
+          sendAblyMessage(ably, message),
+        ]);
+      }
+    },
+    [userId, ably, note, replyText]
+  );
   return (
     <div>
       <Modal
@@ -27,7 +54,7 @@ export default function NoteModal({
           </span>
 
           <div className="relative flex flex-col items-center justify-center flex-1 w-full gap-2 ">
-            <span className="relative w-fit h-fit">
+            <span className="relative flex flex-col items-center w-fit h-fit">
               <Image
                 src={note?.user?.image || "/user.png"}
                 alt={note?.user_id || "user"}
@@ -36,7 +63,7 @@ export default function NoteModal({
                 height={180}
               />
               <p className="text-lg text-center truncate dark:text-white">
-                {note?.user.name}
+                {note.user.name}
               </p>
 
               <div className="absolute left-0 -top-6 w-fit h-fit">
@@ -52,6 +79,25 @@ export default function NoteModal({
                 <span className="absolute w-2 h-2 rounded-full left-4 bg-stone-100 -bottom-4 dark:bg-stone-700"></span>
               </div>
             </span>
+            <form
+              onSubmit={handleSend}
+              className="flex p-1 rounded-3xl dark:bg-white/10 "
+            >
+              <input
+                type="text"
+                placeholder="回覆便利貼..."
+                onChange={(e) => setReplyText(e.target.value)}
+                value={replyText}
+                className="px-3 bg-transparent outline-none "
+              />
+
+              <button
+                type="submit"
+                className="px-3 py-1 bg-blue-500 animate-in zoom-in-0 active:bg-blue-300 rounded-3xl"
+              >
+                <Send />
+              </button>
+            </form>
           </div>
         </div>
       </Modal>
