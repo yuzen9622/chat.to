@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import { useAblyStore } from "../../../store/AblyStore";
 
 import { useAuthStore } from "../../../store/AuthStore";
-import CircularProgress from "@mui/material/CircularProgress";
+
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
 import WarningButton from "../../ui/WarningButton";
-import { Trash2 } from "lucide-react";
+import { Ellipsis, Trash2 } from "lucide-react";
 export default function FriendButton({ friend }: { friend: FriendInterface }) {
   const { rooms } = useChatStore();
   const { setFriends } = useAuthStore();
@@ -110,11 +110,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         className="p-1 px-3 font-bold text-blue-600 transition-colors bg-white rounded-md dark:soutline dark:outline dark:outline-2 dark:outline-white dark:text-white dark:bg-transparent"
       >
         {isLoading.create ? (
-          <CircularProgress
-            color="inherit"
-            size={20}
-            className="mx-1 text-sm text-black dark:text-white"
-          />
+          <Ellipsis className=" animate-pulse" />
         ) : (
           <>
             <p className="">發送訊息</p>
@@ -129,7 +125,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         )}
       >
         {isLoading.delete ? (
-          <CircularProgress color="inherit" size={20} className="text-sm " />
+          <Ellipsis className=" animate-pulse" />
         ) : (
           <Trash2 />
         )}

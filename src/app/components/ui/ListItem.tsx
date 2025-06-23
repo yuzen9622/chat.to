@@ -28,9 +28,9 @@ export default function ListItem({
   return (
     <Link
       className={twMerge(
-        " relative flex items-center text-stone-900/70 lg:justify-start p-2 justify-center w-full   gap-2  hover:bg-stone-900/5 hover:dark:bg-white/5 transition-colors dark:text-neutral-400 hover:text-neutral-800 hover:dark:text-white rounded-lg",
+        " relative flex items-center text-stone-900/70 lg:justify-start p-2 justify-center w-full   gap-2  hover:bg-stone-100 hover:dark:bg-white/5 transition-colors dark:text-neutral-400 hover:text-neutral-800 hover:dark:text-white rounded-lg",
         isActive() &&
-          "dark:bg-white/5 bg-black/5 text-neutral-800 dark:text-white",
+          "dark:bg-white/5 bg-stone-100 text-neutral-800 dark:text-white",
         className
       )}
       href={href}

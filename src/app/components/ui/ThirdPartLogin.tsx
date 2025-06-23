@@ -2,7 +2,8 @@
 import React, { useCallback, useState } from "react";
 import { GitHub, Google } from "@mui/icons-material";
 import { signIn } from "next-auth/react";
-import { CircularProgress } from "@mui/material";
+
+import { Ellipsis } from "lucide-react";
 
 export default function ThirdPartLogin() {
   const [loginStatus, setLoginStatus] = useState({
@@ -29,11 +30,7 @@ export default function ThirdPartLogin() {
         >
           {loginStatus.google && (
             <div className="absolute z-10 flex items-center justify-center w-full h-full rounded-md bg-stone-500/80">
-              <CircularProgress
-                className="text-white"
-                color="inherit"
-                size={20}
-              />
+              <Ellipsis className=" animate-pulse" />
             </div>
           )}
           <Google /> 使用 Google 登入
@@ -45,11 +42,7 @@ export default function ThirdPartLogin() {
         >
           {loginStatus.github && (
             <div className="absolute z-10 flex items-center justify-center w-full h-full rounded-md bg-stone-500/80">
-              <CircularProgress
-                className="text-white"
-                color="inherit"
-                size={20}
-              />
+              <Ellipsis className=" animate-pulse" />
             </div>
           )}
           <GitHub /> 使用 GitHub 登入

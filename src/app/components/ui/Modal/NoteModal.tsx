@@ -8,7 +8,7 @@ import { Ellipsis, Send } from "lucide-react";
 import { getPersonalRoom, sendUserMessage } from "@/app/lib/util";
 import { createReplyNoteMessage } from "@/app/lib/createMessage";
 import { useSession } from "next-auth/react";
-
+import { v4 as uuid } from "uuid";
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
@@ -34,14 +34,12 @@ export default function NoteModal({
   const handleSend = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const friend = friends?.find((f) => f.friend_id === note.user_id);
-      if (!friend) return;
+      const friendRoom =
+        friends?.find((f) => f.friend_id === note.user_id)?.personal_room_id ||
+        uuid();
+
       setLoading(true);
-      const room = await getPersonalRoom(
-        friend.personal_room_id,
-        userId!,
-        note.user_id
-      );
+      const room = await getPersonalRoom(friendRoom, userId!, note.user_id);
       const message = createReplyNoteMessage(userId!, room.id, replyText, note);
       const isExist = rooms.find((r) => r.id === room.id);
 
@@ -70,8 +68,9 @@ export default function NoteModal({
         ]);
       }
       setLoading(false);
+      setIsOpen(false);
     },
-    [userId, ably, note, replyText, setRoom, rooms, friends]
+    [userId, ably, note, replyText, setRoom, rooms, friends, setIsOpen]
   );
   return (
     <div>
@@ -113,27 +112,33 @@ export default function NoteModal({
                 <span className="absolute w-2 h-2 rounded-full left-4 bg-stone-100 -bottom-4 dark:bg-stone-700"></span>
               </div>
             </span>
-            <form
-              onSubmit={handleSend}
-              className="flex p-1 rounded-3xl dark:bg-white/10"
-            >
-              <input
-                type="text"
-                placeholder="回覆便利貼..."
-                onChange={(e) => setReplyText(e.target.value)}
-                value={replyText}
-                className="px-3 py-1 bg-transparent outline-none "
-              />
-              {replyText !== "" && (
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-3 py-1 bg-blue-500 animate-in zoom-in-0 active:bg-blue-300 rounded-3xl disabled:bg-blue-300"
-                >
-                  {loading ? <Ellipsis className=" animate-pulse" /> : <Send />}
-                </button>
-              )}
-            </form>
+            {userId !== note.user_id && (
+              <form
+                onSubmit={handleSend}
+                className="flex p-1 rounded-3xl dark:bg-white/10 bg-stone-100"
+              >
+                <input
+                  type="text"
+                  placeholder="回覆便利貼..."
+                  onChange={(e) => setReplyText(e.target.value)}
+                  value={replyText}
+                  className="px-3 py-1 bg-transparent outline-none "
+                />
+                {replyText !== "" && (
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-3 py-1 text-white bg-blue-500 animate-in zoom-in-0 active:bg-blue-300 rounded-3xl disabled:bg-blue-300"
+                  >
+                    {loading ? (
+                      <Ellipsis className=" animate-pulse" />
+                    ) : (
+                      <Send />
+                    )}
+                  </button>
+                )}
+              </form>
+            )}
           </div>
         </div>
       </Modal>

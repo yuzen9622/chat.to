@@ -14,10 +14,12 @@ export default function ProfileCard({
   user,
   note,
   friends,
+  isPreview = false,
 }: {
   user: UserInterface;
   note?: NoteInterface;
   friends?: FriendInterface[];
+  isPreview?: boolean;
 }) {
   const { data: session } = useSession();
   const isOwn = session?.userId === user.id;
@@ -37,12 +39,12 @@ export default function ProfileCard({
             {note && <NoteButton note={note} />}
           </div>
 
-          {isOwn && (
+          {isOwn && !isPreview && (
             <Link
               href={`/profile/${user.id}/setting`}
               className="px-3 py-1 text-sm text-center text-blue-500 bg-white rounded-md"
             >
-              編輯個人頁面
+              設定
             </Link>
           )}
         </div>

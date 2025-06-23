@@ -79,15 +79,15 @@ export default function SideBar() {
                 alt="user"
                 width={35}
                 height={35}
-                className=" rounded-2xl w-9 h-9"
+                className=" rounded-2xl w-9 h-9 aspect-square"
                 src={session?.user.image || "/user.png"}
               />
             </div>
             <div className="flex flex-col max-xl:hidden">
-              <span className="text-black dark:text-white">
+              <span className="font-bold text-stone-800 dark:text-white ">
                 {session?.user.name}
               </span>
-              <span className="text-sm dark:text-neutral-400">
+              <span className="text-sm text-gray-500 dark:text-neutral-400">
                 {session?.user.email}
               </span>
             </div>

@@ -19,6 +19,8 @@ import {
   FileImage,
 } from "lucide-react";
 
+// 請求函式 making fetch data function
+
 export const getAllUserById = async (userIds: string[]) => {
   try {
     const res = await fetch("/api/users", {
@@ -110,12 +112,6 @@ export const fetchRoomMessage = async (
     throw error;
   } finally {
   }
-};
-
-export const clearReadMessage = (roomId: string) => {
-  useChatStore.setState((state) => ({
-    notify: state.notify.filter((msg) => msg.room !== roomId),
-  }));
 };
 
 export const readMessage = async (roomId: string, userId: string | null) => {
@@ -488,29 +484,6 @@ export async function uploadFile(
   }
 }
 
-export const messageType = (metaData: MetaData | null) => {
-  if (!metaData) return false;
-  const { type } = metaData;
-
-  if (type.startsWith("image")) {
-    return "image";
-  }
-  if (type.startsWith("video")) {
-    return "video";
-  }
-  if (type.startsWith("audio")) {
-    return "audio";
-  }
-  return "file";
-};
-export const replyText = (reply: ClientMessageInterface) => {
-  if (!reply) return "";
-  if (messageType(reply.meta_data!) === "audio") return "語音";
-  if (messageType(reply.meta_data!) === "image") return "圖片";
-  if (messageType(reply.meta_data!) === "file") return reply.text;
-  if (messageType(reply.meta_data!) === "video") return "影片";
-  return reply.text;
-};
 export const deleteMessage = async (messageId: string) => {
   try {
     const response = await fetch("/api/messages/delete", {
@@ -536,6 +509,53 @@ export const deleteMessage = async (messageId: string) => {
     console.log(error);
     return false;
   }
+};
+
+export const fetchFriendNote = async (userIds: string[]) => {
+  try {
+    // const userIds = friends.map((f) => f.user.id);
+    const response = await fetch("/api/note", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: userIds }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//功能函式 nornal function
+
+export const clearReadMessage = (roomId: string) => {
+  useChatStore.setState((state) => ({
+    notify: state.notify.filter((msg) => msg.room !== roomId),
+  }));
+};
+
+export const messageType = (metaData: MetaData | null) => {
+  if (!metaData) return false;
+  const { type } = metaData;
+
+  if (type.startsWith("image")) {
+    return "image";
+  }
+  if (type.startsWith("video")) {
+    return "video";
+  }
+  if (type.startsWith("audio")) {
+    return "audio";
+  }
+  return "file";
+};
+export const replyText = (reply: ClientMessageInterface) => {
+  if (!reply) return "";
+  if (messageType(reply.meta_data!) === "audio") return "語音";
+  if (messageType(reply.meta_data!) === "image") return "圖片";
+  if (messageType(reply.meta_data!) === "file") return reply.text;
+  if (messageType(reply.meta_data!) === "video") return "影片";
+  return reply.text;
 };
 
 export const formatSize = (size: number) => {
@@ -592,21 +612,6 @@ export const getFileIcon = (fileName: string) => {
   };
 
   return fileIcons[mimeType as keyof typeof fileIcons] || fileIcons.default;
-};
-
-export const fetchFriendNote = async (userIds: string[]) => {
-  try {
-    // const userIds = friends.map((f) => f.user.id);
-    const response = await fetch("/api/note", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: userIds }),
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
 };
 
 export const handleDownload = async (fileUrl: string, fileName: string) => {

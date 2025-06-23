@@ -430,8 +430,8 @@ const NoteMessage = memo(function NoteMessage({
       )}
       <div
         className={twMerge(
-          "inline-block text-start my-2  bg-stone-900/10 dark:bg-white/10  max-w-48 p-2 rounded-2xl",
-          isOwn && "bg-blue-500 text-end "
+          "inline-block text-start my-2   bg-stone-900/10 dark:bg-white/10  max-w-48 p-2 rounded-2xl",
+          isOwn && "bg-blue-500  text-white"
         )}
       >
         <span className="flex items-center gap-2 w-fit">

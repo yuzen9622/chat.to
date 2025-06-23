@@ -9,11 +9,11 @@ import {
 import { useChatStore } from "../../../store/ChatStore";
 import ChatButton from "./ChatButton";
 import { Skeleton, Modal } from "@mui/material";
-import { SquarePen, Check } from "lucide-react";
+import { SquarePen, Check, Ellipsis } from "lucide-react";
 import { useAblyStore } from "../../../store/AblyStore";
 
 import { twMerge } from "tailwind-merge";
-import { CircularProgress } from "@mui/material";
+
 import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { redirect } from "next/navigation";
 import { useAuthStore } from "../../../store/AuthStore";
@@ -93,18 +93,7 @@ function JoinModal() {
                 isLoading && "bg-blue-400"
               )}
             >
-              {isLoading ? (
-                <>
-                  <CircularProgress
-                    color="inherit"
-                    size={20}
-                    className="mx-1 text-sm text-white"
-                  />
-                  {"加入中..."}
-                </>
-              ) : (
-                "加入"
-              )}
+              {isLoading ? <Ellipsis className=" animate-pulse" /> : "加入"}
             </button>
           </form>
         </div>
@@ -250,12 +239,7 @@ function CreateRoomModal({
             >
               {isLoading ? (
                 <>
-                  <CircularProgress
-                    color="inherit"
-                    size={20}
-                    className="mx-1 text-sm text-white"
-                  />
-                  {"創建中"}
+                  <Ellipsis className=" animate-pulse" />
                 </>
               ) : (
                 "創建"

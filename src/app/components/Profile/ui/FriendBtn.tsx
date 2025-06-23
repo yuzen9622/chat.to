@@ -6,8 +6,9 @@ import React, { useCallback, useMemo, useState } from "react";
 import FriendButton from "../../Friend/ui/FriendButton";
 import { useSession } from "next-auth/react";
 import { responseFriendRequest, sendFriendRequest } from "@/app/lib/util";
-import { CircularProgress } from "@mui/material";
+
 import { friendStatus } from "@/types/type";
+import { Ellipsis } from "lucide-react";
 
 export default function FriendBtn({ id }: { id: string }) {
   const { friends, friendRequests } = useAuthStore();
@@ -82,15 +83,7 @@ export default function FriendBtn({ id }: { id: string }) {
             disabled={isLoading}
             className="flex items-center justify-center px-3 py-1 text-blue-500 bg-white rounded-md dark:bg-transparent dark:text-white outline outline-white"
           >
-            {isLoading ? (
-              <CircularProgress
-                size={20}
-                className="text-white"
-                color="inherit"
-              />
-            ) : (
-              "新增好友"
-            )}
+            {isLoading ? <Ellipsis className=" animate-pulse" /> : "新增好友"}
           </button>
         </div>
       )}

@@ -113,6 +113,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
           user={editProfile}
           note={editProfile.note!}
           friends={friends!}
+          isPreview={true}
         />
       </section>
 
