@@ -6,7 +6,7 @@ import { useAblyStore } from "../../../store/AblyStore";
 
 import { deleteRoom } from "../../../lib/util";
 import { UserPlus, LogOut, X, Users } from "lucide-react";
-import BadgeAvatar from "@/app/components/ui/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { joinRoom } from "../../../lib/util";
 import { twMerge } from "tailwind-merge";
 

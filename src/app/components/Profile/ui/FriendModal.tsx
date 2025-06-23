@@ -3,7 +3,7 @@ import { FriendInterface } from "@/types/type";
 import { Modal } from "@mui/material";
 import React, { useState } from "react";
 
-import BadgeAvatar from "../../ui/Avatar";
+import BadgeAvatar from "../../ui/Avatar/Avatar";
 import FriendBtn from "./FriendBtn";
 import Link from "next/link";
 

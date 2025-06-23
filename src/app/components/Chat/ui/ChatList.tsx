@@ -14,12 +14,12 @@ import { useAblyStore } from "../../../store/AblyStore";
 
 import { twMerge } from "tailwind-merge";
 import { CircularProgress } from "@mui/material";
-import BadgeAvatar from "@/app/components/ui/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { redirect } from "next/navigation";
 import { useAuthStore } from "../../../store/AuthStore";
 import { ClientMessageInterface, RoomInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
-import UploadAvatar from "../../ui/UploadAvatar";
+import UploadAvatar from "../../ui/Avatar/UploadAvatar";
 import FriendNote from "../../Friend/ui/FriendNote";
 function JoinModal() {
   const [open, setOpen] = React.useState(false);

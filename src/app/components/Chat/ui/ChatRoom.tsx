@@ -264,7 +264,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                   followOutput={(atBottom) => {
                     const lastMessage = flatMessages[flatMessages.length - 1];
                     if (
-                      lastMessage.sender === userId &&
+                      lastMessage?.sender === userId &&
                       atBottom &&
                       !downBtnAppear
                     ) {

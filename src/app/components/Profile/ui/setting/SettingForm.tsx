@@ -10,7 +10,7 @@ import { uploadFile } from "@/app/lib/util";
 import ProfileCard from "../ProfileCard";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop } from "@mui/material";
-import UploadAvatar from "@/app/components/ui/UploadAvatar";
+import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";

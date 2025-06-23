@@ -8,7 +8,7 @@ import { twMerge } from "tailwind-merge";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { uploadFile } from "@/app/lib/util";
 import Input from "./Input";
-import UploadAvatar from "./UploadAvatar";
+import UploadAvatar from "./Avatar/UploadAvatar";
 import { useAuthStore } from "@/app/store/AuthStore";
 export default function EditProtofileBtn() {
   const [isOpen, setIsOpen] = useState(false);

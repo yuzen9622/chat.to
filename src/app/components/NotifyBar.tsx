@@ -7,7 +7,8 @@ import { useUserProfile } from "@/hook//useUserProfile";
 import { replyText } from "@/app/lib/util";
 import { redirect } from "next/navigation";
 import moment from "moment";
-import BadgeAvatar from "@/app/components/ui/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+
 export default function NotifyBar() {
   const [open, setOpen] = useState(false);
 

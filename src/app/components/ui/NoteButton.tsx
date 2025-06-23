@@ -7,7 +7,7 @@ import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
 import { NoteInterface } from "../../../types/type";
 import { useAblyStore } from "../../store/AblyStore";
-import NoteModal from "./NoteModal";
+import NoteModal from "./Modal/NoteModal";
 
 export default function NoteButton({ note }: { note: NoteInterface | null }) {
   const [isOpen, setIsOpen] = useState(false);

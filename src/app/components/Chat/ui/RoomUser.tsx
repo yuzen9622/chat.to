@@ -1,5 +1,5 @@
 import React from "react";
-import BadgeAvatar from "../../ui/Avatar";
+import BadgeAvatar from "../../ui/Avatar/Avatar";
 import { RoomMemberInterface } from "@/types/type";
 import { usePopbox } from "@/hook/usePopbox";
 import UserPopbox from "../../ui/UserPopbox";

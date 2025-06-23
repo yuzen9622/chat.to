@@ -175,7 +175,10 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
 
       if (action === "send") {
         setLastMessages({ ...newMessage, isFetching: true });
-        if (newMessage.room !== currentChat?.id || !currentChat) {
+        if (
+          (newMessage.room !== currentChat?.id || !currentChat) &&
+          newMessage.sender !== userId
+        ) {
           setNewNotify({ type: "message", data: newMessage });
         }
       } else if (action === "edit") {

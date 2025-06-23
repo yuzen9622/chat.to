@@ -7,7 +7,7 @@ import { useChatStore } from "../store/ChatStore";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import BadgeAvatar from "./ui/Avatar";
+import BadgeAvatar from "./ui/Avatar/Avatar";
 
 export default function BarList() {
   const { friendRequests } = useAuthStore();

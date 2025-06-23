@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useMemo } from "react";
-import BadgeAvatar from "../../ui/Avatar";
+import BadgeAvatar from "../../ui/Avatar/Avatar";
 import { LinkHTMLAttributes } from "react";
 import { usePathname } from "next/navigation";
 import { RoomInterface } from "../../../../types/type";

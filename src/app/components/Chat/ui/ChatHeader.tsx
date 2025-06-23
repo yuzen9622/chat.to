@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import BadgeAvatar from "@/app/components/ui/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { Info } from "lucide-react";
 import { useChatStore } from "@/app/store/ChatStore";
 import { ChevronLeft } from "lucide-react";

@@ -19,7 +19,7 @@ import {
   handleDownload,
   messageType,
 } from "@/app/lib/util";
-import PreviewMediaModal from "../../ui/PreviewMediaModal";
+import PreviewMediaModal from "../../ui/Modal/PreviewMediaModal";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useAblyStore } from "@/app/store/AblyStore";
 import {
@@ -416,16 +416,36 @@ const NoteMessage = memo(function NoteMessage({
   message: ClientMessageInterface;
   isOwn: boolean;
 }) {
+  const userId = useSession().data?.userId;
   return (
-    <div
-      className={twMerge(
-        "inline-block text-end my-2 bg-stone/10 dark:bg-white/10 max-w-48 p-2 rounded-2xl",
-        isOwn && "bg-blue-500"
+    <div className="flex flex-col">
+      {message.reply_note && (
+        <span className={twMerge(" w-fit text-xs dark:text-white/50")}>
+          已回復
+          {userId === message.reply_note.user_id
+            ? "你"
+            : message.reply_note?.user.name}
+          的便利貼
+        </span>
       )}
-    >
-      <div>
-        <p className="w-fit">{message?.reply_note?.user.name}的便利貼</p>
-        <p className="text-xs truncate dark:text-white/50">
+      <div
+        className={twMerge(
+          "inline-block text-start my-2  bg-stone-900/10 dark:bg-white/10  max-w-48 p-2 rounded-2xl",
+          isOwn && "bg-blue-500 text-end "
+        )}
+      >
+        <span className="flex items-center gap-2 w-fit">
+          <Image
+            alt={"note_user"}
+            width={30}
+            height={30}
+            className="w-8 h-8 rounded-full aspect-square"
+            src={message?.reply_note?.user.image || "/user.png"}
+          />
+          <p className="text-sm font-bold">{message?.reply_note?.user.name}</p>
+        </span>
+
+        <p className="px-2 mt-2 text-sm truncate dark:text-white/70 ">
           {message?.reply_note?.text}
         </p>
       </div>
@@ -570,7 +590,7 @@ const MessageItem = memo(function MessageItem({
           roomUsers={roomUsers}
           message={message.reply}
         />
-      )}
+      )}{" "}
       {message.reply_note && <NoteMessage message={message} isOwn={isOwn} />}
       <div className="flex items-start w-full gap-1 ">
         {!isOwn && (
@@ -590,7 +610,7 @@ const MessageItem = memo(function MessageItem({
             isOwn && " justify-end items-end"
           )}
         >
-          {!isOwn && !message.reply && (
+          {!isOwn && !message.reply && !message.reply_note && (
             <span className="text-xs w-fit dark:text-white/80">
               {messageUser?.name}
             </span>

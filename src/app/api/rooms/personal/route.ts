@@ -11,6 +11,11 @@ export async function POST(request: NextRequest) {
       );
 
       if (isExist?.length > 0 && !roomError) {
+        await supabase
+          .from("room_members")
+          .update({ is_deleted: false })
+          .eq("room_id", isExist[0].room_id)
+          .eq("user_id", userId);
         const { data: findedRoom } = await supabase
           .from("room_members")
           .select("rooms(*,room_members(*))")

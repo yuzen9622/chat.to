@@ -4,14 +4,15 @@ import Image from "next/image";
 import { Modal } from "@mui/material";
 import { NoteInterface } from "@/types/type";
 import { twMerge } from "tailwind-merge";
-import { Send } from "lucide-react";
+import { Ellipsis, Send } from "lucide-react";
 import { getPersonalRoom, sendUserMessage } from "@/app/lib/util";
 import { createReplyNoteMessage } from "@/app/lib/createMessage";
 import { useSession } from "next-auth/react";
-import { v4 as uuid } from "uuid";
 
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useAuthStore } from "@/app/store/AuthStore";
 
 export default function NoteModal({
   note,
@@ -25,19 +26,52 @@ export default function NoteModal({
   const [replyText, setReplyText] = useState("");
   const userId = useSession()?.data?.user.id;
   const { ably } = useAblyStore();
+  const { rooms, setRoom } = useChatStore();
+  const { friends } = useAuthStore();
+
+  const [loading, setLoading] = useState(false);
+
   const handleSend = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const room = await getPersonalRoom(uuid(), userId!, note.user_id);
+      const friend = friends?.find((f) => f.friend_id === note.user_id);
+      if (!friend) return;
+      setLoading(true);
+      const room = await getPersonalRoom(
+        friend.personal_room_id,
+        userId!,
+        note.user_id
+      );
       const message = createReplyNoteMessage(userId!, room.id, replyText, note);
+      const isExist = rooms.find((r) => r.id === room.id);
+
+      if (isExist) {
+        const isDelete = isExist.room_members.some(
+          (rm) =>
+            rm.is_deleted && rm.user_id === userId && rm.room_id === room.id
+        );
+
+        if (isDelete) {
+          isExist.room_members = isExist.room_members.map((r) => {
+            if (r.user_id === userId) {
+              r.is_deleted = false;
+            }
+            return r;
+          });
+        }
+        setRoom(isExist);
+      } else if (!isExist) {
+        setRoom(room);
+      }
       if (message && ably) {
         await Promise.all([
           sendUserMessage(message),
           sendAblyMessage(ably, message),
         ]);
       }
+      setLoading(false);
     },
-    [userId, ably, note, replyText]
+    [userId, ably, note, replyText, setRoom, rooms, friends]
   );
   return (
     <div>
@@ -81,22 +115,24 @@ export default function NoteModal({
             </span>
             <form
               onSubmit={handleSend}
-              className="flex p-1 rounded-3xl dark:bg-white/10 "
+              className="flex p-1 rounded-3xl dark:bg-white/10"
             >
               <input
                 type="text"
                 placeholder="回覆便利貼..."
                 onChange={(e) => setReplyText(e.target.value)}
                 value={replyText}
-                className="px-3 bg-transparent outline-none "
+                className="px-3 py-1 bg-transparent outline-none "
               />
-
-              <button
-                type="submit"
-                className="px-3 py-1 bg-blue-500 animate-in zoom-in-0 active:bg-blue-300 rounded-3xl"
-              >
-                <Send />
-              </button>
+              {replyText !== "" && (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-3 py-1 bg-blue-500 animate-in zoom-in-0 active:bg-blue-300 rounded-3xl disabled:bg-blue-300"
+                >
+                  {loading ? <Ellipsis className=" animate-pulse" /> : <Send />}
+                </button>
+              )}
             </form>
           </div>
         </div>

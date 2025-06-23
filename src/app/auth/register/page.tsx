@@ -7,7 +7,7 @@ import Link from "next/link";
 import { uploadFile } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
 import Input from "@/app/components/ui/Input";
-import UploadAvatar from "@/app/components/ui/UploadAvatar";
+import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
 
 export default function RegisterPage() {
   const [registerForm, setRegister] = useState<{

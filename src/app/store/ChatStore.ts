@@ -110,7 +110,13 @@ export const useChatStore = create<ChatStore>((set) => ({
       }
 
       if (state.rooms.some((m) => m.id === roomOrFn.id)) {
-        return state;
+        const newRooms = state.rooms.map((r) => {
+          if (r.id === roomOrFn.id) {
+            return roomOrFn;
+          }
+          return r;
+        });
+        return { ...state, rooms: newRooms };
       }
       return {
         ...state,

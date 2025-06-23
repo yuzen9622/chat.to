@@ -4,7 +4,7 @@ import { UserInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
 import { sendFriendRequest, queryFriend } from "../../../lib/util";
 import { Skeleton } from "@mui/material";
-import BadgeAvatar from "@/app/components/ui/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { useRouter } from "next/navigation";
 
 function Loading() {

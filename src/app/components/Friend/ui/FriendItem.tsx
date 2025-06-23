@@ -1,6 +1,6 @@
 import { FriendInterface } from "@/types/type";
 import React from "react";
-import BadgeAvatar from "../../ui/Avatar";
+import BadgeAvatar from "../../ui/Avatar/Avatar";
 import FriendButton from "./FriendButton";
 
 import UserPopbox from "../../ui/UserPopbox";

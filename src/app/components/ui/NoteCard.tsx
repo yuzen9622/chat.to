@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { NoteInterface } from "../../../types/type";
-import BadgeAvatar from "./Avatar";
+import BadgeAvatar from "./Avatar/Avatar";
 import { useSession } from "next-auth/react";
-import NoteModal from "./NoteModal";
+import NoteModal from "./Modal/NoteModal";
 
 export default function NoteCard({ note }: { note: NoteInterface }) {
   const [isOpen, setIsOpen] = useState(false);

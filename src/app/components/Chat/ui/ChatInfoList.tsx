@@ -12,7 +12,7 @@ import { ClientMessageInterface } from "../../../../types/type";
 
 import { useChatStore } from "../../../store/ChatStore";
 import { LucideIcon } from "lucide-react";
-import PreviewMediaModal from "../../ui/PreviewMediaModal";
+import PreviewMediaModal from "../../ui/Modal/PreviewMediaModal";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import moment from "moment";
 type Type = "media" | "url" | "file";
