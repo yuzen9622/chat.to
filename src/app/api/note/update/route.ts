@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       .from("user_note")
       .update({ text: text, public: is_public, updated_at: new Date() })
       .eq("user_id", user_id)
-      .select("*")
+      .select("*,user:users(id,name,image)")
       .single();
 
     return NextResponse.json(updateData, { status: 200 });

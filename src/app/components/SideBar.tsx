@@ -69,30 +69,32 @@ export default function SideBar() {
           </div>
         </div>
 
-        {session?.user && (
-          <ListItem
-            href={`/profile/${session.userId}`}
-            className="max-sm:hidden"
-          >
-            <div>
-              <Image
-                alt="user"
-                width={35}
-                height={35}
-                className=" rounded-2xl w-9 h-9 aspect-square"
-                src={session?.user.image || "/user.png"}
-              />
-            </div>
-            <div className="flex flex-col max-xl:hidden">
-              <span className="font-bold text-stone-800 dark:text-white ">
-                {session?.user.name}
-              </span>
-              <span className="text-sm text-gray-500 dark:text-neutral-400">
-                {session?.user.email}
-              </span>
-            </div>
-          </ListItem>
-        )}
+        <section>
+          {session?.user && (
+            <ListItem
+              href={`/profile/${session.userId}`}
+              className="max-sm:hidden"
+            >
+              <div>
+                <Image
+                  alt="user"
+                  width={35}
+                  height={35}
+                  className=" rounded-2xl w-9 h-9 aspect-square"
+                  src={session?.user.image || "/user.png"}
+                />
+              </div>
+              <div className="flex flex-col max-xl:hidden">
+                <span className="font-bold text-stone-800 dark:text-white ">
+                  {session?.user.name}
+                </span>
+                <span className="text-sm text-gray-500 dark:text-neutral-400">
+                  {session?.user.email}
+                </span>
+              </div>
+            </ListItem>
+          )}
+        </section>
       </nav>
     </div>
   );

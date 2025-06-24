@@ -344,7 +344,7 @@ export default function ChatList() {
 
   const { setRoom, rooms, setNotify, setLastMessages } = useChatStore();
   const [isLoading, setIsLoading] = useState(false);
-  const { userNote } = useAuthStore();
+
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const loadRooms = async () => {
@@ -382,7 +382,7 @@ export default function ChatList() {
   return (
     <div className="flex flex-col h-full p-2 sm:rounded-lg sm:dark:bg-neutral-800 border-t-gray-500">
       <div>
-        <FriendNote userNote={userNote} />
+        <FriendNote />
       </div>
       <div className="flex justify-between ">
         <span className="text-lg font-semibold text-blue-400">Chats</span>

@@ -6,16 +6,12 @@ import { Pagination, Navigation } from "swiper/modules";
 import NoteCard from "../../ui/NoteCard";
 import { useAuthStore } from "../../../store/AuthStore";
 
-import { NoteInterface } from "../../../../types/type";
 import "swiper/css";
 import "swiper/css/navigation";
-export default function FriendNote({
-  userNote,
-}: {
-  userNote: NoteInterface | null;
-}) {
-  const { friendNote } = useAuthStore();
-
+import { useSession } from "next-auth/react";
+export default function FriendNote() {
+  const { friends } = useAuthStore();
+  const user = useSession()?.data?.user;
   return (
     <div className="">
       <Swiper
@@ -29,15 +25,14 @@ export default function FriendNote({
         slidesPerGroup={3}
         modules={[Pagination, Navigation]}
       >
-        {userNote && (
-          <SwiperSlide className="!w-fit">
-            <NoteCard note={userNote} />
-          </SwiperSlide>
-        )}
-        {friendNote &&
-          friendNote.map((note) => (
-            <SwiperSlide key={note.id} className="!w-fit">
-              <NoteCard key={note.id} note={note} />
+        <SwiperSlide className="!w-fit">
+          <NoteCard isOwn={true} user={user!} />
+        </SwiperSlide>
+
+        {friends &&
+          friends.map((friend) => (
+            <SwiperSlide key={friend.id} className="!w-fit">
+              <NoteCard key={friend.id} isOwn={false} user={friend.user} />
             </SwiperSlide>
           ))}
       </Swiper>

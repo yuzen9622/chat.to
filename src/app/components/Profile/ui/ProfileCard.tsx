@@ -1,7 +1,7 @@
 "use client";
 import { FriendInterface, NoteInterface, UserInterface } from "@/types/type";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import NoteButton from "../../ui/NoteButton";
 
 import FriendBtn from "./FriendBtn";
@@ -23,6 +23,7 @@ export default function ProfileCard({
 }) {
   const { data: session } = useSession();
   const isOwn = session?.userId === user.id;
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <section className="w-full max-w-2xl p-6 text-white shadow-lg shadow-blue-400/50 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 backdrop-blur-xl">
       <div className="flex flex-col items-center gap-6 sm:flex-row">
@@ -36,7 +37,14 @@ export default function ProfileCard({
               priority
               alt="avatar"
             />
-            {note && <NoteButton note={note} />}
+            {(isOwn || note) && (
+              <NoteButton
+                user={user}
+                note={note!}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
+            )}
           </div>
 
           {isOwn && !isPreview && (

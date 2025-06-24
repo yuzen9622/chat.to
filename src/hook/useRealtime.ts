@@ -257,8 +257,8 @@ export const useNoteListner = (channel: RealtimeChannel) => {
   useEffect(() => {
     const handleNote = (message: InboundMessage) => {
       const { note }: { note: NoteInterface } = message.data;
-
-      if (friends?.some((f) => f.id === note.user_id)) {
+      console.log(note);
+      if (friends?.some((f) => f.friend_id === note.user_id)) {
         setFriendNote((prev) => {
           if (!prev.some((n) => n.id === note.id)) {
             return [note, ...prev];
