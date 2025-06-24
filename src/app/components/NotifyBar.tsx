@@ -25,14 +25,38 @@ export default function NotifyBar() {
     if (!newNotify) return;
     if (newNotify.type === "message") {
       const room = rooms.find((room) => room.id === newNotify.data.room);
+      // const title =
+      //   room && room.room_type === "group" ? room.room_name : sendUser?.name;
+      // const icon =
+      //   room && room.room_type === "group"
+      //     ? room.room_img?.url
+      //     : sendUser?.image;
+
+      // if (Notification && Notification.permission !== "granted") {
+      //   Notification.requestPermission(function (status) {
+      //     if (status === "granted") {
+      //       new Notification(title!, {
+      //         body: newNotify.data.text,
+      //         icon: icon!,
+      //       });
+      //     }
+      //   });
+      // } else if (Notification.permission === "granted") {
+      //   new Notification(title!, {
+      //     body: newNotify.data.text,
+      //     icon: icon!,
+      //   });
+      // }
       setRoom(room || null);
     }
+
     setOpen(true);
-  }, [newNotify, rooms]);
+  }, [newNotify, rooms, sendUser]);
 
   const handleClick = useCallback(() => {
     setOpen(false);
     setNewNotify(null);
+
     if (newNotify && newNotify.type === "message") {
       redirect(`/chat/${newNotify.data.room}`);
     }
