@@ -84,7 +84,7 @@ export default function NoteButton({
         >
           <p
             className={twMerge(
-              "line-clamp-2 dark:text-white/70 text-stone-100 text-center",
+              "line-clamp-2 dark:text-white/70 text-stone-900 text-center",
               note && "dark:text-white"
             )}
           >

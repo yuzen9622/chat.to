@@ -8,7 +8,8 @@ export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
 export type MessageType = "text" | "media" | "file" | "url" | "audio" | "note";
 export type ProviderType = "google" | "github" | "credentials";
-
+export type CallStatus = "connect" | "disconnect" | "waiting" | "receiving";
+export type CallType = "voice" | "video";
 export interface TypingInterface {
   roomId: string;
   typing: boolean;

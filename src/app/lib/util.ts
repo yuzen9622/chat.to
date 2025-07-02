@@ -3,6 +3,7 @@ import {
   ClientMessageInterface,
   MetaData,
   RoomInterface,
+  CallType,
 } from "../../types/type";
 import { useChatStore } from "../store/ChatStore";
 
@@ -18,6 +19,8 @@ import {
   FileJson,
   FileImage,
 } from "lucide-react";
+import { useCallStore } from "../store/CallStore";
+import { RealtimeChannel } from "ably";
 
 // 請求函式 making fetch data function
 
@@ -656,3 +659,59 @@ export const fileType = (mineType: string) => {
   }
   return "file";
 };
+
+export const startStream = async (callType: CallType) => {
+  try {
+    const streamConfig: MediaStreamConstraints =
+      callType === "voice"
+        ? { audio: true, video: false }
+        : { audio: true, video: true };
+    const stream = await navigator.mediaDevices.getUserMedia(streamConfig);
+    return stream;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export function createPeer(
+  userId: string,
+  peerId: string,
+  channel: RealtimeChannel
+) {
+  const pc = new RTCPeerConnection({
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  });
+  const { addRemoteStream, localStream, callRoom } = useCallStore.getState();
+  localStream?.getTracks().forEach((track) => pc.addTrack(track, localStream));
+
+  pc.onicecandidate = (e) => {
+    if (e.candidate) {
+      channel.publish("signal_action", {
+        type: "candidate",
+        from: userId,
+        to: peerId,
+        candidate: e.candidate,
+      });
+    }
+  };
+
+  pc.ontrack = (e) => {
+    console.log(e.streams);
+    addRemoteStream(peerId, e.streams[0]);
+  };
+
+  pc.oniceconnectionstatechange = () => {
+    const state = pc.iceConnectionState;
+    console.log("ICE 狀態：", state);
+    if (state === "disconnected" || state === "failed" || state === "closed") {
+      channel.publish("call_action", {
+        action: "leave",
+        from: peerId,
+        room: callRoom,
+      });
+    }
+  };
+
+  return pc;
+}

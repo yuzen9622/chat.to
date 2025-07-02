@@ -10,10 +10,12 @@ import { twMerge } from "tailwind-merge";
 import NotifyBar from "../NotifyBar";
 import { useSession } from "next-auth/react";
 import {
+  useCallListner,
   useFriendListner,
   useNoteListner,
   useNotifyListner,
   useRoomActionListner,
+  useSignalListner,
   useTypingListner,
   useUserListner,
 } from "@/hook/useRealtime";
@@ -59,6 +61,8 @@ export default function ClientLayout({
   useNotifyListner(channel);
   useNoteListner(channel);
   useTypingListner(channel);
+  useCallListner(channel);
+  useSignalListner(channel);
 
   const { presenceData } = usePresenceListener("chatta-chat-channel");
   useEffect(() => {
