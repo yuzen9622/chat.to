@@ -53,7 +53,9 @@ export default function RequestButton({
 
           {friend.receiver_id === userId && (
             <>
-              <span className="text-sm">{sender.name} 發送給你的朋友請求</span>
+              <span className="text-sm truncate">
+                {sender.name} 發送給你的朋友請求
+              </span>
               <span className="flex flex-nowrap">
                 <button
                   onClick={() => handleClick(friend.id, "accepted")}

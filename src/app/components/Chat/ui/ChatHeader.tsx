@@ -88,7 +88,7 @@ export default function ChatHeader() {
             onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
           >
             <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
-              <p>{displayName}</p>
+              <p className="truncate ">{displayName}</p>
 
               {currentChat.room_type === "group" && (
                 <p className="flex-shrink-0 ">
