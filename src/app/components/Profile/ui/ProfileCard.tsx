@@ -58,7 +58,7 @@ export default function ProfileCard({
         </div>
 
         <div className="flex flex-col items-center gap-3 sm:items-start">
-          <h1 className="text-2xl font-bold dark:text-white">
+          <h1 className="text-2xl font-bold truncate dark:text-white">
             {user.name}
             {isOwn && <span className="ml-2 text-sm text-blue-100">(你)</span>}
           </h1>
