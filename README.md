@@ -8,7 +8,7 @@
 
 **Chat.to** is a sleek, real-time chat application that lets you connect with friends and groups effortlessly. Powered by **Ably**, **Next.js**, **Supabase**, and **NextAuth**, it delivers a seamless, secure, and engaging messaging experience.
 
-## 👉 [Try it here](https://chat-to-sage.vercel.app/)
+## 👉 [Try it here](https://chat-to-sage.vercel.app/introduce)
 
 ---
 
@@ -71,7 +71,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 **Chat.to** 是一款簡潔、即時的聊天應用程式，讓你能輕鬆與朋友和群組連線。透過 **Ably**、**Next.js**、**Supabase** 和 **NextAuth** 強力驅動，提供流暢、安全且富有互動性的訊息體驗。
 
-## 👉 [點我體驗](https://chat-to-sage.vercel.app/)
+## 👉 [點我體驗](https://chat-to-sage.vercel.app/introduce)
 
 ---
 
