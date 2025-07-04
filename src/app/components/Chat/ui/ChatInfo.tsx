@@ -215,7 +215,7 @@ export default function ChatInfo() {
               )
             ) && <span className="text-xs text-green-400">目前在線上</span>}
             <span className="flex text-lg dark:text-white">
-              <p>{displayName}</p>
+              <p className="truncate ">{displayName}</p>
               {currentChat.room_type === "group" && (
                 <p className="flex-shrink-0 ml-1">
                   ({currentChat.room_members.length})
