@@ -1,4 +1,5 @@
-import { supabase } from "@/app/lib/supabasedb";
+import { selectMessages } from "@/app/lib/services/messageService";
+
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,16 +20,7 @@ export async function GET(
       return NextResponse.json({ error: "No message range" }, { status: 401 });
     }
 
-    const { data, error } = await supabase
-      .from("messages")
-      .select("*,reply(*)")
-      .eq("room", roomId)
-      .order("created_at", { ascending: false })
-      .range(start, end);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const data = await selectMessages(roomId, start, end);
     data.reverse();
     return NextResponse.json({ data }, { status: 200 });
   } catch (error) {

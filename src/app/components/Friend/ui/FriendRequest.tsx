@@ -5,7 +5,7 @@ import FriendSearch from "./FriendSearch";
 
 import { useAuthStore } from "../../../store/AuthStore";
 import { Skeleton } from "@mui/material";
-import { fetchFriendRequests } from "../../../lib/util";
+import { fetchFriendRequests } from "@/app/lib/api/friend/friendApi";
 import { useSession } from "next-auth/react";
 export default function FriendRequest() {
   const { friendRequests, setFriendRequest } = useAuthStore();

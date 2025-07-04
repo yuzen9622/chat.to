@@ -75,7 +75,11 @@ export default function ClientLayout({
       <NotifyBar />
 
       <div className={twMerge("flex", isChatRoom && " hidden sm:block")}>
-        {!pathname.includes("/auth") && <SideBar />}
+        {!pathname.includes("/auth") && !pathname.includes("/introduce") ? (
+          <SideBar />
+        ) : (
+          ""
+        )}
       </div>
 
       {children}

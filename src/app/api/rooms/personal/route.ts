@@ -1,3 +1,4 @@
+import { selectRoom } from "@/app/lib/services/roomService";
 import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -16,14 +17,10 @@ export async function POST(request: NextRequest) {
           .update({ is_deleted: false })
           .eq("room_id", isExist[0].room_id)
           .eq("user_id", userId);
-        const { data: findedRoom } = await supabase
-          .from("room_members")
-          .select("rooms(*,room_members(*))")
-          .eq("room_id", isExist[0].room_id)
-          .limit(1);
 
-        if (findedRoom)
-          return NextResponse.json(findedRoom[0].rooms, { status: 200 });
+        const room = await selectRoom(isExist[0].room_id);
+
+        if (room) return NextResponse.json(room, { status: 200 });
       } else {
         const { error } = await supabase.from("room_members").upsert(
           [
@@ -34,17 +31,12 @@ export async function POST(request: NextRequest) {
             onConflict: "room_id, user_id",
           }
         );
-        const { data: personalRoom } = await supabase
-          .from("room_members")
-          .select("rooms(*,room_members(*))")
-          .eq("room_id", roomId)
-          .limit(1);
+        const room = await selectRoom(roomId);
 
         if (error) {
           return NextResponse.json({ error }, { status: 500 });
         }
-        if (personalRoom)
-          return NextResponse.json(personalRoom[0].rooms, { status: 200 });
+        if (room) return NextResponse.json(room, { status: 200 });
       }
     }
   } catch (error) {

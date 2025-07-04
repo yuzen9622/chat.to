@@ -110,7 +110,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## 📌 開發中功能
 
 - [ ] 語音／視訊通話
-- [ ] 正在輸入指示
+- [x] 正在輸入指示
 - [ ] 支援 Markdown 格式訊息
 - [ ] AI 訊息產生器
 

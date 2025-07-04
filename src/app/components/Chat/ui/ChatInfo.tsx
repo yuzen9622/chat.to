@@ -4,10 +4,9 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useChatStore } from "../../../store/ChatStore";
 import { useAblyStore } from "../../../store/AblyStore";
 
-import { deleteRoom } from "../../../lib/util";
 import { UserPlus, LogOut, X, Users } from "lucide-react";
 import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { joinRoom } from "../../../lib/util";
+import { joinRoom, deleteRoom } from "@/app/lib/api/room/roomApi";
 import { twMerge } from "tailwind-merge";
 
 import { Modal } from "@mui/material";
@@ -151,7 +150,7 @@ export default function ChatInfo() {
               setRoomMembers([]);
             }}
           >
-            <div className="absolute w-11/12 max-w-[500px] p-4  transform -translate-x-1/2 -translate-y-1/2 bg-stone-900 rounded-md top-1/2 left-1/2  ">
+            <div className="absolute w-11/12 max-w-[500px] p-4 max-h-full overflow-auto  transform -translate-x-1/2 -translate-y-1/2 bg-stone-900 rounded-md top-1/2 left-1/2  ">
               <button className="w-full p-2 my-2 text-sm font-bold text-white rounded-md bg-white/5 hover:bg-white/10 ">
                 複製邀請碼
               </button>
@@ -167,13 +166,13 @@ export default function ChatInfo() {
                         <button
                           key={friend.id}
                           disabled={currentChat.room_members.some(
-                            (rm) => rm.user_id === friend.id
+                            (rm) => rm.user_id === friend.user.id
                           )}
                           type="button"
-                          onClick={() => handleRoomMember(friend.id)}
+                          onClick={() => handleRoomMember(friend.user.id)}
                           className={twMerge(
                             " relative flex  items-center disabled:text-white/40  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
-                            roomMembers.includes(friend.id) &&
+                            roomMembers.includes(friend.user.id) &&
                               "after:content-['✔'] after:text-xs after:absolute after:w-4 after:border-0 after:h-4 after:bottom-6 after:right-2 after:rounded-full after:animate-in after:zoom-in-0 after:bg-blue-500"
                           )}
                         >

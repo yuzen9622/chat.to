@@ -61,6 +61,15 @@ export interface UserInterface {
   provider?: ProviderType;
 }
 
+export interface PublicUserInfo {
+  id: string;
+  name: string;
+  email?: string;
+  image: string;
+  note?: NoteInterface;
+  provider?: ProviderType;
+}
+
 export interface RoomMemberInterface {
   id?: string;
   room_id: string;
@@ -77,9 +86,9 @@ export interface RoomInterface {
   room_members: Array<RoomMemberInterface>;
   room_type: "personal" | "group";
   room_img?: { url: string; public_id: "" };
-
   updated_at?: Date;
 }
+
 export interface FriendInterface {
   id: string;
   user_id: string;

@@ -3,7 +3,10 @@ import { FriendRequestInterface, friendStatus } from "@/types/type";
 import { useUserProfile } from "@/hook/useUserProfile";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
-import { cancelFriendRequest, responseFriendRequest } from "@/app/lib/util";
+import {
+  cancelFriendRequest,
+  responseFriendRequest,
+} from "@/app/lib/api/friend/friendApi";
 import { twMerge } from "tailwind-merge";
 import CircularProgress from "@mui/material/CircularProgress";
 export default function RequestButton({

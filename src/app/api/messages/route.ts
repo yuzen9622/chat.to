@@ -1,4 +1,4 @@
-import { supabase } from "@/app/lib/supabasedb";
+import { insertMessage } from "@/app/lib/services/messageService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,17 +15,7 @@ export async function POST(request: NextRequest) {
       message.reply = message.reply.id;
     }
 
-    const { data, error } = await supabase
-      .from("messages")
-      .insert([message])
-      .select("*,reply(*)")
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      console.log(error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const data = await insertMessage(message);
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

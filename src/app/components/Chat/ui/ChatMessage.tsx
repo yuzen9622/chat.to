@@ -13,12 +13,13 @@ import Image from "next/image";
 
 import {
   Copy2ClipBoard,
-  deleteMessage,
   formatSize,
   getFileIcon,
   handleDownload,
   messageType,
 } from "@/app/lib/util";
+
+import { deleteMessage } from "@/app/lib/api/message/messageApi";
 import PreviewMediaModal from "../../ui/Modal/PreviewMediaModal";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useAblyStore } from "@/app/store/AblyStore";

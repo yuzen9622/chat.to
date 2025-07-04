@@ -16,7 +16,7 @@ export default function CallVideo({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { callRoom, peerConnections } = useCallStore();
+  const { callRoom } = useCallStore();
 
   const user = useMemo(() => {
     if (!callRoom) return null;
@@ -28,25 +28,18 @@ export default function CallVideo({
 
   useEffect(() => {
     if (!videoRef.current) return;
-
     videoRef.current.srcObject = stream;
   }, [stream]);
-
-  useEffect(() => {
-    if (userId === user?.id) return;
-    const pc = peerConnections[userId];
-    pc.ontrack = (e) => {
-      console.log(e.streams);
-    };
-  }, [peerConnections, user, userId]);
 
   return (
     <div className="relative animate-in zoom-in-0 flex-1 w-full rounded-md max-w-[100%] min-w-[50%]">
       <video
         className="absolute inset-0 object-cover w-full h-full rounded-md "
         autoPlay
-        muted={!stream.getAudioTracks()[0].enabled}
+        muted={true}
         ref={videoRef}
+        controls={false}
+        playsInline={true}
       />
 
       {user && !stream.getVideoTracks()[0]?.enabled && (
@@ -62,7 +55,7 @@ export default function CallVideo({
         </div>
       )}
 
-      <div className="absolute p-2 text-white rounded-full inset-2 w-fit h-fit bg-stone-100 dark:bg-white/10 backdrop-blur-md">
+      <div className="absolute p-2 text-white rounded-full inset-2 w-fit h-fit bg-stone-800/50 backdrop-blur-md">
         {stream.getAudioTracks()[0].enabled ? (
           <Volume2 size={20} />
         ) : (
@@ -70,7 +63,7 @@ export default function CallVideo({
         )}
       </div>
       {user && (
-        <div className="absolute px-3 py-2 font-bold text-white rounded-3xl right-2 top-2 w-fit h-fit bg-stone-100 dark:bg-white/10 backdrop-blur-lg">
+        <div className="absolute px-3 py-2 font-bold text-white rounded-3xl right-2 top-2 w-fit h-fit bg-stone-800/50 backdrop-blur-lg">
           {isOwn ? "你" : user.name}
         </div>
       )}

@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
-import { supabase } from "@/app/lib/supabasedb";
+
 import { getToken } from "next-auth/jwt";
+import { fetchUserInfo } from "@/app/lib/services/userService";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,17 +10,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No authcation" }, { status: 401 });
     const { userId } = await request.json();
 
-    const { data, error } = await supabase
-      .from("users")
-      .select("id,image,name")
-      .in("id", userId);
+    const user = await fetchUserInfo(userId);
 
-    if (error) {
-      console.error(error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json(

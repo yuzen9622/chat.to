@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { fetchUsersNotify } from "@/app/lib/api/notify/notifytApi";
+
 import {
+  joinRoom,
   createRoom,
   fetchUserRooms,
-  fetchUsersNotify,
-  joinRoom,
-} from "../../../lib/util";
+} from "@/app/lib/api/room/roomApi";
 
 import { useChatStore } from "../../../store/ChatStore";
 import ChatButton from "./ChatButton";

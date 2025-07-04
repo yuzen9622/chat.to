@@ -8,14 +8,14 @@ import {
   RoomInterface,
   SystemAlertInterface,
 } from "../../types/type";
+
+import { fetchFriendNote } from "../lib/api/note/noteApi";
 import {
-  fetchFriendNote,
   fetchFriendRequests,
   fetchUserFriends,
-  fetchUserRooms,
-  fetchUsersNotify,
-} from "../lib/util";
-
+} from "../lib/api/friend/friendApi";
+import { fetchUserRooms } from "../lib/api/room/roomApi";
+import { fetchUsersNotify } from "../lib/api/notify/notifytApi";
 import { isMobile } from "react-device-detect";
 import { useChatStore } from "./ChatStore";
 

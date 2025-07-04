@@ -19,13 +19,15 @@ import _ from "lodash";
 
 import { X, Laugh, Pencil, Paperclip } from "lucide-react";
 import {
-  editUserMessage,
   formatSize,
   getFileIcon,
   messageType,
-  sendUserMessage,
   uploadFile,
 } from "../../../lib/util";
+import {
+  sendUserMessage,
+  editUserMessage,
+} from "@/app/lib/api/message/messageApi";
 import EmojiPicker from "emoji-picker-react";
 import { Theme, EmojiStyle } from "emoji-picker-react";
 import { twMerge } from "tailwind-merge";

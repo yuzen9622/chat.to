@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../../store/AuthStore";
 import { UserInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
-import { sendFriendRequest, queryFriend } from "../../../lib/util";
+import { sendFriendRequest, queryFriend } from "@/app/lib/api/friend/friendApi";
 import { Skeleton } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { useRouter } from "next/navigation";

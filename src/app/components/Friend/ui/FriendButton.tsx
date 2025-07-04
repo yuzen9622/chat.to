@@ -2,8 +2,7 @@
 import React, { useCallback, useState } from "react";
 import { FriendInterface, RoomInterface } from "../../../../types/type";
 import { useChatStore } from "../../../store/ChatStore";
-import { getPersonalRoom } from "../../../lib/util";
-
+import { getPersonalRoom } from "@/app/lib/api/room/roomApi";
 import { useRouter } from "next/navigation";
 import { useAblyStore } from "../../../store/AblyStore";
 

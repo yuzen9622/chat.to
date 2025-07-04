@@ -5,7 +5,10 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import FriendButton from "../../Friend/ui/FriendButton";
 import { useSession } from "next-auth/react";
-import { responseFriendRequest, sendFriendRequest } from "@/app/lib/util";
+import {
+  responseFriendRequest,
+  sendFriendRequest,
+} from "@/app/lib/api/friend/friendApi";
 
 import { friendStatus } from "@/types/type";
 import { Ellipsis } from "lucide-react";

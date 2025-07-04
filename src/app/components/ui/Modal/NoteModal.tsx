@@ -5,7 +5,9 @@ import { Modal } from "@mui/material";
 import { NoteInterface } from "@/types/type";
 import { twMerge } from "tailwind-merge";
 import { Ellipsis, Send } from "lucide-react";
-import { getPersonalRoom, sendUserMessage } from "@/app/lib/util";
+
+import { getPersonalRoom } from "@/app/lib/api/room/roomApi";
+import { sendUserMessage } from "@/app/lib/api/message/messageApi";
 import { createReplyNoteMessage } from "@/app/lib/createMessage";
 import { useSession } from "next-auth/react";
 import { v4 as uuid } from "uuid";

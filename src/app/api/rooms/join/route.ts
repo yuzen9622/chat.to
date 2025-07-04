@@ -1,4 +1,5 @@
-import { supabase } from "@/app/lib/supabasedb";
+import { insertRoomMembers, selectRoom } from "@/app/lib/services/roomService";
+
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,23 +16,11 @@ export const POST = async (req: NextRequest) => {
       user_id: uid,
     }));
 
-    const { data, error } = await supabase
-      .from("room_members")
-      .insert(roomMembers)
-      .select("*")
-      .limit(1)
-      .single();
-    const { data: roomData, error: roomsError } = await supabase
-      .from("room_members")
-      .select("rooms(*,room_members(*))")
-      .eq("room_id", data.room_id)
-      .limit(1)
-      .single();
-    if (error || roomsError) {
-      return NextResponse.json({ error, roomsError }, { status: 500 });
-    }
+    await insertRoomMembers(roomMembers);
 
-    return NextResponse.json(roomData, { status: 200 });
+    const room = await selectRoom(room_id);
+
+    return NextResponse.json(room, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error }, { status: 500 });

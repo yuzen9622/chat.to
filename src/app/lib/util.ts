@@ -1,14 +1,6 @@
-import {
-  FriendRequestInterface,
-  ClientMessageInterface,
-  MetaData,
-  RoomInterface,
-  CallType,
-} from "../../types/type";
+import { ClientMessageInterface, MetaData, CallType } from "../../types/type";
 import { useChatStore } from "../store/ChatStore";
 
-import { useAuthStore } from "../store/AuthStore";
-import { useAblyStore } from "../store/AblyStore";
 import {
   File,
   FileText,
@@ -24,442 +16,443 @@ import { RealtimeChannel } from "ably";
 
 // 請求函式 making fetch data function
 
-export const getAllUserById = async (userIds: string[]) => {
-  try {
-    const res = await fetch("/api/users", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: userIds }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw data.error;
-    }
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getAllUserById = async (userIds: string[]) => {
+//   try {
+//     const res = await fetch("/api/users", {
+//       method: "post",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ userId: userIds }),
+//     });
+//     const data = await res.json();
+//     if (!res.ok) {
+//       throw data.error;
+//     }
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-export const fetchUserRooms = async () => {
-  try {
-    const response = await fetch(`/api/rooms`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+// export const fetchUserRooms = async () => {
+//   try {
+//     const response = await fetch(`/api/rooms`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching rooms:", error);
-    throw error;
-  }
-};
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Error fetching rooms:", error);
+//     throw error;
+//   }
+// };
 
-export const fetchUsersNotify = async (
-  userId: string,
-  rooms: RoomInterface[]
-) => {
-  try {
-    const roomsId = rooms.map((room) => room.id);
+// export const fetchUsersNotify = async (
+//   userId: string,
+//   rooms: RoomInterface[]
+// ) => {
+//   try {
+//     const roomsId = rooms.map((room) => room.id);
 
-    const response = await fetch(`/api/messages/notify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId, rooms: roomsId }),
-    });
+//     const response = await fetch(`/api/messages/notify`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ userId, rooms: roomsId }),
+//     });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching rooms:", error);
-    throw error;
-  }
-};
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Error fetching rooms:", error);
+//     throw error;
+//   }
+// };
 
-export const fetchRoomMessage = async (
-  roomId: string,
-  start: number,
-  end: number
-) => {
-  try {
-    const response = await fetch(
-      `/api/messages/${roomId}?start=${start}&end=${end}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error("Server Error");
-    }
+// export const fetchRoomMessage = async (
+//   roomId: string,
+//   start: number,
+//   end: number
+// ) => {
+//   try {
+//     const response = await fetch(
+//       `/api/messages/${roomId}?start=${start}&end=${end}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+//     const data = await response.json();
+//     if (!response.ok) {
+//       throw new Error("Server Error");
+//     }
 
-    return data.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  } finally {
-  }
-};
+//     return data.data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   } finally {
+//   }
+// };
 
-export const readMessage = async (roomId: string, userId: string | null) => {
-  if (!roomId || !userId) return;
-  try {
-    const response = await fetch(`/api/messages/read`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ roomId, userId }),
-    });
+// export const readMessage = async (roomId: string, userId: string | null) => {
+//   if (!roomId || !userId) return;
+//   try {
+//     const response = await fetch(`/api/messages/read`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ roomId, userId }),
+//     });
 
-    if (!response.ok) {
-      throw new Error("Failed to mark messages as read");
-    }
+//     if (!response.ok) {
+//       throw new Error("Failed to mark messages as read");
+//     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error reading messages:", error);
-    throw error;
-  }
-};
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Error reading messages:", error);
+//     throw error;
+//   }
+// };
 
-export const sendUserMessage = async (message: ClientMessageInterface) => {
-  try {
-    const response = await fetch("/api/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+// export const sendUserMessage = async (message: ClientMessageInterface) => {
+//   try {
+//     const response = await fetch("/api/messages", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(message),
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-export const editUserMessage = async (message: ClientMessageInterface) => {
-  try {
-    const response = await fetch("/api/messages/edit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: message.id, text: message.text }),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+// export const editUserMessage = async (message: ClientMessageInterface) => {
+//   try {
+//     const response = await fetch("/api/messages/edit", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ id: message.id, text: message.text }),
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-export const createRoom = async (
-  userId: string | null,
-  room_name: string,
-  room_members: string[] | [],
-  room_type?: string,
-  room_img?: File
-) => {
-  try {
-    let roomImageUrl;
-    if (room_img) {
-      const roomImage = await uploadFile([room_img]);
-      if (roomImage) {
-        roomImageUrl = roomImage[0].url;
-      }
-    }
+// export const createRoom = async (
+//   userId: string | null,
+//   room_name: string,
+//   room_members: string[] | [],
+//   room_type?: string,
+//   room_img?: File
+// ) => {
+//   try {
+//     let roomImageUrl;
+//     if (room_img) {
+//       const roomImage = await uploadFile([room_img]);
+//       if (roomImage) {
+//         roomImageUrl = roomImage[0].url;
+//       }
+//     }
 
-    const response = await fetch("/api/rooms/create/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        room_name,
-        userId,
-        room_type: room_type || "personal",
-        room_members,
-        room_img: roomImageUrl || null,
-      }),
-    });
+//     const response = await fetch("/api/rooms/create/", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         room_name,
+//         userId,
+//         room_type: room_type || "personal",
+//         room_members,
+//         room_img: roomImageUrl || null,
+//       }),
+//     });
 
-    const data = await response.json();
-    console.log(data);
+//     const data = await response.json();
+//     console.log(data);
 
-    useChatStore.setState((state) => ({
-      rooms: [...state.rooms, data],
-    }));
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     useChatStore.setState((state) => ({
+//       rooms: [...state.rooms, data],
+//     }));
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-export const getPersonalRoom = async (
-  id: string,
-  userId: string,
-  friendId: string
-): Promise<RoomInterface> => {
-  try {
-    const data = fetch("/api/rooms/personal", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        roomId: id,
-        userId,
-        friendId,
-        room_type: "personal",
-      }),
-    });
-    const res = (await data).json();
-    return res;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+// export const getPersonalRoom = async (
+//   id: string,
+//   userId: string,
+//   friendId: string
+// ): Promise<RoomInterface> => {
+//   try {
+//     const data = fetch("/api/rooms/personal", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         roomId: id,
+//         userId,
+//         friendId,
+//         room_type: "personal",
+//       }),
+//     });
+//     const res = (await data).json();
+//     return res;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-export const joinRoom = async (room_id: string, users_id: Array<string>) => {
-  try {
-    const { rooms } = useChatStore.getState();
-    if (users_id.length === 0) return;
-    const room = rooms.find((room) => room.id === room_id);
-    if (room?.room_members.some((m) => users_id.includes(m.user_id))) {
-      return room;
-    }
+// export const joinRoom = async (room_id: string, users_id: Array<string>) => {
+//   try {
+//     const { rooms } = useChatStore.getState();
+//     if (users_id.length === 0) return;
 
-    const response = await fetch("/api/rooms/join", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        room_id,
-        users_id,
-      }),
-    });
+//     const room = rooms.find((room) => room.id === room_id);
+//     if (room?.room_members.some((m) => users_id.includes(m.user_id)) || room) {
+//       return room;
+//     }
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error("Join failed");
-    }
-    if (room) return data.rooms;
-    useChatStore.setState((state) => ({
-      rooms: [...state.rooms, data.rooms],
-    }));
-    return data.rooms;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     const response = await fetch("/api/rooms/join", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         room_id,
+//         users_id,
+//       }),
+//     });
 
-export const deleteRoom = async (
-  room_id: string,
-  user_id: string,
-  room_type: string
-) => {
-  try {
-    const res = await fetch("/api/rooms/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id,
-        room_id,
-        room_type,
-      }),
-    });
-    const data = await res.json();
-    if (!data.success) {
-      throw new Error("Delete room failed");
-    }
-    return data.success;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     const data = await response.json();
+//     if (!response.ok) {
+//       throw new Error("Join failed");
+//     }
 
-export const fetchUserFriends = async (userId: string) => {
-  try {
-    const response = await fetch(`/api/friends`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-      }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      return data;
-    }
-    throw data.error;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+//     useChatStore.setState((state) => ({
+//       rooms: [...state.rooms, data],
+//     }));
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-export const fetchFriendRequests = async (userId: string) => {
-  try {
-    const response = await fetch("/api/friends/request", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-      }),
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+// export const deleteRoom = async (
+//   room_id: string,
+//   user_id: string,
+//   room_type: string
+// ) => {
+//   try {
+//     const res = await fetch("/api/rooms/delete", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         user_id,
+//         room_id,
+//         room_type,
+//       }),
+//     });
+//     const data = await res.json();
+//     if (!data.success) {
+//       throw new Error("Delete room failed");
+//     }
+//     return data.success;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-export const queryFriend = async (query: string, userId: string) => {
-  try {
-    if (!query) return null;
-    const response = await fetch("/api/friends/q", {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        userId,
-        query,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const fetchUserFriends = async (userId: string) => {
+//   try {
+//     const response = await fetch(`/api/friends`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         userId,
+//       }),
+//     });
+//     const data = await response.json();
+//     if (response.ok) {
+//       return data;
+//     }
+//     throw data.error;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-export const cancelFriendRequest = async (
-  friendRequest: FriendRequestInterface
-) => {
-  try {
-    const { channel } = useAblyStore.getState();
-    const response = await fetch("/api/friends/request/cancel", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: friendRequest.id }),
-    });
-    const data = await response.json();
-    if (data.success && channel) {
-      await channel.publish("friend_action", {
-        action: "request",
-        data: { ...friendRequest, status: "canceled" },
-      });
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+// export const fetchFriendRequests = async (userId: string) => {
+//   try {
+//     const response = await fetch("/api/friends/request", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         userId,
+//       }),
+//     });
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-export const sendFriendRequest = async (
-  receiver_id: string,
-  sender_id: string
-) => {
-  const { channel } = useAblyStore.getState();
-  try {
-    if (!channel) throw "Ably error";
+// export const queryFriend = async (query: string, userId: string) => {
+//   try {
+//     if (!query) return null;
+//     const response = await fetch("/api/friends/q", {
+//       headers: { "Content-Type": "application/json" },
+//       method: "POST",
+//       body: JSON.stringify({
+//         userId,
+//         query,
+//       }),
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
-    const response = await fetch("/api/friends/request/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        receiver_id,
-        sender_id,
-      }),
-    });
-    if (!response.ok) {
-      throw "Network error";
-    }
+// export const cancelFriendRequest = async (
+//   friendRequest: FriendRequestInterface
+// ) => {
+//   try {
+//     const { channel } = useAblyStore.getState();
+//     const response = await fetch("/api/friends/request/cancel", {
+//       method: "post",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ id: friendRequest.id }),
+//     });
+//     const data = await response.json();
+//     if (data.success && channel) {
+//       await channel.publish("friend_action", {
+//         action: "request",
+//         data: { ...friendRequest, status: "canceled" },
+//       });
+//       return true;
+//     }
+//     return false;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-    const data = await response.json();
+// export const sendFriendRequest = async (
+//   receiver_id: string,
+//   sender_id: string
+// ) => {
+//   const { channel } = useAblyStore.getState();
+//   try {
+//     if (!channel) throw "Ably error";
 
-    useAuthStore.setState((state) => {
-      if (!state.friendRequests) return state;
-      return { ...state, friendRequests: [...state.friendRequests, data] };
-    });
-    channel.publish("friend_action", { action: "request", data });
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+//     const response = await fetch("/api/friends/request/send", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         receiver_id,
+//         sender_id,
+//       }),
+//     });
+//     if (!response.ok) {
+//       throw "Network error";
+//     }
 
-export const responseFriendRequest = async (id: string, status: string) => {
-  try {
-    const { channel } = useAblyStore.getState();
-    if (!channel) return "Ably Error";
+//     const data = await response.json();
 
-    const response = await fetch("/api/friends/response", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        status,
-      }),
-    });
-    const data = await response.json();
+//     useAuthStore.setState((state) => {
+//       if (!state.friendRequests) return state;
+//       return { ...state, friendRequests: [...state.friendRequests, data] };
+//     });
+//     channel.publish("friend_action", { action: "request", data });
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
 
-    await channel.publish("friend_action", {
-      action: "response",
-      data: { id, status, friends: data },
-    });
-  } catch (error) {
-    throw error;
-  }
-};
+// export const responseFriendRequest = async (id: string, status: string) => {
+//   try {
+//     const { channel } = useAblyStore.getState();
+//     if (!channel) return "Ably Error";
+
+//     const response = await fetch("/api/friends/response", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         id,
+//         status,
+//       }),
+//     });
+//     const data = await response.json();
+
+//     await channel.publish("friend_action", {
+//       action: "response",
+//       data: { id, status, friends: data },
+//     });
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 export async function uploadFile(
   files: File[]
@@ -487,47 +480,47 @@ export async function uploadFile(
   }
 }
 
-export const deleteMessage = async (messageId: string) => {
-  try {
-    const response = await fetch("/api/messages/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: messageId,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Network not ok.");
-    }
-    useChatStore.setState((state) => ({
-      ...state,
-      currentMessage: state.currentMessage.filter(
-        (msg) => msg.id !== messageId
-      ),
-    }));
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
+// export const deleteMessage = async (messageId: string) => {
+//   try {
+//     const response = await fetch("/api/messages/delete", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         id: messageId,
+//       }),
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network not ok.");
+//     }
+//     useChatStore.setState((state) => ({
+//       ...state,
+//       currentMessage: state.currentMessage.filter(
+//         (msg) => msg.id !== messageId
+//       ),
+//     }));
+//     return true;
+//   } catch (error) {
+//     console.log(error);
+//     return false;
+//   }
+// };
 
-export const fetchFriendNote = async (userIds: string[]) => {
-  try {
-    // const userIds = friends.map((f) => f.user.id);
-    const response = await fetch("/api/note", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: userIds }),
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const fetchFriendNote = async (userIds: string[]) => {
+//   try {
+//     // const userIds = friends.map((f) => f.user.id);
+//     const response = await fetch("/api/note", {
+//       method: "post",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ ids: userIds }),
+//     });
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 //功能函式 nornal function
 
