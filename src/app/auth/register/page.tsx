@@ -76,7 +76,7 @@ export default function RegisterPage() {
           setSystemAlert({
             ...systemAlert,
             text: "註冊成功",
-            serverity: "success",
+            severity: "success",
             open: true,
           });
           router.push("/auth/login");

@@ -304,7 +304,7 @@ export default function InputBar() {
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
       if (!ably) return;
-      const pendingMessagas: ClientMessageInterface[] = [];
+      const pendingMessages: ClientMessageInterface[] = [];
       const newMessage: ClientMessageInterface | null = createTextMessage(
         userId!,
         roomId,
@@ -312,7 +312,7 @@ export default function InputBar() {
         reply!
       );
       if (newMessage) {
-        pendingMessagas.push(newMessage);
+        pendingMessages.push(newMessage);
         setLastMessages({ ...newMessage, isFetching: true });
         setMessageText("");
         if (inputRef.current) {
@@ -328,10 +328,10 @@ export default function InputBar() {
       );
 
       newFilesMessages.forEach((msg) => {
-        pendingMessagas.push(msg);
+        pendingMessages.push(msg);
       });
       setMessageFiles([]);
-      setCurrentMessage((prev) => [...prev, ...pendingMessagas]);
+      setCurrentMessage((prev) => [...prev, ...pendingMessages]);
       try {
         if (messageFiles.length > 0) {
           const filesResponse = await uploadFile(messageFiles);
@@ -440,7 +440,7 @@ export default function InputBar() {
             if (file.size > MAX_FILE_SIZE) {
               setSystemAlert({
                 open: true,
-                serverity: "error",
+                severity: "error",
                 text: "請檢查檔案，檔案大小不得超過10MB",
                 variant: "filled",
               });

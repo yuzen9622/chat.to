@@ -21,16 +21,6 @@ export default function LoginPage() {
 
   const { status } = useSession();
 
-  // useEffect(() => {
-  //   const getAuthSession = async () => {
-  //     const sessoin = await getSession();
-  //     if (sessoin) {
-  //       router.push("/");
-  //     }
-  //   };
-  //   getAuthSession();
-  // }, [router]);
-
   const handleLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -47,7 +37,7 @@ export default function LoginPage() {
           setSystemAlert({
             ...systemAlert,
             text: "登入成功",
-            serverity: "info",
+            severity: "info",
             open: true,
           });
           router.push("/chat");
