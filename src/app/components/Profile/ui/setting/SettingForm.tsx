@@ -32,14 +32,14 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const { setSystemAlert, friends } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleEditProfofile = useCallback(async () => {
+  const handleEditProfile = useCallback(async () => {
     try {
       setIsLoading(true);
       let image = editProfile?.image;
       if (userImage) {
         if (userImage.imgFile.size > 1024 * 1024 * 8) {
           setSystemAlert({
-            serverity: "error",
+            severity: "error",
             variant: "filled",
             text: "檔案大小需低於8MB",
             open: true,
@@ -145,7 +145,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             />
           </div>
           <button
-            onClick={handleEditProfofile}
+            onClick={handleEditProfile}
             className="px-4 py-2 text-sm text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600"
           >
             確認

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { fetchUsersNotify } from "@/app/lib/api/notify/notifytApi";
+import { fetchUsersNotify } from "@/app/lib/api/notify/notifyApi";
 
 import {
   joinRoom,

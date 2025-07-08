@@ -10,8 +10,6 @@ import React, {
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 import {
   Copy2ClipBoard,
@@ -44,6 +42,7 @@ import WavesurferAudio from "../../ui/Audio";
 import { usePopbox } from "@/hook/usePopbox";
 import UserPopbox from "../../ui/UserPopbox";
 import { useTheme } from "next-themes";
+import MarkDownText from "../../ui/MarkDownText";
 
 type MessageItemProps = {
   index: number;
@@ -326,31 +325,7 @@ const TextMessage = memo(function TextMessage({
           : "dark:bg-neutral-700/70   bg-stone-200/70 text-stone-900 dark:text-white"
       )}
     >
-      <Markdown
-        components={{
-          h1: (props) => {
-            return <h1 className="text-2xl " {...props} />;
-          },
-          h2: (props) => {
-            return <h2 className="text-xl " {...props} />;
-          },
-          a: (props) => {
-            return <a className="text-blue-900 underline " {...props} />;
-          },
-          code: (props) => {
-            const { children, className, ...rest } = props;
-            return (
-              <code
-                className={twMerge("overflow-auto text-wrap ", className)}
-                {...rest}
-              >
-                {children}
-              </code>
-            );
-          },
-        }}
-        remarkPlugins={[remarkGfm]}
-      >{`${message.text}`}</Markdown>
+      <MarkDownText text={message.text} />
     </div>
   );
 });

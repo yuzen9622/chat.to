@@ -30,7 +30,7 @@ export default function EditProtofileBtn() {
       if (userImage) {
         if (userImage.imgFile.size > 1024 * 1024 * 8) {
           setSystemAlert({
-            serverity: "error",
+            severity: "error",
             variant: "filled",
             text: "檔案大小需低於8MB",
             open: true,

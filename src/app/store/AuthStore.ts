@@ -15,7 +15,7 @@ import {
   fetchUserFriends,
 } from "../lib/api/friend/friendApi";
 import { fetchUserRooms } from "../lib/api/room/roomApi";
-import { fetchUsersNotify } from "../lib/api/notify/notifytApi";
+import { fetchUsersNotify } from "../lib/api/notify/notifyApi";
 import { isMobile } from "react-device-detect";
 import { useChatStore } from "./ChatStore";
 

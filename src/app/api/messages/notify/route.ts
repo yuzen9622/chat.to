@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (request: NextRequest) => {
   const token = await getToken({ req: request });
   if (!token)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
   try {
     const { userId, rooms } = await request.json();
 

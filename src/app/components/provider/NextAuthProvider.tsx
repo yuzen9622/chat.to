@@ -26,7 +26,7 @@ export default function NextAuthProvider({
       >
         <Alert
           onClose={handleClose}
-          severity={systemAlert.serverity}
+          severity={systemAlert.severity}
           variant={systemAlert.variant}
         >
           {systemAlert.text}

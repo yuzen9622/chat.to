@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s｜chat.to",
     default: "主頁｜chat.to",
   },
-  description: "The morden online chat app",
+  description: "The modern online chat app",
 
   icons: {
     icon: "/favicon/favicon.ico",

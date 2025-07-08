@@ -10,7 +10,7 @@ cloudinary.config({
 export async function POST(request: NextRequest) {
   const token = await getToken({ req: request });
   if (!token)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
   try {
     const { id } = await request.json();
     const data = await deleteMessage(id);

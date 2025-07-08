@@ -222,7 +222,7 @@ export function WavesurferRecord({
           open: true,
           text: "語音傳送失敗",
           variant: "filled",
-          serverity: "error",
+          severity: "error",
         });
       }
     },

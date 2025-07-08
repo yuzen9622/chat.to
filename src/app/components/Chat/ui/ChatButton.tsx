@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import TypingBar from "../../ui/TypingBar";
 import { useChatStore } from "@/app/store/ChatStore";
+import MarkDownText from "../../ui/MarkDownText";
 type ButtonProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ChatButton({
   room,
@@ -104,7 +105,11 @@ export default function ChatButton({
                     lastMessage.status === "send" &&
                     `你：`}
                 </span>
-                <p className="truncate ">{messageContent && messageContent}</p>
+                <div className="max-w-full max-h-full overflow-hidden truncate">
+                  {messageContent && (
+                    <MarkDownText style="inline" text={messageContent} />
+                  )}
+                </div>
                 {lastMessage && lastMessage.id !== "" && (
                   <span className="flex-shrink-0">
                     ．

@@ -16,11 +16,11 @@ export const useLastMessage = (roomId: string) => {
 
   //   const fetchLastMessage = async () => {
   //     if (ignore) return;
-  //     const controler = new AbortController();
+  //     const controller = new AbortController();
   //     const { data, error } = await supabase
   //       .from("messages")
   //       .select("*")
-  //       .abortSignal(controler.signal)
+  //       .abortSignal(controller.signal)
   //       .eq("room", roomId)
   //       .eq("status", "send")
   //       .order("created_at", { ascending: false })
