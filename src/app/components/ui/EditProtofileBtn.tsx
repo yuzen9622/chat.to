@@ -10,7 +10,7 @@ import { uploadFile } from "@/app/lib/util";
 import Input from "./Input";
 import UploadAvatar from "./Avatar/UploadAvatar";
 import { useAuthStore } from "@/app/store/AuthStore";
-export default function EditProtofileBtn() {
+export default function EditProfileBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, update } = useSession();
   const [editProfile, setEditProfile] = useState(session?.user);
@@ -23,7 +23,7 @@ export default function EditProtofileBtn() {
   const { setSystemAlert } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleEditProfofile = useCallback(async () => {
+  const handleEditProfile = useCallback(async () => {
     try {
       setIsLoading(true);
       let image = editProfile?.image;
@@ -105,7 +105,7 @@ export default function EditProtofileBtn() {
             <h1 className="text-lg">編輯個人資料</h1>
             <button
               onClick={() => {
-                handleEditProfofile();
+                handleEditProfile();
               }}
               className="text-blue-400"
             >

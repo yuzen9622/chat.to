@@ -329,28 +329,6 @@ const TextMessage = memo(function TextMessage({
     </div>
   );
 });
-const UrlMessage = memo(function TextMessage({
-  message,
-  isOwn,
-}: {
-  message: ClientMessageInterface;
-  isOwn: boolean;
-}) {
-  return (
-    <div
-      className={twMerge(
-        "h-full max-w-full px-3 py-2 underline break-all text-wrap underline-offset-2 rounded-3xl text-start text-ellipsis w-fit  backdrop-blur-3xl ",
-        isOwn
-          ? " bg-blue-500 text-white "
-          : "dark:bg-neutral-700/70   bg-stone-200/70 text-stone-900 dark:text-white"
-      )}
-    >
-      <a href={message.text} target="_BLANK">
-        {message.text}
-      </a>
-    </div>
-  );
-});
 
 const AudioMessage = memo(function AudioMessage({
   metaData,
@@ -483,11 +461,10 @@ const ReplyMessage = memo(function ReplyMessage({
       text: <TextMessage message={message} isOwn={replyOwn} />,
       media: <MediaMessage message={message} />,
       file: <FileMessage message={message} isOwn={replyOwn} />,
-      url: <UrlMessage message={message} isOwn={replyOwn} />,
+
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={replyOwn} />
       ),
-      note: <TextMessage message={message} isOwn={replyOwn} />,
     };
 
     return messageType[message.type];
@@ -539,11 +516,9 @@ const MessageItem = memo(function MessageItem({
       text: <TextMessage message={message} isOwn={isOwn} />,
       media: <MediaMessage message={message} />,
       file: <FileMessage message={message} isOwn={isOwn} />,
-      url: <UrlMessage message={message} isOwn={isOwn} />,
       audio: message.meta_data && (
         <AudioMessage metaData={message.meta_data} isOwn={isOwn} />
       ),
-      note: <TextMessage message={message} isOwn={isOwn} />,
     };
 
     return messageType[message.type];
@@ -593,7 +568,7 @@ const MessageItem = memo(function MessageItem({
           roomUsers={roomUsers}
           message={message.reply}
         />
-      )}{" "}
+      )}
       {message.reply_note && <NoteMessage message={message} isOwn={isOwn} />}
       <div className="flex items-start w-full gap-1 ">
         {!isOwn && (

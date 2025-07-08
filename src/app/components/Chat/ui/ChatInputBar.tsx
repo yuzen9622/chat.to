@@ -252,54 +252,6 @@ export default function InputBar() {
     return reply.text;
   }, [reply]);
 
-  // const createTextMessage = useCallback(() => {
-  //   if (messageText.trim() === "") return null;
-  //   const messageType = messageText.trim().startsWith("http") ? "url" : "text";
-  //   const newMessage: ClientMessageInterface = {
-  //     id: uuidv4(),
-  //     sender: userId || "",
-  //     room: roomId,
-  //     is_read: [userId || ""],
-  //     reply: reply!,
-  //     status: "pending",
-  //     text: messageText,
-  //     created_at: new Date().toISOString(),
-  //     type: messageType,
-  //   };
-  //   return newMessage;
-  // }, [messageText, roomId, userId, reply]);
-
-  // const createFileMessage = useCallback(
-  //   (
-  //     userId: string,
-  //     roomId: string,
-  //     file: File,
-  //     reply?: ClientMessageInterface
-  //   ) => {
-  //     const metaData: MetaData = {
-  //       type: file.type,
-  //       url: URL.createObjectURL(file),
-  //       size: file.size,
-  //       public_id: "",
-  //     };
-  //     const type = fileType(metaData.type);
-  //     const newMessage: ClientMessageInterface = {
-  //       id: uuidv4(),
-  //       sender: userId || "",
-  //       room: roomId,
-  //       is_read: [userId || ""],
-  //       reply: reply!,
-  //       text: file.name,
-  //       status: "pending",
-  //       created_at: new Date().toISOString(),
-  //       meta_data: metaData,
-  //       type,
-  //     };
-  //     return newMessage;
-  //   },
-  //   []
-  // );
-
   const handleSendMessage = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();

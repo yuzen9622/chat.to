@@ -14,18 +14,24 @@ export default function MarkDownText({
     <Markdown
       components={{
         h1: (props) => {
-          return <h1 className="text-2xl " {...props} />;
+          return <h1 className="text-2xl truncate" {...props} />;
         },
         h2: (props) => {
-          return <h2 className="text-xl " {...props} />;
+          return <h2 className="text-xl truncate" {...props} />;
         },
         a: (props) => {
-          return <a className="text-blue-900 underline " {...props} />;
+          return <a className="text-white underline truncate" {...props} />;
+        },
+        p: (props) => {
+          return <p className="truncate " {...props} />;
         },
         code: (props) => {
           const { children, className, ...rest } = props;
           if (style === "inline") {
-            <code className="overflow-hidden  text-nowrap" {...props} />;
+            <code
+              className="overflow-hidden truncate text-nowrap"
+              {...props}
+            />;
           } else
             return (
               <code

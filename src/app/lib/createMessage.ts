@@ -9,7 +9,7 @@ export const createTextMessage = (
   reply?: ClientMessageInterface
 ) => {
   if (messageText.trim() === "") return null;
-  const messageType = messageText.trim().startsWith("http") ? "url" : "text";
+
   const newMessage: ClientMessageInterface = {
     id: uuidv4(),
     sender: userId || "",
@@ -19,7 +19,7 @@ export const createTextMessage = (
     status: "pending",
     text: messageText,
     created_at: new Date().toISOString(),
-    type: messageType,
+    type: "text",
   };
   return newMessage;
 };
@@ -40,7 +40,7 @@ export const createReplyNoteMessage = (
     status: "pending",
     text: messageText,
     created_at: new Date().toISOString(),
-    type: "note",
+    type: "text",
   };
   return newMessage;
 };
