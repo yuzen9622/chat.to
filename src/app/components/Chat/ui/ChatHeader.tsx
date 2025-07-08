@@ -26,7 +26,7 @@ export default function ChatHeader() {
   const userId = useSession()?.data?.userId;
   const user = useSession()?.data?.user;
 
-  const { recipentUser, displayName } = useChatInfo(currentChat!, userId!);
+  const { recipientUser, displayName } = useChatInfo(currentChat!, userId!);
 
   const handleCall = useCallback(
     async (callType: CallType) => {
@@ -34,8 +34,8 @@ export default function ChatHeader() {
         router.push("/call");
         return;
       }
-      const comfirm = window.confirm("確認開啟通話?(beta版)");
-      if (!comfirm) return;
+      const confirm = window.confirm("確認開啟通話?(beta版)");
+      if (!confirm) return;
 
       const stream = await startStream(callType);
       startCall([user], currentChat, true, callType, stream);
@@ -74,7 +74,7 @@ export default function ChatHeader() {
           >
             {currentChat.room_type === "personal" ? (
               <BadgeAvatar
-                user={recipentUser?.user_id}
+                user={recipientUser?.user_id}
                 width={40}
                 height={40}
               />

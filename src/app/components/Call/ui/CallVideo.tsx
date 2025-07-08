@@ -28,6 +28,7 @@ export default function CallVideo({
 
   useEffect(() => {
     if (!videoRef.current) return;
+
     videoRef.current.srcObject = stream;
   }, [stream]);
 
@@ -41,7 +42,22 @@ export default function CallVideo({
         controls={false}
         playsInline={true}
       />
-
+      {!isOwn && (
+        <audio
+          className="absolute z-10"
+          ref={(el) => {
+            if (el) {
+              el.srcObject = stream;
+              el.play().catch((err) => {
+                console.warn("audio 播放失敗：", err);
+              });
+            }
+          }}
+          autoPlay
+          playsInline
+          controls
+        ></audio>
+      )}
       {user && !stream.getVideoTracks()[0]?.enabled && (
         <div className="absolute inset-0 grid w-full h-full gap-2 bg-stone-100 place-items-center dark:bg-stone-900 place-content-center">
           <Image

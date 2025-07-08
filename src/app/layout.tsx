@@ -52,7 +52,7 @@ export default async function RootLayout({
     <html lang="en" className="max-h-dvh">
       <body
         className={twMerge(
-          " bg-white dark:bg-neutral-900  h-dvh max-h-dvh overflow-y-hidden  [&::-webkit-scrollbar]:w-2   [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
+          " bg-white dark:bg-neutral-900   h-dvh max-h-dvh overflow-y-hidden  [&::-webkit-scrollbar]:w-2   [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
 
           geistSans.className
         )}

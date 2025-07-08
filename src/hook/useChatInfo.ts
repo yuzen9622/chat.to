@@ -9,18 +9,18 @@ export const useChatInfo = (
 ) => {
   const { currentUser } = useChatStore();
 
-  const recipentUser = useMemo(() => {
+  const recipientUser = useMemo(() => {
     if (!currentChat || !userId) return null;
-    const recipentId = currentChat.room_members.find(
+    const recipientId = currentChat.room_members.find(
       (id) => id.user_id !== userId
     );
-    return recipentId;
+    return recipientId;
   }, [currentChat, userId]);
   const displayName = useMemo(() => {
     if (!currentChat) return null;
-    const user = currentUser.find((u) => u.id === recipentUser?.user_id);
+    const user = currentUser.find((u) => u.id === recipientUser?.user_id);
 
     return currentChat.room_name === "" ? user?.name : currentChat.room_name;
-  }, [currentChat, recipentUser, currentUser]);
-  return { recipentUser, displayName };
+  }, [currentChat, recipientUser, currentUser]);
+  return { recipientUser, displayName };
 };

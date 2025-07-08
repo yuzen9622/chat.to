@@ -16,7 +16,7 @@ import { RoomMemberInterface } from "@/types/type";
 import { useCallStore } from "@/app/store/CallStore";
 import { createPeer, startStream } from "@/app/lib/util";
 
-export const useFriendListner = (channel: RealtimeChannel) => {
+export const useFriendListener = (channel: RealtimeChannel) => {
   const { setFriendRequest, setFriends } = useAuthStore();
   const userId = useSession().data?.userId;
   useEffect(() => {
@@ -24,8 +24,8 @@ export const useFriendListner = (channel: RealtimeChannel) => {
       const { action, data } = message.data;
       if (action === "request") {
         setFriendRequest((prev) => {
-          const isExsist = prev.some((request) => request.id === data.id);
-          if (isExsist) {
+          const isExist = prev.some((request) => request.id === data.id);
+          if (isExist) {
             return prev.map((fr) => (fr.id === data.id ? data : fr));
           }
           return [...prev, data];
@@ -60,7 +60,7 @@ export const useFriendListner = (channel: RealtimeChannel) => {
   }, [channel, setFriendRequest, userId, setFriends]);
 };
 
-export const useRoomActionListner = (channel: RealtimeChannel) => {
+export const useRoomActionListener = (channel: RealtimeChannel) => {
   const { setRoom, rooms, currentChat, setCurrentChat } = useChatStore();
   const userId = useSession()?.data?.userId;
   useEffect(() => {
@@ -140,7 +140,7 @@ export const useRoomActionListner = (channel: RealtimeChannel) => {
   }, [channel, rooms, setRoom, userId, currentChat, setCurrentChat]);
 };
 
-export const useNotifyListner = (channel: RealtimeChannel) => {
+export const useNotifyListener = (channel: RealtimeChannel) => {
   const {
     rooms,
     setLastMessages,
@@ -254,7 +254,7 @@ export const useNotifyListner = (channel: RealtimeChannel) => {
   ]);
 };
 
-export const useNoteListner = (channel: RealtimeChannel) => {
+export const useNoteListener = (channel: RealtimeChannel) => {
   const { setFriendNote, friends } = useAuthStore();
   useEffect(() => {
     const handleNote = (message: InboundMessage) => {
@@ -277,7 +277,7 @@ export const useNoteListner = (channel: RealtimeChannel) => {
   }, [channel, setFriendNote, friends]);
 };
 
-export const useSignalListner = (channel: RealtimeChannel) => {
+export const useSignalListener = (channel: RealtimeChannel) => {
   const { addRemoteStream, peerConnections, addPeer } = useCallStore();
   const { rooms } = useChatStore();
   const user = useSession()?.data?.user;
@@ -320,7 +320,7 @@ export const useSignalListner = (channel: RealtimeChannel) => {
   }, [user, addRemoteStream, channel, peerConnections, rooms, addPeer]);
 };
 
-export const useCallListner = (channel: RealtimeChannel) => {
+export const useCallListener = (channel: RealtimeChannel) => {
   const {
     setCallStatus,
     startCall,
@@ -348,8 +348,8 @@ export const useCallListner = (channel: RealtimeChannel) => {
         console.log(message.data);
 
         if (!callRoom || callRoom.id !== room.id) {
-          const comfirm = window.confirm(`${caller.name}的來電`) ?? true;
-          if (!comfirm) {
+          const confirm = window.confirm(`${caller.name}的來電`) ?? true;
+          if (!confirm) {
             await channel.publish("call_action", {
               action: "decline",
             });
@@ -445,7 +445,7 @@ export const useCallListner = (channel: RealtimeChannel) => {
   ]);
 };
 
-export const useUserListner = (channel: RealtimeChannel) => {
+export const useUserListener = (channel: RealtimeChannel) => {
   const { setCurrentUsers, currentUser } = useChatStore();
   useEffect(() => {
     if (!channel) return;
@@ -461,7 +461,7 @@ export const useUserListner = (channel: RealtimeChannel) => {
   }, [channel, setCurrentUsers, currentUser]);
 };
 
-export const useTypingListner = (channel: RealtimeChannel) => {
+export const useTypingListener = (channel: RealtimeChannel) => {
   const { setTypingUsers } = useChatStore();
   useEffect(() => {
     const handleTyping = async (message: InboundMessage) => {

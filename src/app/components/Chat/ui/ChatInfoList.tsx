@@ -138,7 +138,7 @@ export default function ChatInfoList() {
                       )
                     }
                     className={twMerge(
-                      "flex  p-2  dark:text-white bg-gray-500/20 gap-1 dark:bg-wjite/5"
+                      "flex  p-2  dark:text-white bg-gray-500/20 gap-1 dark:bg-white/5"
                     )}
                   >
                     <div className="flex flex-col items-center justify-center">
