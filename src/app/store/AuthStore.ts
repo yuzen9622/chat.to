@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
   systemAlert: {
     open: false,
-    serverity: "success",
+    severity: "success",
     variant: "standard",
     text: "",
   },

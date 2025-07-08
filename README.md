@@ -55,7 +55,7 @@
 - [ ] Call/Video
 - [ ] Typing indicators
 - [ ] Markdown message
-- [ ] AI gernarate
+- [ ] AI generate
 
 ---
 

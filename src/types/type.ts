@@ -107,7 +107,7 @@ export interface FriendRequestInterface {
 
 export interface SystemAlertInterface {
   open: boolean;
-  serverity: "success" | "info" | "error";
+  severity: "success" | "info" | "error";
   variant: "standard" | "filled" | "outlined";
   text: string;
 }

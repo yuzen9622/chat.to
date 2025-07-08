@@ -66,7 +66,7 @@ export default function ChatInfo() {
   const userId = useSession()?.data?.userId;
 
   const router = useRouter();
-  const { recipentUser, displayName } = useChatInfo(currentChat!, userId!);
+  const { recipientUser, displayName } = useChatInfo(currentChat!, userId!);
 
   const handleRoomMember = useCallback(
     (userId: string) => {
@@ -203,7 +203,7 @@ export default function ChatInfo() {
               <BadgeAvatar
                 width={80}
                 height={80}
-                user={recipentUser?.user_id}
+                user={recipientUser?.user_id}
               />
             ) : (
               <BadgeAvatar width={80} height={80} room={currentChat!} />
