@@ -2,7 +2,7 @@ import {
   insertNote,
   selectNote,
   updateNote,
-} from "@/app/lib/services/noteService";
+} from "@/server/services/noteService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";

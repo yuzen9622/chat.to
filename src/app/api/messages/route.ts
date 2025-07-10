@@ -1,4 +1,4 @@
-import { insertMessage } from "@/app/lib/services/messageService";
+import { insertMessage } from "@/server/services/messageService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";

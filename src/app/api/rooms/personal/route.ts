@@ -1,4 +1,4 @@
-import { selectRoom } from "@/app/lib/services/roomService";
+import { selectRoom } from "@/server/services/roomService";
 import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 

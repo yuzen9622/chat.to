@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
 import { getToken } from "next-auth/jwt";
-import { fetchUserInfo } from "@/app/lib/services/userService";
+import { fetchUserInfo } from "@/server/services/userService";
 
 export async function POST(request: NextRequest) {
   try {

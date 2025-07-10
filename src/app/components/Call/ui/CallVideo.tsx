@@ -55,7 +55,6 @@ export default function CallVideo({
           }}
           autoPlay
           playsInline
-          controls
         ></audio>
       )}
       {user && !stream.getVideoTracks()[0]?.enabled && (

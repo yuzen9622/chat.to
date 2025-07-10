@@ -25,7 +25,7 @@ import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
 import { ClientMessageInterface } from "../../../../types/type";
 import TypingBar from "../../ui/TypingBar";
-import { fetchRoomMessage } from "@/app/lib/api/room/roomApi";
+import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
@@ -229,7 +229,6 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover border border-l dark:border-none sm:rounded-l-md dark:bg-neutral-800 max-h-dvh">
           <div className="box-border relative flex flex-col flex-1 py-2 overflow-hidden max-h-dvh ">
             <ChatHeader />
-
             <main
               className={twMerge(
                 " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in  dark:border-none "

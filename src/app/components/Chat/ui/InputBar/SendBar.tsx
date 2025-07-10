@@ -70,13 +70,6 @@ export function SendBar({
             <Paperclip className="mr-2" size={20} />
             檔案
           </button>
-
-          {/* <button
-            type="button"
-            className="flex items-center justify-around w-full gap-2 p-1 text-sm font-bold text-white rounded-md hover:bg-white/10"
-          >
-            <Bot size={20} className="mr-2" /> AI 文字
-          </button> */}
         </div>
       </Popover>
     </div>

@@ -2,7 +2,7 @@ import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getToken } from "next-auth/jwt";
-import { insertRoom, selectRoom } from "@/app/lib/services/roomService";
+import { insertRoom, selectRoom } from "@/server/services/roomService";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,

@@ -1,4 +1,4 @@
-import { selectNote } from "@/app/lib/services/noteService";
+import { selectNote } from "@/server/services/noteService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";

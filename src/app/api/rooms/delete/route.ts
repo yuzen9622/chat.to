@@ -1,7 +1,4 @@
-import {
-  deleteGroup,
-  deletePersonalRoom,
-} from "@/app/lib/services/roomService";
+import { deleteGroup, deletePersonalRoom } from "@/server/services/roomService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";

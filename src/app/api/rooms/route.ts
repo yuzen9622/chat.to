@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { getToken } from "next-auth/jwt";
 import { RoomInterface } from "@/types/type";
-import { selectRoom, selectUserRooms } from "@/app/lib/services/roomService";
+import { selectRoom, selectUserRooms } from "@/server/services/roomService";
 export async function GET() {
   const session = await getServerSession(authOptions);
 

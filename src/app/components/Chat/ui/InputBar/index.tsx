@@ -1,6 +1,6 @@
 "use client";
 import React, {
-  ChangeEvent,
+  FormEvent,
   useCallback,
   useEffect,
   useRef,
@@ -10,85 +10,53 @@ import React, {
 import { Send } from "lucide-react";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
-import { ClientMessageInterface, TypingInterface } from "@/types/type";
-import _ from "lodash";
+
 import { SendBar } from "./SendBar";
 import { Laugh, Pencil } from "lucide-react";
-import { uploadFile } from "@/app/lib/util";
-import {
-  sendUserMessage,
-  editUserMessage,
-} from "@/app/lib/api/message/messageApi";
 import EmojiPicker from "emoji-picker-react";
 import { Theme, EmojiStyle } from "emoji-picker-react";
 import { twMerge } from "tailwind-merge";
-
 import { useSession } from "next-auth/react";
-
 import { WavesurferRecord } from "@/app/components/ui/Audio";
-import { createFileMessage, createTextMessage } from "@/app/lib/createMessage";
-import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 import Reply from "./Reply";
 import Edit from "./Edit";
 import FileContainer from "./FileContainer";
-
 import MediaActions from "./MediaActions";
-
+import { useInputBarTyping } from "./hook/useInputBarTyping";
+import { useInputBarEdit, useInputBarSend } from "./hook/useInputBar";
 export default function InputBar() {
   const [messageText, setMessageText] = useState("");
   const [messageFiles, setMessageFiles] = useState<File[]>([]);
   const [emojiOpen, setEmojiOpen] = useState(false);
-  const { channel } = useAblyStore();
+
   const [isComposing, setIsComposing] = useState(false);
   const [isDropIn, setIsDropIn] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
-  const { setCurrentMessage, reply, setReply, edit, setEdit, setLastMessages } =
-    useChatStore();
-  const { roomId, room, ably } = useAblyStore();
-
-  const userId = useSession().data?.userId;
+  const { reply, edit } = useChatStore();
+  const { roomId, channel } = useAblyStore();
   const user = useSession()?.data?.user;
+
+  const { handleChange } = useInputBarTyping({
+    user: user,
+    channel: channel,
+    roomId,
+  });
+  const { handleSendMessage } = useInputBarSend({
+    userId: user?.id,
+    roomId,
+    messageText,
+    messageFiles,
+    setMessageFiles,
+    setMessageText,
+  });
+  const { handleEditMessage } = useInputBarEdit({
+    messageText,
+    setMessageText,
+  });
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const isTyping = useRef(false);
-
-  const debouncedStopTyping = useCallback(
-    _.debounce(async () => {
-      if (!user || !channel || !isTyping.current) return;
-
-      const typingUser: TypingInterface = {
-        roomId: roomId,
-        user: user,
-        typing: false,
-      };
-      await channel.publish("typing_action", typingUser);
-      isTyping.current = false;
-    }, 500),
-    [channel, roomId, user]
-  );
-
-  const handleChange = useCallback(
-    async (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setMessageText(e.target.value);
-
-      if (!isTyping.current && user && channel) {
-        isTyping.current = true;
-        const typingUser: TypingInterface = {
-          roomId: roomId,
-          user: user,
-          typing: true,
-        };
-        await channel.publish("typing_action", typingUser);
-      }
-
-      debouncedStopTyping();
-      if (!inputRef.current) return;
-      inputRef.current.style.height = "auto"; // 先重設高度，避免內容刪減後高度無法縮小
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-    },
-    [channel, roomId, user, debouncedStopTyping]
-  );
 
   const handleCompositionEnd = () => {
     setIsComposing(false);
@@ -106,126 +74,32 @@ export default function InputBar() {
     }
   }, [reply, edit]);
 
-  const handleSendMessage = useCallback(
+  const onSend = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      if (!ably) return;
-      const pendingMessages: ClientMessageInterface[] = [];
-      const newMessage: ClientMessageInterface | null = createTextMessage(
-        userId!,
-        roomId,
-        messageText,
-        reply!
-      );
-      if (newMessage) {
-        pendingMessages.push(newMessage);
-        setLastMessages({ ...newMessage, isFetching: true });
-        setMessageText("");
-        if (inputRef.current) {
-          inputRef.current?.focus();
-          inputRef.current.rows = 1;
-          inputRef.current.style.height = "auto"; // 先重設高度，避免內容刪減後高度無法縮小
-          inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-        }
+      await handleSendMessage();
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.rows = 1;
+        inputRef.current.style.height = "auto";
+        inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
       }
-
-      const newFilesMessages: ClientMessageInterface[] = messageFiles.map(
-        (file) => createFileMessage(userId!, roomId, file, reply!)
-      );
-
-      newFilesMessages.forEach((msg) => {
-        pendingMessages.push(msg);
-      });
-      setMessageFiles([]);
-      setCurrentMessage((prev) => [...prev, ...pendingMessages]);
-      try {
-        if (messageFiles.length > 0) {
-          const filesResponse = await uploadFile(messageFiles);
-          if (filesResponse) {
-            const uploadFileMessages = newFilesMessages.map((msg, index) => {
-              if (msg.meta_data) {
-                const { url, public_id } = filesResponse[index];
-                msg.meta_data = {
-                  ...msg.meta_data,
-                  public_id,
-                  url,
-                };
-              }
-              return msg;
-            });
-            await Promise.all(
-              uploadFileMessages.map(async (msg) => {
-                await sendUserMessage(msg);
-                await sendAblyMessage(ably, msg);
-              })
-            );
-          }
-        }
-
-        if (newMessage) {
-          await sendUserMessage(newMessage);
-          await sendAblyMessage(ably, newMessage);
-        }
-      } catch (error) {
-        if (newMessage) {
-          newMessage.status = "failed";
-          setCurrentMessage((prev) =>
-            prev.map((msg) => (msg.id === newMessage.id ? newMessage : msg))
-          );
-          setLastMessages({ ...newMessage, isFetching: true });
-        }
-
-        console.error("發送訊息失敗:", error);
-      }
-      setReply(null);
     },
-    [
-      setCurrentMessage,
-      ably,
-      setReply,
-      setLastMessages,
-      userId,
-      roomId,
-      messageText,
-      reply,
-      messageFiles,
-    ]
+    [handleSendMessage]
   );
 
-  const handleEditMessage = useCallback(
-    async (e?: React.FormEvent<HTMLFormElement>) => {
+  const onEdit = useCallback(
+    async (e?: FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      if (!edit || !room || messageText.trim().length === 0) return;
-      const newMessage: ClientMessageInterface = {
-        ...edit,
-        text: messageText,
-        status: "pending",
-      };
-      setCurrentMessage((prev) =>
-        prev.map((msg) => (msg.id === edit.id ? newMessage : msg))
-      );
-      setMessageText("");
-      setEdit(null);
-
-      try {
-        await editUserMessage(newMessage);
-        if (channel) {
-          await channel.publish("notify", {
-            action: "edit",
-            newMessage,
-          });
-        }
-        await room.publish("message", { action: "edit", newMessage });
-      } catch (error) {
-        setCurrentMessage((prev) =>
-          prev.map((msg) =>
-            msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
-          )
-        );
-        console.error("編輯訊息失敗:", error);
+      await handleEditMessage();
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.rows = 1;
+        inputRef.current.style.height = "auto";
+        inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
       }
     },
-    [room, channel, edit, messageText, setCurrentMessage, setEdit]
+    [handleEditMessage]
   );
 
   const handleDragFile = useCallback((e: React.DragEvent<HTMLFormElement>) => {
@@ -264,9 +138,9 @@ export default function InputBar() {
           onDragLeave={() => setIsDropIn(false)}
           onSubmit={(e) => {
             if (edit) {
-              handleEditMessage(e);
+              onEdit(e);
             } else {
-              handleSendMessage(e);
+              onSend(e);
             }
           }}
           className={twMerge("z-20 w-full")}
@@ -304,9 +178,9 @@ export default function InputBar() {
                     if (!window.getSelection()?.toString()) {
                       e.preventDefault(); // 防止換行
                       if (edit) {
-                        handleEditMessage();
+                        onEdit();
                       } else {
-                        handleSendMessage();
+                        onSend();
                       }
                     }
                   } else {
@@ -315,7 +189,7 @@ export default function InputBar() {
                     target.style.height = `${target.scrollHeight}px`; // 設定新高度
                   }
                 }}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, setMessageText)}
                 placeholder="輸入訊息..."
                 className="w-full p-1 mx-2 text-base bg-transparent outline-none resize-none max-h-52 dark:text-white h-fit"
               />

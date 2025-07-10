@@ -23,34 +23,6 @@ export const fetchUserRooms = async () => {
   }
 };
 
-export const fetchRoomMessage = async (
-  roomId: string,
-  start: number,
-  end: number
-): Promise<ClientMessageInterface[]> => {
-  try {
-    const response = await fetch(
-      `/api/messages/${roomId}?start=${start}&end=${end}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error("Server Error");
-    }
-
-    return data.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  } finally {
-  }
-};
-
 export const createRoom = async (
   userId: string | null,
   room_name: string,

@@ -9,7 +9,7 @@ import { useAblyStore } from "../../../store/AblyStore";
 import ChatInfo from "./ChatInfo";
 import { useSession } from "next-auth/react";
 import { clearReadMessage } from "../../../lib/util";
-import { fetchRoomMessage } from "@/app/lib/api/room/roomApi";
+import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
 
 export default function ChatRoomWrapper({
   room,

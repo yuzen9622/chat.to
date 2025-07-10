@@ -1,5 +1,5 @@
 import { ClientMessageInterface } from "@/types/type";
-import { supabase } from "../supabasedb";
+import { supabase } from "../../app/lib/supabasedb";
 
 export const insertMessage = async (
   message: ClientMessageInterface

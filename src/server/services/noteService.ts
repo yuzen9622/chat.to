@@ -1,5 +1,5 @@
 import { NoteInterface } from "@/types/type";
-import { supabase } from "../supabasedb";
+import { supabase } from "../../app/lib/supabasedb";
 export const selectNote = async (
   userIds: string[]
 ): Promise<NoteInterface[]> => {

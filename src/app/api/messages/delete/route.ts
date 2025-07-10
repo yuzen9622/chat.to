@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getToken } from "next-auth/jwt";
-import { deleteMessage } from "@/app/lib/services/messageService";
+import { deleteMessage } from "@/server/services/messageService";
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,

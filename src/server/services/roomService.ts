@@ -1,5 +1,5 @@
 import { RoomInterface } from "@/types/type";
-import { supabase } from "../supabasedb";
+import { supabase } from "../../app/lib/supabasedb";
 
 export const selectRoom = async (roomId: string): Promise<RoomInterface> => {
   const { data, error } = await supabase
