@@ -1,6 +1,6 @@
 import { useChatStore } from "@/app/store/ChatStore";
 import { uploadFile } from "../../util";
-import { ClientMessageInterface, RoomInterface } from "@/types/type";
+import { RoomInterface } from "@/types/type";
 
 export const fetchUserRooms = async () => {
   try {
