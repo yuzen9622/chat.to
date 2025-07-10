@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const token = await getToken({ req: request });
     if (!token)
-      return NextResponse.json({ error: "No authcation" }, { status: 401 });
+      return NextResponse.json({ error: "No authentication" }, { status: 401 });
     const { userId } = await request.json();
 
     const user = await fetchUserInfo(userId);

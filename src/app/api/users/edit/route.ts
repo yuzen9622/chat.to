@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const token = await getToken({ req: req });
   if (!token)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
   const { id, name, email, image } = await req.json();
   try {
     const { error } = await supabase

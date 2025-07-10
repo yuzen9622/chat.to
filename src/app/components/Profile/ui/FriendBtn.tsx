@@ -17,8 +17,9 @@ export default function FriendBtn({ id }: { id: string }) {
   const { friends, friendRequests } = useAuthStore();
   const userId = useSession()?.data?.userId;
   const friend = useMemo(() => {
-    return friends?.find((f) => f.friend_id === id);
+    return friends?.find((f) => f.user.id === id);
   }, [friends, id]);
+
   const isOwn = id === userId;
   const [isLoading, setIsLoading] = useState(false);
 

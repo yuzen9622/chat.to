@@ -67,9 +67,34 @@ export const insertRoom = async (
   return data;
 };
 
+export const InsertPersonalRoom = async (
+  roomId: string
+): Promise<RoomInterface> => {
+  const { data, error } = await supabase
+    .from("room")
+    .insert([{ id: roomId, room_type: "personal" }])
+    .select("*")
+    .single();
+  if (error) throw error;
+  return data;
+};
+
 export const insertRoomMembers = async (
   roomMembers: { user_id: string; room_id: string }[]
 ) => {
   const { error } = await supabase.from("room_members").insert(roomMembers);
   if (error) throw error;
+};
+
+export const findPrivateRoom = async (
+  userId1: string,
+  userId2: string
+): Promise<{ room_id: string } | null> => {
+  const { data, error } = await supabase.rpc("find_private_room", {
+    uid1: userId1,
+    uid2: userId2,
+  });
+
+  if (error) throw error;
+  return data[0] || null;
 };

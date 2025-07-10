@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../../store/AuthStore";
 import { UserInterface } from "../../../../types/type";
 import { useSession } from "next-auth/react";
-import { sendFriendRequest, queryFriend } from "@/app/lib/api/friend/friendApi";
+import { queryUsers } from "@/app/lib/api/user/userApi";
+import { sendFriendRequest } from "@/app/lib/api/friend/friendApi";
 import { Skeleton } from "@mui/material";
 import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { useRouter } from "next/navigation";
@@ -63,16 +64,16 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
   const router = useRouter();
   const { friends, friendRequests } = useAuthStore();
   const [searchFriends, setSearchFriends] = useState<UserInterface[]>([]);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
 
   useEffect(() => {
     const getFriends = async () => {
       if (!userId) return;
-      setIsloading(true);
-      const data = await queryFriend(queryValue, userId);
+      setIsLoading(true);
+      const data = await queryUsers(queryValue, userId);
       setSearchFriends(data);
-      setIsloading(false);
+      setIsLoading(false);
     };
     getFriends();
   }, [queryValue, userId]);

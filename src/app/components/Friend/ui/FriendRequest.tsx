@@ -11,12 +11,12 @@ export default function FriendRequest() {
   const { friendRequests, setFriendRequest } = useAuthStore();
   const userId = useSession().data?.userId;
   useEffect(() => {
-    const getFrinedRequests = async () => {
+    const getFriendRequests = async () => {
       if (!userId) return;
       const data = await fetchFriendRequests(userId);
       setFriendRequest(() => data);
     };
-    getFrinedRequests();
+    getFriendRequests();
   }, [userId, setFriendRequest]);
   return (
     <div className="relative w-full mx-1 dark:text-white">

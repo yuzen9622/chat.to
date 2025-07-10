@@ -14,3 +14,24 @@ export const getAllUserById = async (userIds: string[]) => {
     console.log(error);
   }
 };
+
+export const queryUsers = async (query: string, userId: string) => {
+  try {
+    if (!query) return null;
+    const response = await fetch("/api/users/q", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        userId,
+        query,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

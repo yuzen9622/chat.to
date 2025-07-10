@@ -10,7 +10,7 @@ cloudinary.config({
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const fileResoponse: Array<{ url: string; public_id: string }> = [];
+    const fileResponse: Array<{ url: string; public_id: string }> = [];
     const files = formData.getAll("files") as File[];
     if (!files) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -32,13 +32,13 @@ export async function POST(request: NextRequest) {
         folder: "chat-app",
         resource_type: resourceType,
       });
-      fileResoponse.push({
+      fileResponse.push({
         url: uploadRes.secure_url,
         public_id: uploadRes.public_id,
       });
     }
 
-    return NextResponse.json({ data: fileResoponse }, { status: 200 });
+    return NextResponse.json({ data: fileResponse }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(error, { status: 500 });
