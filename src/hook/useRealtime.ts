@@ -258,15 +258,24 @@ export const useNoteListener = (channel: RealtimeChannel) => {
   const { setFriendNote, friends } = useAuthStore();
   useEffect(() => {
     const handleNote = (message: InboundMessage) => {
-      const { note }: { note: NoteInterface } = message.data;
+      const {
+        action,
+        note,
+      }: { action: "delete" | "update"; note: NoteInterface } = message.data;
       console.log(note);
       if (friends?.some((f) => f.friend_id === note.user_id)) {
-        setFriendNote((prev) => {
-          if (!prev.some((n) => n.id === note.id)) {
-            return [note, ...prev];
-          }
-          return prev.map((n) => (n.id === note.id ? note : n));
-        });
+        if (action === "delete") {
+          setFriendNote((prev) => {
+            return prev.filter((n) => n.id !== note.id);
+          });
+        } else {
+          setFriendNote((prev) => {
+            if (!prev.some((n) => n.id === note.id)) {
+              return [note, ...prev];
+            }
+            return prev.map((n) => (n.id === note.id ? note : n));
+          });
+        }
       }
     };
     channel.subscribe("note_action", handleNote);

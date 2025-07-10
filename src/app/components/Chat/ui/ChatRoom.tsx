@@ -9,7 +9,7 @@ import React, {
 import Message from "./ChatMessage";
 
 import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
-import InputBar from "./ChatInputBar";
+import InputBar from "./InputBar/index";
 import { useAblyRoom, useAblyStore } from "../../../store/AblyStore";
 import { useChatStore } from "../../../store/ChatStore";
 import { InboundMessage } from "ably";
@@ -17,7 +17,7 @@ import { clearReadMessage } from "../../../lib/util";
 import { readMessage } from "@/app/lib/api/message/messageApi";
 import moment from "moment";
 import { ChevronDown } from "lucide-react";
-import { supabase } from "../../../lib/supabasedb";
+
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
@@ -25,6 +25,7 @@ import { useRoomUser } from "@/hook/useRoomUser";
 import { CircularProgress } from "@mui/material";
 import { ClientMessageInterface } from "../../../../types/type";
 import TypingBar from "../../ui/TypingBar";
+import { fetchRoomMessage } from "@/app/lib/api/room/roomApi";
 
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
@@ -92,23 +93,14 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
     if (isLoading || !hasOldMessage || start < 20) return;
     setIsLoading(true);
+    try {
+      const data = await fetchRoomMessage(roomId, start, end);
 
-    const abortSignal = new AbortController();
-    const { data, error } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("room", roomId)
-      .order("created_at", { ascending: false })
-      .range(start, end)
-      .abortSignal(abortSignal.signal);
-
-    if (error) return;
-    if (data) {
-      if (data.length === 0) {
+      if (data.length === 0 || data.length < 10) {
         setHasOldMessage(false);
       }
       setPage(nextPage);
-      data.reverse();
+
       setCurrentMessage((prev) => {
         return [...data, ...prev];
       });
@@ -119,9 +111,12 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
           align: "start",
         });
       }
+      return data as ClientMessageInterface[];
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-    return data as ClientMessageInterface[];
   }, [
     page,
     roomId,

@@ -1,6 +1,6 @@
 import { useChatStore } from "@/app/store/ChatStore";
 import { uploadFile } from "../../util";
-import { RoomInterface } from "@/types/type";
+import { ClientMessageInterface, RoomInterface } from "@/types/type";
 
 export const fetchUserRooms = async () => {
   try {
@@ -27,7 +27,7 @@ export const fetchRoomMessage = async (
   roomId: string,
   start: number,
   end: number
-) => {
+): Promise<ClientMessageInterface[]> => {
   try {
     const response = await fetch(
       `/api/messages/${roomId}?start=${start}&end=${end}`,

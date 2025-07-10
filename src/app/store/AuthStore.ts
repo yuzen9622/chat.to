@@ -41,7 +41,7 @@ interface AuthStore {
   setFriendNote: (
     note: NoteInterface | ((prev: NoteInterface[]) => NoteInterface[])
   ) => void;
-  setUserNote: (note: NoteInterface) => void;
+  setUserNote: (note: NoteInterface | null) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({

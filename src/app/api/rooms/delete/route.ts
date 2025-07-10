@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   const { room_id, user_id, room_type } = await req.json();
   if (!token || token.sub !== user_id)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
 
   try {
     if (room_type === "personal") {

@@ -20,27 +20,33 @@ export default function MarkDownText({
           return <h2 className="text-xl truncate" {...props} />;
         },
         a: (props) => {
-          return <a className="text-white underline truncate" {...props} />;
+          const { children, ...rest } = props;
+          return style === "inline" ? (
+            <>{children}</>
+          ) : (
+            <a className="text-white underline truncate" {...rest}>
+              {children}
+            </a>
+          );
         },
         p: (props) => {
           return <p className="truncate " {...props} />;
         },
         code: (props) => {
           const { children, className, ...rest } = props;
-          if (style === "inline") {
+
+          return (
             <code
-              className="overflow-hidden truncate text-nowrap"
-              {...props}
-            />;
-          } else
-            return (
-              <code
-                className={twMerge("overflow-auto text-wrap  ", className)}
-                {...rest}
-              >
-                {children}
-              </code>
-            );
+              className={twMerge(
+                "overflow-auto text-wrap  ",
+                className,
+                style === "inline" && "overflow-hidden truncate text-nowrap"
+              )}
+              {...rest}
+            >
+              {children}
+            </code>
+          );
         },
       }}
       remarkPlugins={[remarkGfm]}

@@ -15,6 +15,7 @@ import { NoteInterface, UserInterface } from "../../../types/type";
 import { useAblyStore } from "../../store/AblyStore";
 import NoteModal from "./Modal/NoteModal";
 import { useAuthStore } from "@/app/store/AuthStore";
+import { deleteNote, updateNote } from "@/app/lib/api/note/noteApi";
 
 export default function NoteButton({
   note,
@@ -28,7 +29,7 @@ export default function NoteButton({
   user: UserInterface;
 }) {
   const [noteText, setNoteText] = useState("");
-  const [isFoucs, setIsFoucs] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { data: session, update } = useSession();
@@ -37,40 +38,48 @@ export default function NoteButton({
   const { setUserNote } = useAuthStore();
 
   const handleShare = useCallback(async () => {
-    if (!channel || noteText.trim() === "") return;
+    if (!channel || noteText.trim() === "" || !session) return;
     setIsLoading(true);
-    const res = await fetch("/api/note/update", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        text: noteText,
-        is_public: true,
-        user_id: session?.userId,
-      }),
-    });
-    const data: NoteInterface = await res.json();
-    await channel.publish("note_action", { note: data });
+    const data = await updateNote(noteText, session.user.id);
+    await channel.publish("note_action", { action: "update", note: data });
     await update({ ...session?.user, note: data });
     setUserNote(data);
     setIsLoading(false);
     setIsOpen(false);
   }, [session, update, noteText, channel, setIsOpen, setUserNote]);
 
-  const onFoucs = useCallback(() => {
-    setIsFoucs(true);
+  const handleDelete = useCallback(async () => {
+    try {
+      if (!note || !channel) return;
+      await deleteNote(note.id);
+      await channel.publish("note_action", { action: "delete", note: note });
+      await update({ ...session?.user, note: null });
+      setUserNote(null);
+      setIsLoading(false);
+      setIsOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [note, channel, session, setIsOpen, setUserNote, update]);
+
+  const onFocus = useCallback(() => {
+    setIsFocus(true);
   }, []);
+
   const onBlur = useCallback(() => {
-    setIsFoucs(false);
+    setIsFocus(false);
     const target = textareaRef.current;
     if (target) {
       target.style.height = "auto";
       target.style.height = `${target.scrollHeight}px`;
     }
   }, []);
+
   const onChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length === 51) return;
     setNoteText(e.target.value);
   }, []);
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(true);
@@ -135,13 +144,13 @@ export default function NoteButton({
 
                 <div className="absolute right-0 -top-8 w-fit h-fit">
                   <textarea
-                    onFocus={onFoucs}
+                    onFocus={onFocus}
                     rows={1}
                     onBlur={onBlur}
                     disabled={!isOwn}
                     className={twMerge(
                       " relative p-2 truncate rounded-md max-w-44 text-wrap shadow-md  dark:bg-stone-700 text-white/40 outline-none resize-none",
-                      (isFoucs || noteText.length !== 0) &&
+                      (isFocus || noteText.length !== 0) &&
                         "dark:text-white text-stone-900"
                     )}
                     ref={textareaRef}
@@ -162,6 +171,13 @@ export default function NoteButton({
               <p className="text-sm dark:text-white">
                 字數限制 {noteText.length}/50
               </p>
+              <button
+                onClick={handleDelete}
+                type="button"
+                className="w-6/12 p-2 bg-white rounded-md dark:bg-stone-700"
+              >
+                刪除便利貼
+              </button>
             </div>
           </div>
         </Modal>

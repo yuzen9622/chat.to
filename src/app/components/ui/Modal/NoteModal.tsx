@@ -74,6 +74,7 @@ export default function NoteModal({
     },
     [userId, ably, note, replyText, setRoom, rooms, friends, setIsOpen]
   );
+
   return (
     <div>
       <Modal
