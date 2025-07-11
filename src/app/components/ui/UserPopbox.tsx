@@ -15,7 +15,7 @@ export default function UserPopbox({
 }) {
   const open = Boolean(anchorEl);
   const router = useRouter();
-  if (!user.id) return null;
+  if (!user) return null;
   return (
     <div>
       <Popover

@@ -141,7 +141,7 @@ export function WavesurferRecord({
   const { ably } = useAblyStore();
   const { setSystemAlert } = useAuthStore();
 
-  const userId = useSession()?.data?.userId;
+  const user = useSession()?.data?.user;
 
   const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: audioRef,
@@ -194,10 +194,10 @@ export function WavesurferRecord({
 
   const handleSend = useCallback(
     async (file: File) => {
-      if (!userId || !currentChat || !ably) return;
+      if (!user || !currentChat || !ably) return;
       try {
         const audioMessage = createFileMessage(
-          userId!,
+          user!,
           currentChat?.id,
           file,
           reply!
@@ -226,7 +226,7 @@ export function WavesurferRecord({
         });
       }
     },
-    [userId, currentChat, reply, setCurrentMessage, ably, setSystemAlert]
+    [user, currentChat, reply, setCurrentMessage, ably, setSystemAlert]
   );
 
   useEffect(() => {

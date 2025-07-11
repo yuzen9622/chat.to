@@ -34,6 +34,7 @@ export interface ClientMessageInterface {
   meta_data?: MetaData;
   reply?: ClientMessageInterface;
   sender: string;
+  sender_info: PublicUserInfo;
   room: string;
   created_at: string;
   status: MessageStatus;
@@ -64,10 +65,7 @@ export interface UserInterface {
 export interface PublicUserInfo {
   id: string;
   name: string;
-  email?: string;
   image: string;
-  note?: NoteInterface;
-  provider?: ProviderType;
 }
 
 export interface RoomMemberInterface {
@@ -101,6 +99,8 @@ export interface FriendRequestInterface {
   id: string;
   sender_id: string;
   receiver_id: string;
+  sender_info: PublicUserInfo;
+  receiver_info: PublicUserInfo;
   status: friendStatus;
   created_at: Date;
 }

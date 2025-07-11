@@ -26,7 +26,7 @@ export default function NoteModal({
   setIsOpen: React.Dispatch<boolean>;
 }) {
   const [replyText, setReplyText] = useState("");
-  const userId = useSession()?.data?.user.id;
+  const user = useSession()?.data?.user;
   const { ably } = useAblyStore();
   const { rooms, setRoom } = useChatStore();
   const { friends } = useAuthStore();
@@ -39,21 +39,21 @@ export default function NoteModal({
       const friendRoom =
         friends?.find((f) => f.friend_id === note.user_id)?.personal_room_id ||
         uuid();
-
+      if (!user) return;
       setLoading(true);
-      const room = await getPersonalRoom(friendRoom, userId!, note.user_id);
-      const message = createReplyNoteMessage(userId!, room.id, replyText, note);
+      const room = await getPersonalRoom(friendRoom, user.id, note.user_id);
+      const message = createReplyNoteMessage(user, room.id, replyText, note);
       const isExist = rooms.find((r) => r.id === room.id);
 
       if (isExist) {
         const isDelete = isExist.room_members.some(
           (rm) =>
-            rm.is_deleted && rm.user_id === userId && rm.room_id === room.id
+            rm.is_deleted && rm.user_id === user?.id && rm.room_id === room.id
         );
 
         if (isDelete) {
           isExist.room_members = isExist.room_members.map((r) => {
-            if (r.user_id === userId) {
+            if (r.user_id === user?.id) {
               r.is_deleted = false;
             }
             return r;
@@ -72,7 +72,7 @@ export default function NoteModal({
       setLoading(false);
       setIsOpen(false);
     },
-    [userId, ably, note, replyText, setRoom, rooms, friends, setIsOpen]
+    [user, ably, note, replyText, setRoom, rooms, friends, setIsOpen]
   );
 
   return (
@@ -116,7 +116,7 @@ export default function NoteModal({
                   <span className="absolute w-2 h-2 rounded-full left-4 bg-stone-100 -bottom-4 dark:bg-stone-700"></span>
                 </div>
               </span>
-              {userId !== note.user_id && (
+              {user && user.id !== note.user_id && (
                 <form
                   onSubmit={handleSend}
                   className="flex p-1 rounded-3xl dark:bg-white/10 bg-stone-100"

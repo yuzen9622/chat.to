@@ -179,7 +179,7 @@ export default function ChatInfo() {
                           <BadgeAvatar
                             width={55}
                             height={55}
-                            user={friend.user.id}
+                            user={friend.user}
                           />
                           <p className="truncate">{friend.user.name}</p>
                         </button>
@@ -200,11 +200,7 @@ export default function ChatInfo() {
           </Modal>
           <div className="flex flex-col items-center justify-center w-full gap-2 py-4 border-b dark:border-white/10">
             {currentChat.room_type === "personal" ? (
-              <BadgeAvatar
-                width={80}
-                height={80}
-                user={recipientUser?.user_id}
-              />
+              <BadgeAvatar width={80} height={80} user={recipientUser!} />
             ) : (
               <BadgeAvatar width={80} height={80} room={currentChat!} />
             )}

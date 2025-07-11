@@ -21,7 +21,7 @@ import { ChevronDown } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
-import { useRoomUser } from "@/hook/useRoomUser";
+
 import { CircularProgress } from "@mui/material";
 import { ClientMessageInterface } from "../../../../types/type";
 import TypingBar from "../../ui/TypingBar";
@@ -45,7 +45,6 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   const findRef = useRef("");
   const scrollRef = useRef<VirtuosoHandle>(null);
 
-  const userMap = useRoomUser();
   useAblyRoom(roomId);
   const typingUser = useMemo(() => {
     return typingUsers[roomId];
@@ -123,7 +122,6 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     setCurrentMessage,
     hasOldMessage,
     currentMessage,
-
     isLoading,
   ]);
 
@@ -198,12 +196,12 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   }, [room, setCurrentMessage, currentMessage, userId, currentChat]);
 
   useEffect(() => {
-    if (userMap && shouldScroll) {
+    if (shouldScroll) {
       setTimeout(() => {
         setShouldScroll(false);
       }, 100);
     }
-  }, [userMap, shouldScroll, currentMessage, scrollToBottom]);
+  }, [, shouldScroll, currentMessage, scrollToBottom]);
 
   const dateContent = useCallback(
     (index: number) => {
@@ -225,7 +223,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
 
   return (
     <>
-      {currentChat && currentChat.id === roomId && userMap && isRended && (
+      {currentChat && currentChat.id === roomId && isRended && (
         <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover border border-l dark:border-none sm:rounded-l-md dark:bg-neutral-800 max-h-dvh">
           <div className="box-border relative flex flex-col flex-1 py-2 overflow-hidden max-h-dvh ">
             <ChatHeader />
@@ -234,77 +232,66 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in  dark:border-none "
               )}
             >
-              {userMap ? (
-                <GroupedVirtuoso
-                  increaseViewportBy={1500}
-                  ref={scrollRef}
-                  className="h-full overflow-x-hidden fade-in animate-in"
-                  atBottomStateChange={(atBottom) =>
-                    setDownBtnAppear(!atBottom)
+              <GroupedVirtuoso
+                increaseViewportBy={1500}
+                ref={scrollRef}
+                className="h-full overflow-x-hidden fade-in animate-in"
+                atBottomStateChange={(atBottom) => setDownBtnAppear(!atBottom)}
+                atTopStateChange={(atTop: boolean) => {
+                  if (atTop && !isLoading && !shouldScroll) {
+                    loadMoreMessages();
                   }
-                  atTopStateChange={(atTop: boolean) => {
-                    if (atTop && !isLoading && !shouldScroll) {
-                      loadMoreMessages();
-                    }
-                  }}
-                  onScroll={(e) => {
-                    if (
-                      e.currentTarget.scrollTop === 0 &&
-                      !isLoading &&
-                      !shouldScroll
-                    ) {
-                      loadMoreMessages();
-                    }
-                  }}
-                  followOutput={(atBottom) => {
-                    const lastMessage = flatMessages[flatMessages.length - 1];
-                    if (
-                      lastMessage?.sender === userId &&
-                      atBottom &&
-                      !downBtnAppear
-                    ) {
-                      return true;
-                    }
-                    return false;
-                  }}
-                  initialTopMostItemIndex={
-                    flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
+                }}
+                onScroll={(e) => {
+                  if (
+                    e.currentTarget.scrollTop === 0 &&
+                    !isLoading &&
+                    !shouldScroll
+                  ) {
+                    loadMoreMessages();
                   }
-                  context={{ isLoading }}
-                  groupContent={dateContent}
-                  groupCounts={dateCounts}
-                  itemContent={(index) => (
-                    <Message
-                      key={flatMessages[index].id}
-                      index={index}
-                      target={target}
-                      setTarget={setTarget}
-                      scrollToMessage={scrollToMessage}
-                      roomUsers={userMap}
-                      message={flatMessages[index]}
-                    />
-                  )}
-                  components={{
-                    Header: ({ context: { isLoading } }) => {
-                      return (
-                        <>
-                          {isLoading && (
-                            <span className="flex items-center justify-center w-full">
-                              <CircularProgress size={24} />
-                            </span>
-                          )}
-                        </>
-                      );
-                    },
-                  }}
-                />
-              ) : (
-                !isRended && (
-                  <span className="flex items-center justify-center w-full">
-                    <CircularProgress size={24} />
-                  </span>
-                )
-              )}
+                }}
+                followOutput={(atBottom) => {
+                  const lastMessage = flatMessages[flatMessages.length - 1];
+                  if (
+                    lastMessage?.sender === userId &&
+                    atBottom &&
+                    !downBtnAppear
+                  ) {
+                    return true;
+                  }
+                  return false;
+                }}
+                initialTopMostItemIndex={
+                  flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
+                }
+                context={{ isLoading }}
+                groupContent={dateContent}
+                groupCounts={dateCounts}
+                itemContent={(index) => (
+                  <Message
+                    key={flatMessages[index].id}
+                    index={index}
+                    target={target}
+                    setTarget={setTarget}
+                    scrollToMessage={scrollToMessage}
+                    message={flatMessages[index]}
+                  />
+                )}
+                components={{
+                  Header: ({ context: { isLoading } }) => {
+                    return (
+                      <>
+                        {isLoading && (
+                          <span className="flex items-center justify-center w-full">
+                            <CircularProgress size={24} />
+                          </span>
+                        )}
+                      </>
+                    );
+                  },
+                }}
+              />
 
               {downBtnAppear && (
                 <button

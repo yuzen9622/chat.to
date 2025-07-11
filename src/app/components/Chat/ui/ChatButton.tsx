@@ -75,7 +75,7 @@ export default function ChatButton({
     >
       <div className="flex items-center w-full space-x-3">
         {room.room_type === "personal" ? (
-          <BadgeAvatar width={50} height={50} user={recipientUser?.user_id} />
+          <BadgeAvatar width={50} height={50} user={recipientUser!} />
         ) : (
           <BadgeAvatar width={50} height={50} room={room} />
         )}

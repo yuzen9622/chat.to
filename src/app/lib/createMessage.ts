@@ -1,20 +1,26 @@
-import { ClientMessageInterface, MetaData, NoteInterface } from "@/types/type";
+import {
+  ClientMessageInterface,
+  MetaData,
+  NoteInterface,
+  UserInterface,
+} from "@/types/type";
 import { fileType } from "./util";
 import { v4 as uuidv4 } from "uuid";
 
 export const createTextMessage = (
-  userId: string,
+  user: UserInterface,
   roomId: string,
   messageText: string,
   reply?: ClientMessageInterface
 ) => {
   if (messageText.trim() === "") return null;
-
+  const { id, name, image } = user;
   const newMessage: ClientMessageInterface = {
     id: uuidv4(),
-    sender: userId || "",
+    sender: id || "",
+    sender_info: { id, name, image },
     room: roomId,
-    is_read: [userId || ""],
+    is_read: [id || ""],
     reply: reply!,
     status: "pending",
     text: messageText,
@@ -24,18 +30,19 @@ export const createTextMessage = (
   return newMessage;
 };
 export const createReplyNoteMessage = (
-  userId: string,
+  user: UserInterface,
   roomId: string,
   messageText: string,
   reply_note: NoteInterface
 ) => {
   if (messageText.trim() === "") return null;
-
+  const { id, name, image } = user;
   const newMessage: ClientMessageInterface = {
     id: uuidv4(),
-    sender: userId || "",
+    sender: id || "",
+    sender_info: { id, name, image },
     room: roomId,
-    is_read: [userId || ""],
+    is_read: [id || ""],
     reply_note: reply_note,
     status: "pending",
     text: messageText,
@@ -46,7 +53,7 @@ export const createReplyNoteMessage = (
 };
 
 export const createFileMessage = (
-  userId: string,
+  user: UserInterface,
   roomId: string,
   file: File,
   reply?: ClientMessageInterface
@@ -58,11 +65,13 @@ export const createFileMessage = (
     public_id: "",
   };
   const type = fileType(metaData.type);
+  const { id, name, image } = user;
   const newMessage: ClientMessageInterface = {
     id: uuidv4(),
-    sender: userId || "",
+    sender: id || "",
+    sender_info: { id, name, image },
     room: roomId,
-    is_read: [userId || ""],
+    is_read: [id || ""],
     reply: reply!,
     text: file.name,
     status: "pending",

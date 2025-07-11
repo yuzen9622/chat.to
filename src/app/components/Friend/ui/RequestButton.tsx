@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { FriendRequestInterface, friendStatus } from "@/types/type";
-import { useUserProfile } from "@/hook/useUserProfile";
+
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import {
@@ -14,20 +14,20 @@ export default function RequestButton({
 }: {
   friend: FriendRequestInterface;
 }) {
-  const receiver = useUserProfile(friend.receiver_id);
-  const sender = useUserProfile(friend.sender_id);
-  const [isLoading, setIsloading] = useState(false);
+  const receiver = friend.receiver_info;
+  const sender = friend.sender_info;
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const userId = session?.userId;
   const handleClick = useCallback(
     async (friendId: string, status: friendStatus) => {
-      setIsloading(true);
+      setIsLoading(true);
       try {
         await responseFriendRequest(friendId, status);
       } catch (error) {
         console.log(error);
       } finally {
-        setIsloading(false);
+        setIsLoading(false);
       }
     },
     []

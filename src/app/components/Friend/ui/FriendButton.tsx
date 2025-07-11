@@ -18,7 +18,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
   const { channel } = useAblyStore();
   const userId = useSession()?.data?.userId;
   const router = useRouter();
-  const [isLoading, setIsloading] = useState<{
+  const [isLoading, setIsLoading] = useState<{
     delete: boolean;
     create: boolean;
   }>({ delete: false, create: false });
@@ -30,7 +30,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
     );
     if (!friendRoom) {
       if (isLoading.create) return;
-      setIsloading((prev) => ({ ...prev, create: true }));
+      setIsLoading((prev) => ({ ...prev, create: true }));
       const newRoom: RoomInterface = await getPersonalRoom(
         friend.personal_room_id,
         userId!,
@@ -43,7 +43,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         newRoom,
         newRoomMembers: roomMembers,
       });
-      setIsloading((prev) => ({ ...prev, create: false }));
+      setIsLoading((prev) => ({ ...prev, create: false }));
       router.push(`/chat/${newRoom.id}`);
     } else {
       //await getPersonalRoom(friend.personal_room_id, userId!, friend.friend_id);
@@ -80,7 +80,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
 
   const deleteFriend = useCallback(async () => {
     try {
-      setIsloading((prev) => ({ ...prev, delete: true }));
+      setIsLoading((prev) => ({ ...prev, delete: true }));
       if (!channel) return;
       const response = await fetch("/api/friends/delete", {
         headers: { "Content-Type": "application/json" },
@@ -96,7 +96,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsloading((prev) => ({ ...prev, delete: false }));
+      setIsLoading((prev) => ({ ...prev, delete: false }));
     }
   }, [friend, userId, channel, setFriends]);
 
@@ -106,7 +106,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         onClick={handleClick}
         disabled={isLoading.create}
         title="發送訊息"
-        className="p-1 px-3 font-bold text-blue-600 transition-colors bg-white rounded-md dark:soutline dark:outline dark:outline-2 dark:outline-white dark:text-white dark:bg-transparent"
+        className="p-1 px-3 font-bold text-blue-600 transition-colors bg-white rounded-md dark:outline dark:outline-2 dark:outline-white dark:text-white dark:bg-transparent"
       >
         {isLoading.create ? (
           <Ellipsis className=" animate-pulse" />

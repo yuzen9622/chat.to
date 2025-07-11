@@ -15,7 +15,7 @@ export default function RoomUser({ member }: { member: RoomMemberInterface }) {
         className="flex flex-row items-center gap-4 p-2 rounded-md hover:dark:bg-white/10"
         onClick={handleOpen}
       >
-        <BadgeAvatar user={member.user_id} />
+        <BadgeAvatar user={member.user} />
         <span className="text-start">
           <p>{userId === member.user_id ? "你" : member.user?.name}</p>
           <p className="text-xs dark:text-white/40">

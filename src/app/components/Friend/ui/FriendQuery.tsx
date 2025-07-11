@@ -102,7 +102,7 @@ export default function FriendQuery({ queryValue }: { queryValue: string }) {
             onClick={() => router.push(`/profile/${friend.id}`)}
           >
             <div className="flex items-center">
-              <BadgeAvatar user={friend.id} />
+              <BadgeAvatar user={friend} />
 
               <span className="px-2 text-stone-800 dark:text-white">
                 {friend.name}

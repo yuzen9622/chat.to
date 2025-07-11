@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Snackbar } from "@mui/material";
 import { useChatStore } from "../store/ChatStore";
 import { RoomInterface } from "../../types/type";
-import { useUserProfile } from "@/hook//useUserProfile";
+
 import { replyText } from "@/app/lib/util";
 import { redirect } from "next/navigation";
 import moment from "moment";
@@ -14,12 +14,10 @@ export default function NotifyBar() {
 
   const [room, setRoom] = useState<RoomInterface | null>(null);
   const { newNotify, rooms, setNewNotify } = useChatStore();
-  const senderId = useMemo(
-    () => (newNotify?.type === "message" ? newNotify.data.sender : void 0),
+  const sender = useMemo(
+    () => (newNotify?.type === "message" ? newNotify.data.sender_info : void 0),
     [newNotify]
   );
-
-  const sendUser = useUserProfile(senderId);
 
   useEffect(() => {
     if (!newNotify) return;
@@ -51,7 +49,7 @@ export default function NotifyBar() {
     }
 
     setOpen(true);
-  }, [newNotify, rooms, sendUser]);
+  }, [newNotify, rooms, sender]);
 
   const handleClick = useCallback(() => {
     setOpen(false);
@@ -80,7 +78,7 @@ export default function NotifyBar() {
             {room && (
               <>
                 {room.room_type == "personal" ? (
-                  <BadgeAvatar width={45} height={45} user={senderId} />
+                  <BadgeAvatar width={45} height={45} user={sender} />
                 ) : (
                   <BadgeAvatar width={45} height={45} room={room} />
                 )}
@@ -91,7 +89,7 @@ export default function NotifyBar() {
                 <p className="text-base">
                   {room && room.room_type === "group"
                     ? room.room_name
-                    : sendUser?.name}
+                    : sender?.name}
                 </p>
                 <p className="text-xs text-gray-500/70 dark:text-white/70">
                   {moment(newNotify.data.created_at).calendar()}
@@ -100,8 +98,8 @@ export default function NotifyBar() {
               <p className="text-sm truncate dark:text-white/80">
                 {room &&
                   room.room_type === "group" &&
-                  sendUser &&
-                  sendUser.name + "："}
+                  sender &&
+                  sender.name + "："}
 
                 {replyText(newNotify.data)}
               </p>

@@ -29,7 +29,9 @@ export const InsertFriendRequest = async (
     .insert([
       { receiver_id: receiverId, sender_id: senderId, status: "pending" },
     ])
-    .select("*")
+    .select(
+      "*,receiver_info:receiver_id(id,name,image),sender_info:sender_id(id,name,image)"
+    )
     .limit(1)
     .single();
   if (error) throw error;

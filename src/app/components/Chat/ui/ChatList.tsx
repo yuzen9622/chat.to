@@ -222,7 +222,7 @@ function CreateRoomModal({
                         <BadgeAvatar
                           width={55}
                           height={55}
-                          user={friend.user.id}
+                          user={friend.user}
                         />
                       </span>
 

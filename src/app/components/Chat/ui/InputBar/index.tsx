@@ -43,7 +43,7 @@ export default function InputBar() {
     roomId,
   });
   const { handleSendMessage } = useInputBarSend({
-    userId: user?.id,
+    user: user,
     roomId,
     messageText,
     messageFiles,
@@ -61,6 +61,7 @@ export default function InputBar() {
   const handleCompositionEnd = () => {
     setIsComposing(false);
   };
+
   const handleCompositionStart = () => {
     setIsComposing(true);
   };

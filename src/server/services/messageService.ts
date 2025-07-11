@@ -1,12 +1,14 @@
 import { ClientMessageInterface } from "@/types/type";
 import { supabase } from "../../app/lib/supabasedb";
-
+import { omit } from "lodash";
 export const insertMessage = async (
   message: ClientMessageInterface
 ): Promise<ClientMessageInterface> => {
+  const cleanedMessage = omit(message, ["sender_info"]);
+
   const { data, error } = await supabase
     .from("messages")
-    .insert([message])
+    .insert([cleanedMessage])
     .select("*,reply(*)")
     .limit(1)
     .maybeSingle();
@@ -23,7 +25,7 @@ export const selectMessages = async (
 ): Promise<ClientMessageInterface[]> => {
   const { data, error } = await supabase
     .from("messages")
-    .select("*,reply(*)")
+    .select("*,reply(*),sender_info:users(id,name,image)")
     .eq("room", roomId)
     .order("created_at", { ascending: false })
     .range(start, end);

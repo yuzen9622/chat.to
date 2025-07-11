@@ -73,11 +73,7 @@ export default function ChatHeader() {
             type="button"
           >
             {currentChat.room_type === "personal" ? (
-              <BadgeAvatar
-                user={recipientUser?.user_id}
-                width={40}
-                height={40}
-              />
+              <BadgeAvatar user={recipientUser!} width={40} height={40} />
             ) : (
               <BadgeAvatar room={currentChat} width={40} height={40} />
             )}

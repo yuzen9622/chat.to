@@ -14,7 +14,7 @@ export default function FriendItem({ friend }: { friend: FriendInterface }) {
         onClick={handleOpen}
         className="flex items-center w-full gap-2 overflow-hidden cursor-pointer"
       >
-        <BadgeAvatar width={40} height={40} user={friend.user.id} />
+        <BadgeAvatar width={40} height={40} user={friend.user} />
         <p className="truncate text-nowrap">{friend.user.name}</p>
       </button>
       <FriendButton friend={friend} />

@@ -49,14 +49,7 @@ type MessageItemProps = {
   message: ClientMessageInterface;
   scrollToMessage: (messageId: string) => Promise<void>;
   target: string;
-  roomUsers: Record<
-    string,
-    {
-      id: string;
-      name: string;
-      image: string;
-    }
-  >;
+
   setTarget: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -436,25 +429,18 @@ const NoteMessage = memo(function NoteMessage({
 
 const ReplyMessage = memo(function ReplyMessage({
   message,
-  roomUsers,
+
   isOwn,
   scrollToMessage,
 }: {
   message: ClientMessageInterface;
-  roomUsers: Record<
-    string,
-    {
-      id: string;
-      name: string;
-      image: string;
-    }
-  >;
+
   isOwn: boolean;
   scrollToMessage: (messageId: string) => Promise<void>;
 }) {
   const userId = useSession().data?.userId;
   const replyOwn = message.sender === userId;
-  const replySender = roomUsers[message.sender];
+  const replySender = message.sender_info;
 
   const Message = useCallback(() => {
     const messageType = {
@@ -500,14 +486,13 @@ const ReplyMessage = memo(function ReplyMessage({
 const MessageItem = memo(function MessageItem({
   index,
   message,
-  roomUsers,
   scrollToMessage,
   target,
   setTarget,
 }: MessageItemProps) {
   const userId = useSession().data?.userId;
   const isOwn = userId === message.sender;
-  const messageUser = roomUsers[message.sender];
+  const messageUser = message.sender_info;
   const messageRef = useRef<HTMLDivElement>(null);
 
   const { anchorEl, handleClose, handleOpen } = usePopbox();
@@ -565,7 +550,6 @@ const MessageItem = memo(function MessageItem({
         <ReplyMessage
           scrollToMessage={scrollToMessage}
           isOwn={isOwn}
-          roomUsers={roomUsers}
           message={message.reply}
         />
       )}

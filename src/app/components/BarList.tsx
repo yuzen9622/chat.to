@@ -14,7 +14,7 @@ export default function BarList() {
   const { notify } = useChatStore();
   const userId = useSession()?.data?.userId;
   const { data: session } = useSession();
-  const roomNotfiyCount = useMemo(() => {
+  const roomNotifyCount = useMemo(() => {
     const isExist: string[] = [];
     notify.forEach((n) => {
       if (n.is_read.includes(userId!)) return;
@@ -44,7 +44,7 @@ export default function BarList() {
           Home
         </span>
       </ListItem>
-      <ListItem href="/chat" notify={roomNotfiyCount}>
+      <ListItem href="/chat" notify={roomNotifyCount}>
         <MessageCircleMore size={30} />
         <span
           className={twMerge(
@@ -76,7 +76,7 @@ export default function BarList() {
           className="sm:hidden"
           // className="flex items-center justify-center w-full gap-2 p-2 rounded-md sm:hidden hover:bg-stone-900/5 hover:dark:bg-white/5"
         >
-          <BadgeAvatar width={30} height={30} user={session.userId} />
+          <BadgeAvatar width={30} height={30} user={session.user} />
         </ListItem>
       )}
     </>

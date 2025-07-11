@@ -44,7 +44,7 @@ export default function NoteCard({
         className="relative flex flex-col items-center "
         onClick={handleClick}
       >
-        <BadgeAvatar user={user.id} width={width} height={height} />
+        <BadgeAvatar user={user} width={width} height={height} />
         <p className="text-xs truncate">{isOwn ? "你的便利貼" : user.name}</p>
         {(isOwn || note) && (
           <NoteButton

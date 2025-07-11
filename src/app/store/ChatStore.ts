@@ -25,7 +25,7 @@ interface ChatStore {
   setChatInfoOpen: (isOpen: boolean) => void;
   notify: ClientMessageInterface[];
   lastMessages: Record<string, LastMessageType>;
-  onboardingUsers: Set<string>;
+
   sidebarOpen: boolean;
   setCachedMessages: (
     roomId: string,
@@ -56,8 +56,7 @@ interface ChatStore {
           prev: Record<string, LastMessageType>
         ) => Record<string, LastMessageType>)
   ) => void;
-  addOnboardingUser: (userId: string) => void;
-  removeOnboardingUser: (userId: string) => void;
+
   setSidebarOpen: (isOpen: boolean) => void;
   setTypingUsers: (typingUsers: TypingInterface) => void;
   setNewNotify: (
@@ -160,18 +159,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       return { ...state, cachedMessages: newCached };
     });
   },
-  addOnboardingUser: (userId) =>
-    set((state) => {
-      const newSet = new Set(state.onboardingUsers);
-      newSet.add(userId);
-      return { onboardingUsers: newSet };
-    }),
-  removeOnboardingUser: (userId) =>
-    set((state) => {
-      const newSet = new Set(state.onboardingUsers);
-      newSet.delete(userId);
-      return { onboardingUsers: newSet };
-    }),
   setCurrentMessage: (msgOrFn) => {
     set((state) => {
       if (typeof msgOrFn === "function") {
