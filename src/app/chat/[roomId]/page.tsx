@@ -1,4 +1,4 @@
-import { getRoomById } from "@/app/lib/server";
+import { getRoomById } from "@/server/services/roomService";
 import { redirect } from "next/navigation";
 import ChatRoomWrapper from "@/app/components/Chat/ui/ChatWrapper";
 import { RoomInterface } from "@/types/type";

@@ -1,5 +1,6 @@
 import { RoomInterface } from "@/types/type";
 import { supabase } from "../../app/lib/supabasedb";
+import { readMessage } from "./messageService";
 
 export const selectRoom = async (roomId: string): Promise<RoomInterface> => {
   const { data, error } = await supabase
@@ -97,4 +98,30 @@ export const findPrivateRoom = async (
 
   if (error) throw error;
   return data[0] || null;
+};
+
+export const getRoomById = async (
+  roomId: string,
+  userId: string
+): Promise<{ room: RoomInterface | null }> => {
+  try {
+    const { data, error } = await supabase
+      .from("room_members")
+      .select("rooms(*, room_members(*,user:users(id,name,image)))")
+      .eq("user_id", userId)
+      .eq("room_id", roomId)
+      .limit(1);
+
+    if (error || !data) {
+      console.error("Room not found or user is not a member:", error);
+      return { room: null };
+    }
+    const getRooms = data.map((d) => d.rooms) as unknown;
+    await readMessage(roomId, userId);
+
+    return { room: getRooms as RoomInterface };
+  } catch (error) {
+    console.log(error);
+    return { room: null };
+  }
 };

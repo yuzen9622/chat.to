@@ -51,3 +51,11 @@ export const updateMessage = async (messageId: string, text: string) => {
     .eq("id", messageId);
   if (error) throw error;
 };
+
+export const readMessage = async (roomId: string, userId: string) => {
+  const { error } = await supabase.rpc("read", {
+    room_id: roomId,
+    user_id: userId,
+  });
+  if (error) throw error;
+};

@@ -9,20 +9,6 @@ export function generateMetadata() {
   };
 }
 export default function Page() {
-  // // 監聽用戶進出
-  // usePresenceListener(
-  //   "chatta-chat-channel",
-  //   (presenceMessage: PresenceMessage) => {
-  //     const { action, clientId } = presenceMessage;
-
-  //     if (action === "enter") {
-  //       setLog((prev) => [...prev, `${clientId} 進入聊天室`]);
-  //     } else if (action === "leave") {
-  //       setLog((prev) => [...prev, `${clientId} 離開聊天室`]);
-  //     }
-  //   }
-  // );
-
   return (
     <>
       <div className="justify-center hidden transition-all sm:flex sm:items-center sm:w-full sm:h-full">
