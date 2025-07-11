@@ -116,7 +116,7 @@ export const getRoomById = async (
       console.error("Room not found or user is not a member:", error);
       return { room: null };
     }
-    const getRooms = data.map((d) => d.rooms) as unknown;
+    const getRooms = data.map((d) => d.rooms)[0] as unknown;
     await readMessage(roomId, userId);
 
     return { room: getRooms as RoomInterface };

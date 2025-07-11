@@ -1,5 +1,5 @@
 "use client";
-import { Modal } from "@mui/material";
+import { Grow, Modal } from "@mui/material";
 import { Ellipsis, X } from "lucide-react";
 import React, {
   ChangeEvent,
@@ -109,77 +109,86 @@ export default function NoteButton({
           open={isOpen}
           className="flex items-center justify-center w-full h-full"
         >
-          <div className="flex flex-col w-11/12 max-w-lg bg-white rounded-md dark:bg-stone-800 h-96">
-            <span
-              className={twMerge(
-                "flex items-center justify-between w-full px-2 py-3 border-b "
-              )}
-            >
-              <button
-                onClick={() => setIsOpen(false)}
-                className="dark:text-white"
+          <Grow in={isOpen}>
+            <div className="flex flex-col w-11/12 max-w-lg bg-white rounded-md dark:bg-stone-800 h-96">
+              <span
+                className={twMerge(
+                  "flex items-center justify-between w-full px-2 py-3 border-b "
+                )}
               >
-                <X />
-              </button>
-
-              <h3 className="text-xl font-bold text-center dark:text-white">
-                新增便利貼
-              </h3>
-              {isOwn && (
-                <button onClick={() => handleShare()} className="text-blue-400">
-                  {isLoading ? <Ellipsis className=" animate-pulse" /> : "分享"}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="dark:text-white"
+                >
+                  <X />
                 </button>
-              )}
-            </span>
 
-            <div className="relative flex flex-col items-center justify-center flex-1 w-full gap-2 ">
-              <span className="relative w-fit h-fit">
-                <Image
-                  src={user.image || "/user.png"}
-                  alt={user.id || "user"}
-                  className="rounded-full w-44 h-44"
-                  width={180}
-                  height={180}
-                />
-
-                <div className="absolute right-0 -top-8 w-fit h-fit">
-                  <textarea
-                    onFocus={onFocus}
-                    rows={1}
-                    onBlur={onBlur}
-                    disabled={!isOwn}
-                    className={twMerge(
-                      " relative p-2 truncate rounded-md max-w-44 text-wrap shadow-md  dark:bg-stone-700 text-white/40 outline-none resize-none",
-                      (isFocus || noteText.length !== 0) &&
-                        "dark:text-white text-stone-900"
+                <h3 className="text-xl font-bold text-center dark:text-white">
+                  新增便利貼
+                </h3>
+                {isOwn && (
+                  <button
+                    onClick={() => handleShare()}
+                    className="text-blue-400"
+                  >
+                    {isLoading ? (
+                      <Ellipsis className=" animate-pulse" />
+                    ) : (
+                      "分享"
                     )}
-                    ref={textareaRef}
-                    onKeyDown={(e) => {
-                      const target = e.target as HTMLTextAreaElement;
-                      target.style.height = "auto";
-                      target.style.height = `${target.scrollHeight}px`;
-                    }}
-                    placeholder="便利貼..."
-                    value={isOwn ? noteText : note?.text}
-                    onChange={onChange}
+                  </button>
+                )}
+              </span>
+
+              <div className="relative flex flex-col items-center justify-center flex-1 w-full gap-2 ">
+                <span className="relative w-fit h-fit">
+                  <Image
+                    src={user.image || "/user.png"}
+                    alt={user.id || "user"}
+                    className="rounded-full w-44 h-44"
+                    width={180}
+                    height={180}
                   />
 
-                  <span className="absolute w-4 h-4 bg-white rounded-full left-3 -bottom-0 dark:bg-stone-700"></span>
-                  <span className="absolute w-2 h-2 bg-white rounded-full left-7 -bottom-4 dark:bg-stone-700"></span>
-                </div>
-              </span>
-              <p className="text-sm dark:text-white">
-                字數限制 {noteText.length}/50
-              </p>
-              <button
-                onClick={handleDelete}
-                type="button"
-                className="w-6/12 p-2 bg-white rounded-md dark:bg-stone-700"
-              >
-                刪除便利貼
-              </button>
+                  <div className="absolute right-0 -top-8 w-fit h-fit">
+                    <textarea
+                      onFocus={onFocus}
+                      rows={1}
+                      onBlur={onBlur}
+                      disabled={!isOwn}
+                      className={twMerge(
+                        " relative p-2 truncate rounded-md max-w-44 text-wrap shadow-md  dark:bg-stone-700 text-white/40 outline-none resize-none",
+                        (isFocus || noteText.length !== 0) &&
+                          "dark:text-white text-stone-900"
+                      )}
+                      ref={textareaRef}
+                      onKeyDown={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        target.style.height = "auto";
+                        target.style.height = `${target.scrollHeight}px`;
+                      }}
+                      placeholder="便利貼..."
+                      value={isOwn ? noteText : note?.text}
+                      onChange={onChange}
+                    />
+
+                    <span className="absolute w-4 h-4 bg-white rounded-full left-3 -bottom-0 dark:bg-stone-700"></span>
+                    <span className="absolute w-2 h-2 bg-white rounded-full left-7 -bottom-4 dark:bg-stone-700"></span>
+                  </div>
+                </span>
+                <p className="text-sm dark:text-white">
+                  字數限制 {noteText.length}/50
+                </p>
+                <button
+                  onClick={handleDelete}
+                  type="button"
+                  className="w-6/12 p-2 bg-white rounded-md dark:bg-stone-700"
+                >
+                  刪除便利貼
+                </button>
+              </div>
             </div>
-          </div>
+          </Grow>
         </Modal>
       )}
       {!isOwn && note && (
