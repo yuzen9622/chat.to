@@ -5,7 +5,7 @@ import { useChatStore } from "@/app/store/ChatStore";
 import { ClientMessageInterface } from "@/types/type";
 import { messageType } from "@/app/lib/util";
 export default function Reply({ reply }: { reply: ClientMessageInterface }) {
-  const { currentUser, setReply } = useChatStore();
+  const { setReply } = useChatStore();
 
   const replyText = useMemo(() => {
     if (!reply) return "";
@@ -18,9 +18,7 @@ export default function Reply({ reply }: { reply: ClientMessageInterface }) {
   return (
     <div className="p-2 border-b dark:border-none">
       <div className="flex justify-between font-semibold dark:text-white ">
-        <p className="text-lg text-blue-500">
-          {currentUser.find((user) => user.id === reply.sender)?.name}
-        </p>
+        <p className="text-lg text-blue-500">{reply.sender_info.name}</p>
         <button
           type="button"
           className="p-1 rounded-full hover:bg-gray-100 hover:dark:bg-white/10"

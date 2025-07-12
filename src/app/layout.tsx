@@ -4,10 +4,10 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import { twMerge } from "tailwind-merge";
 
-import SessionProvider from "./components/provider/SessionProvider";
+import SessionProvider from "./provider/SessionProvider";
 import { authOptions } from "@/auth";
-import NextAuthProvider from "./components/provider/NextAuthProvider";
-import { ThemeProvider } from "./components/provider/ThemeProvider";
+import NextAuthProvider from "./provider/NextAuthProvider";
+import { ThemeProvider } from "./provider/ThemeProvider";
 import { Toast } from "./components/Toast";
 
 export const geistSans = Geist({

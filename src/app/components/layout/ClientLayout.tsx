@@ -9,16 +9,8 @@ import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import NotifyBar from "../NotifyBar";
 import { useSession } from "next-auth/react";
-import {
-  useCallListener,
-  useFriendListener,
-  useNoteListener,
-  useNotifyListener,
-  useRoomActionListener,
-  useSignalListener,
-  useTypingListener,
-  useUserListener,
-} from "@/hook/useRealtime";
+
+import { useRealtime } from "@/hook/useRealtime/index";
 
 moment.locale("zh-tw");
 export default function ClientLayout({
@@ -55,14 +47,7 @@ export default function ClientLayout({
     };
   }, [channel, setChannel]);
 
-  useFriendListener(channel);
-  useRoomActionListener(channel);
-  useUserListener(channel);
-  useNotifyListener(channel);
-  useNoteListener(channel);
-  useTypingListener(channel);
-  useCallListener(channel);
-  useSignalListener(channel);
+  useRealtime(channel);
 
   const { presenceData } = usePresenceListener("chatta-chat-channel");
   useEffect(() => {

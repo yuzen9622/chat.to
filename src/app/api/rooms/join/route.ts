@@ -9,7 +9,7 @@ export const POST = async (req: NextRequest) => {
   try {
     const { users_id, room_id } = await req.json();
     if (!token)
-      return NextResponse.json({ error: "No authication" }, { status: 401 });
+      return NextResponse.json({ error: "No authentication" }, { status: 401 });
 
     const roomMembers = users_id.map((uid: string) => ({
       room_id: room_id,
@@ -17,7 +17,6 @@ export const POST = async (req: NextRequest) => {
     }));
 
     await insertRoomMembers(roomMembers);
-
     const room = await selectRoom(room_id);
 
     return NextResponse.json(room, { status: 200 });

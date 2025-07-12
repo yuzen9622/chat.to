@@ -5,7 +5,7 @@ import { readMessage } from "./messageService";
 export const selectRoom = async (roomId: string): Promise<RoomInterface> => {
   const { data, error } = await supabase
     .from("rooms")
-    .select("*, room_members(*)")
+    .select("*, room_members(*,user:users(id,name,image))")
     .eq("id", roomId);
 
   if (error || !data) {
