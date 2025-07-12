@@ -1,4 +1,4 @@
-import { deleteGroup, deletePersonalRoom } from "@/server/services/roomService";
+import { quitPersonalRoom, quitGroup } from "@/server/services/roomService";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,11 +11,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No authentication" }, { status: 401 });
 
   try {
-    if (room_type === "group") {
-      console.log(room_id, user_id);
-      await deleteGroup(room_id, user_id);
+    if (room_type === "personal") {
+      await quitPersonalRoom(room_id, user_id);
     } else {
-      await deletePersonalRoom(room_id);
+      await quitGroup(room_id, user_id);
     }
 
     return NextResponse.json({ success: true, error: null }, { status: 200 });

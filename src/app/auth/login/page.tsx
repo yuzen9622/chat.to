@@ -6,7 +6,7 @@ import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/store/AuthStore";
+
 import Input from "@/app/components/ui/Input";
 
 export default function LoginPage() {
@@ -17,7 +17,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { systemAlert, setSystemAlert } = useAuthStore();
 
   const { status } = useSession();
 
@@ -34,12 +33,6 @@ export default function LoginPage() {
         });
         console.log(res);
         if (res && res.ok) {
-          setSystemAlert({
-            ...systemAlert,
-            text: "登入成功",
-            severity: "info",
-            open: true,
-          });
           router.push("/chat");
         }
 
@@ -52,7 +45,7 @@ export default function LoginPage() {
         setIsLoading(false);
       }
     },
-    [loginForm, router, systemAlert, setSystemAlert]
+    [loginForm, router]
   );
 
   return (

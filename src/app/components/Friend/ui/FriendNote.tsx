@@ -3,7 +3,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 
-import NoteCard from "../../ui/NoteCard";
+import NoteCard from "../../ui/note/NoteCard";
 import { useAuthStore } from "../../../store/AuthStore";
 
 import "swiper/css";

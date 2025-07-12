@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useChatStore } from "../../../store/ChatStore";
 import { useAblyStore } from "../../../store/AblyStore";
 
-import ChatInfo from "./ChatInfo";
+import ChatInfo from "./ChatInfo/index";
 import { useSession } from "next-auth/react";
 import { clearReadMessage } from "../../../lib/util";
 import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";

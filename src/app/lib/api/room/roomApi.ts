@@ -31,11 +31,12 @@ export const createRoom = async (
   room_img?: File
 ) => {
   try {
-    let roomImageUrl;
+    let roomImageInfo;
+    if (!userId) return;
     if (room_img) {
       const roomImage = await uploadFile([room_img]);
       if (roomImage) {
-        roomImageUrl = roomImage[0].url;
+        roomImageInfo = roomImage[0];
       }
     }
 
@@ -49,7 +50,7 @@ export const createRoom = async (
         userId,
         room_type: room_type || "personal",
         room_members,
-        room_img: roomImageUrl || null,
+        room_img: roomImageInfo || null,
       }),
     });
 
@@ -91,13 +92,14 @@ export const getPersonalRoom = async (
   }
 };
 
-export const joinRoom = async (room_id: string, users_id: Array<string>) => {
+export const joinRoom = async (
+  room: RoomInterface,
+  users_id: Array<string>
+) => {
   try {
-    const { rooms } = useChatStore.getState();
     if (users_id.length === 0) return;
 
-    const room = rooms.find((room) => room.id === room_id);
-    if (room?.room_members.some((m) => users_id.includes(m.user_id)) || room) {
+    if (room.room_members.some((m) => users_id.includes(m.user_id))) {
       return room;
     }
 
@@ -107,7 +109,7 @@ export const joinRoom = async (room_id: string, users_id: Array<string>) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        room_id,
+        room_id: room.id,
         users_id,
       }),
     });
@@ -117,10 +119,34 @@ export const joinRoom = async (room_id: string, users_id: Array<string>) => {
       throw new Error("Join failed");
     }
 
-    useChatStore.setState((state) => ({
-      rooms: [...state.rooms, data],
-    }));
     return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const quitRoom = async (
+  room_id: string,
+  user_id: string,
+  room_type: string
+) => {
+  try {
+    const res = await fetch("/api/rooms/quit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        room_id,
+        room_type,
+      }),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      throw new Error("Delete room failed");
+    }
+    return data.success;
   } catch (error) {
     console.log(error);
   }

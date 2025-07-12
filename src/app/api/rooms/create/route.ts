@@ -1,8 +1,11 @@
-import { supabase } from "@/app/lib/supabasedb";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getToken } from "next-auth/jwt";
-import { insertRoom, selectRoom } from "@/server/services/roomService";
+import {
+  insertRoom,
+  insertRoomMembers,
+  selectRoom,
+} from "@/server/services/roomService";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -12,22 +15,22 @@ cloudinary.config({
 export const POST = async (request: NextRequest) => {
   const token = await getToken({ req: request });
   if (!token)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
   try {
     const { userId, room_name, room_type, room_members, room_img } =
       await request.json();
 
-    const newRoom = await insertRoom(room_name, room_type, room_img);
-
+    const newRoom = await insertRoom(room_name, room_type, room_img, userId);
+    console.log(newRoom);
     const roomMembers =
       room_members.map((id: string) => ({
-        room_id: room.id,
+        room_id: newRoom.id,
         user_id: id,
       })) || [];
 
     roomMembers.push({ room_id: newRoom.id, user_id: userId });
 
-    await supabase.from("room_members").insert(roomMembers);
+    await insertRoomMembers(roomMembers);
     const room = await selectRoom(newRoom.id);
 
     return NextResponse.json(room, { status: 200 });

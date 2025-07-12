@@ -8,6 +8,7 @@ import SessionProvider from "./components/provider/SessionProvider";
 import { authOptions } from "@/auth";
 import NextAuthProvider from "./components/provider/NextAuthProvider";
 import { ThemeProvider } from "./components/provider/ThemeProvider";
+import { Toast } from "./components/Toast";
 
 export const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default async function RootLayout({
           geistSans.className
         )}
       >
+        <Toast />
         <SessionProvider session={session}>
           <NextAuthProvider>
             <ThemeProvider>{children}</ThemeProvider>

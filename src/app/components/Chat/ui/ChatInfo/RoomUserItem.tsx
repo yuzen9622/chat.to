@@ -1,12 +1,16 @@
 import React from "react";
-import BadgeAvatar from "../../ui/Avatar/Avatar";
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
 import { RoomMemberInterface } from "@/types/type";
 import { usePopbox } from "@/hook/usePopbox";
-import UserPopbox from "../../ui/UserPopbox";
+import UserPopbox from "@/app/components/ui/UserPopbox";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 
-export default function RoomUser({ member }: { member: RoomMemberInterface }) {
+export default function RoomUserItem({
+  member,
+}: {
+  member: RoomMemberInterface;
+}) {
   const { anchorEl, handleClose, handleOpen } = usePopbox();
   const userId = useSession()?.data?.userId;
   return (

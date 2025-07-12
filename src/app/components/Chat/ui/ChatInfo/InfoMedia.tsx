@@ -7,17 +7,17 @@ import {
   getFileIcon,
   handleDownload,
   messageType,
-} from "../../../lib/util";
-import { ClientMessageInterface } from "../../../../types/type";
+} from "../../../../lib/util";
+import { ClientMessageInterface } from "../../../../../types/type";
 
-import { useChatStore } from "../../../store/ChatStore";
+import { useChatStore } from "../../../../store/ChatStore";
 import { LucideIcon } from "lucide-react";
-import PreviewMediaModal from "../../ui/Modal/PreviewMediaModal";
+import PreviewMediaModal from "../../../ui/Modal/PreviewMediaModal";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import moment from "moment";
 type Type = "media" | "url" | "file";
 
-export default function ChatInfoList() {
+export default function InfoMedia() {
   const [isLoading, setIsLoading] = useState(false);
   const [filterMessages, setFilterMessages] = useState<
     ClientMessageInterface[]

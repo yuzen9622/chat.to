@@ -11,9 +11,9 @@ import React, {
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
-import { NoteInterface, UserInterface } from "../../../types/type";
-import { useAblyStore } from "../../store/AblyStore";
-import NoteModal from "./Modal/NoteModal";
+import { NoteInterface, UserInterface } from "../../../../types/type";
+import { useAblyStore } from "../../../store/AblyStore";
+import NoteModal from "../Modal/NoteModal";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { deleteNote, updateNote } from "@/app/lib/api/note/noteApi";
 

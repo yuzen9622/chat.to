@@ -123,6 +123,14 @@ export const useRoomActionListener = (channel: RealtimeChannel) => {
         });
       });
     };
+
+    const handleDelete = (message: InboundMessage) => {
+      const { newRoom }: { newRoom: RoomInterface } = message.data;
+      setRoom((prev) => {
+        return prev.filter((room) => room.id !== newRoom.id);
+      });
+    };
+
     const handleRoomAction = (message: InboundMessage) => {
       const { action } = message.data;
       if (action === "join") {
@@ -131,6 +139,8 @@ export const useRoomActionListener = (channel: RealtimeChannel) => {
         handleCreate(message);
       } else if (action === "edit") {
         handleEdit(message);
+      } else if (action === "delete") {
+        handleDelete(message);
       }
     };
     channel.subscribe("room_action", handleRoomAction);

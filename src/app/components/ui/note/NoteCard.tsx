@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { UserInterface } from "../../../types/type";
-import BadgeAvatar from "./Avatar/Avatar";
+import { UserInterface } from "../../../../types/type";
+import BadgeAvatar from "../Avatar/Avatar";
 
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useRouter } from "next/navigation";

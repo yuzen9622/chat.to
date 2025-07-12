@@ -1,9 +1,9 @@
-import { joinRoom } from "@/app/lib/api/room/roomApi";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
+import { useSnackBar } from "@/hook/useSnackBar";
 import { Grow, Modal } from "@mui/material";
 import { Ellipsis } from "lucide-react";
-import { useSession } from "next-auth/react";
+
 import { Fragment, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -13,8 +13,8 @@ export function JoinModal() {
   const [isLoading, setIsLoading] = useState(false);
   const { channel } = useAblyStore();
   const { rooms } = useChatStore();
+  const { handleSnackOpen } = useSnackBar();
 
-  const userId = useSession()?.data?.userId;
   const handleOpen = () => {
     setOpen(true);
   };
@@ -32,19 +32,15 @@ export function JoinModal() {
           rooms.some((r) => r.id === roomId && r.room_type === "group")
         )
           return;
-        const data = await joinRoom(roomId, [userId!]);
-        if (!data) return;
-        await channel?.publish("room_action", {
-          action: "join",
-          newRoom: data,
-        });
+
+        handleSnackOpen("加入房間成功", "success");
       } catch (error) {
         console.log(error);
       } finally {
         setIsLoading(false);
       }
     },
-    [channel, roomId, userId, rooms]
+    [channel, roomId, rooms, handleSnackOpen]
   );
   return (
     <Fragment>
@@ -55,6 +51,7 @@ export function JoinModal() {
         加入群組
       </button>
       <Modal
+        keepMounted
         className="flex items-center justify-center w-full h-full"
         open={open}
         onClose={handleClose}

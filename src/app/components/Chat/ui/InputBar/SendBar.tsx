@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/app/store/AuthStore";
 import { useFile } from "@/hook/useFile";
+import { useSnackBar } from "@/hook/useSnackBar";
 import { Popover } from "@mui/material";
 import { CirclePlus, Paperclip } from "lucide-react";
 import React from "react";
@@ -12,7 +12,8 @@ export function SendBar({
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { handleFile } = useFile();
-  const { setSystemAlert } = useAuthStore();
+
+  const { handleSnackOpen } = useSnackBar();
   const barOpen = Boolean(anchorEl);
   const handleClose = () => {
     setAnchorEl(null);
@@ -55,14 +56,12 @@ export function SendBar({
             type="button"
             onClick={async () => {
               const { getFiles, error } = await handleFile("*");
-              setMessageFiles((prev) => [...getFiles, ...prev]);
+
+              setMessageFiles((prev) => {
+                return prev.concat(getFiles);
+              });
               if (error !== "") {
-                setSystemAlert({
-                  open: true,
-                  severity: "error",
-                  text: "請檢查檔案，檔案大小不得超過10MB",
-                  variant: "filled",
-                });
+                handleSnackOpen("請檢查檔案，檔案大小不得超過10MB", "error");
               }
             }}
             className="flex items-center w-full gap-2 p-2 text-sm font-bold rounded-md dark:text-white hover:bg-stone-900/10 hover:dark:bg-white/10"

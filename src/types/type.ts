@@ -85,6 +85,7 @@ export interface RoomInterface {
   room_type: "personal" | "group";
   room_img?: { url: string; public_id: "" };
   updated_at?: Date;
+  room_owner?: string;
 }
 
 export interface FriendInterface {

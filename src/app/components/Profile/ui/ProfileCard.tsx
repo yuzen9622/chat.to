@@ -2,7 +2,7 @@
 import { FriendInterface, NoteInterface, UserInterface } from "@/types/type";
 import Image from "next/image";
 import React, { useState } from "react";
-import NoteButton from "../../ui/NoteButton";
+import NoteButton from "../../ui/note/NoteButton";
 
 import FriendBtn from "./FriendBtn";
 import FriendModal from "./FriendModal";

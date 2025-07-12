@@ -30,7 +30,7 @@ export const selectUserRooms = async (
   return getRooms as RoomInterface[];
 };
 
-export const deletePersonalRoom = async (
+export const quitPersonalRoom = async (
   roomId: string,
   userId: string
 ): Promise<void> => {
@@ -42,23 +42,46 @@ export const deletePersonalRoom = async (
   if (error) throw error;
 };
 
-export const deleteGroup = async (roomId: string, userId: string) => {
+export const quitGroup = async (roomId: string, userId: string) => {
   const { error } = await supabase
     .from("room_members")
     .delete()
     .eq("room_id", roomId)
     .eq("user_id", userId);
+
+  if (error) throw error;
+};
+
+export const deleteGroup = async (roomId: string, userId: string) => {
+  const { error } = await supabase
+    .from("rooms")
+    .delete()
+    .eq("id", roomId)
+    .eq("room_owner", userId);
+  if (error) throw error;
+};
+
+export const deletePersonalRoom = async (roomId: string) => {
+  const { error } = await supabase.from("room").delete().eq("id", roomId);
   if (error) throw error;
 };
 
 export const insertRoom = async (
   roomName: string,
   roomType: string,
-  roomImg: string
+  roomImg: string,
+  roomOwner: string
 ): Promise<RoomInterface> => {
   const { data, error } = await supabase
     .from("rooms")
-    .insert([{ room_name: roomName, room_type: roomType, room_img: roomImg }])
+    .insert([
+      {
+        room_name: roomName,
+        room_type: roomType,
+        room_img: roomImg,
+        room_owner: roomOwner,
+      },
+    ])
     .select("*")
     .limit(1)
     .single();
