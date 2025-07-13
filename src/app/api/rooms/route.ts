@@ -5,6 +5,7 @@ import { authOptions } from "@/auth";
 import { getToken } from "next-auth/jwt";
 import { RoomInterface } from "@/types/type";
 import { selectRoom, selectUserRooms } from "@/server/services/roomService";
+
 export async function GET() {
   const session = await getServerSession(authOptions);
 
@@ -30,7 +31,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const token = await getToken({ req: request });
   if (token)
-    return NextResponse.json({ error: "No authication" }, { status: 401 });
+    return NextResponse.json({ error: "No authentication" }, { status: 401 });
   try {
     const { room_id } = await request.json();
     const room = await selectRoom(room_id);

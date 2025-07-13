@@ -1,4 +1,9 @@
-import { ClientMessageInterface, MetaData, CallType } from "../../types/type";
+import {
+  ClientMessageInterface,
+  MetaData,
+  CallType,
+  ServerMessageInterface,
+} from "../../types/type";
 import { useChatStore } from "../store/ChatStore";
 
 import {
@@ -226,3 +231,13 @@ export function createPeer(
 
   return pc;
 }
+
+export const Client2ServerMessage = (
+  message: ClientMessageInterface
+): ServerMessageInterface => {
+  return {
+    ...message,
+    reply: message.reply?.id,
+    forward: message.forward?.id,
+  };
+};

@@ -29,10 +29,10 @@ export const createRoom = async (
   room_members: string[] | [],
   room_type?: string,
   room_img?: File
-) => {
+): Promise<RoomInterface | null> => {
   try {
     let roomImageInfo;
-    if (!userId) return;
+    if (!userId) return null;
     if (room_img) {
       const roomImage = await uploadFile([room_img]);
       if (roomImage) {
@@ -63,6 +63,7 @@ export const createRoom = async (
     return data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 
@@ -95,9 +96,9 @@ export const getPersonalRoom = async (
 export const joinRoom = async (
   room: RoomInterface,
   users_id: Array<string>
-) => {
+): Promise<RoomInterface | null> => {
   try {
-    if (users_id.length === 0) return;
+    if (users_id.length === 0) return null;
 
     if (room.room_members.some((m) => users_id.includes(m.user_id))) {
       return room;
@@ -111,6 +112,7 @@ export const joinRoom = async (
       body: JSON.stringify({
         room_id: room.id,
         users_id,
+        room_type: room.room_type,
       }),
     });
 
@@ -122,6 +124,7 @@ export const joinRoom = async (
     return data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 

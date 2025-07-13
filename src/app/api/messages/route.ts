@@ -1,3 +1,4 @@
+import { Client2ServerMessage } from "@/app/lib/util";
 import { insertMessage } from "@/server/services/messageService";
 
 import { getToken } from "next-auth/jwt";
@@ -11,11 +12,9 @@ export async function POST(request: NextRequest) {
     const message = await request.json();
 
     message.status = "send";
-    if (message.reply) {
-      message.reply = message.reply.id;
-    }
+    const serverMessage = Client2ServerMessage(message);
 
-    const data = await insertMessage(message);
+    const data = await insertMessage(serverMessage);
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

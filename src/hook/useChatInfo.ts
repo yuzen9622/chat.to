@@ -17,10 +17,13 @@ export const useChatInfo = (
 
   const displayName = useMemo(() => {
     if (!currentChat) return null;
-
-    return currentChat.room_name === ""
-      ? recipientUser?.name
-      : currentChat.room_name;
+    if (currentChat.room_type) {
+      const users = currentChat.room_members.map((rm) => rm.user.name);
+      return currentChat.room_name === ""
+        ? users.join(",")
+        : currentChat.room_name;
+    }
+    return recipientUser?.name;
   }, [currentChat, recipientUser]);
   return { recipientUser, displayName };
 };

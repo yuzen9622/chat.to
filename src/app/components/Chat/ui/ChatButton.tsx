@@ -36,6 +36,9 @@ export default function ChatButton({
   const messageContent = useMemo(() => {
     if (!lastMessage) return null;
     if (lastMessage.status === "pending") return "傳送中...";
+    console.log(lastMessage);
+    if (lastMessage.forward) return "已轉發訊息";
+
     const type = {
       image: "傳送圖片",
       video: "傳送影片",

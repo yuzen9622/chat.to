@@ -11,7 +11,8 @@ export const createTextMessage = (
   user: UserInterface,
   roomId: string,
   messageText: string,
-  reply?: ClientMessageInterface
+  reply?: ClientMessageInterface,
+  forward?: ClientMessageInterface
 ) => {
   if (messageText.trim() === "") return null;
   const { id, name, image } = user;
@@ -26,6 +27,8 @@ export const createTextMessage = (
     text: messageText,
     created_at: new Date().toISOString(),
     type: "text",
+    is_edit: false,
+    forward,
   };
   return newMessage;
 };
@@ -48,6 +51,7 @@ export const createReplyNoteMessage = (
     text: messageText,
     created_at: new Date().toISOString(),
     type: "text",
+    is_edit: false,
   };
   return newMessage;
 };
@@ -78,6 +82,28 @@ export const createFileMessage = (
     created_at: new Date().toISOString(),
     meta_data: metaData,
     type,
+    is_edit: false,
+  };
+  return newMessage;
+};
+
+export const createForwardMessage = (
+  user: UserInterface,
+  forward: ClientMessageInterface,
+  text: string
+) => {
+  const { id, name, image } = user;
+  const newMessage: ClientMessageInterface = {
+    sender: id || "",
+    sender_info: { id, name, image },
+    room: "",
+    is_read: [id || ""],
+    text,
+    status: "pending",
+    created_at: new Date().toISOString(),
+    type: "text",
+    is_edit: false,
+    forward,
   };
   return newMessage;
 };

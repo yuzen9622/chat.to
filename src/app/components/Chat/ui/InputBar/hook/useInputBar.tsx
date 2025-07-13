@@ -36,9 +36,9 @@ export const useInputBarSend = ({
 }: sendProps) => {
   const { reply, setReply, setCurrentMessage, setLastMessages } =
     useChatStore();
-  const { ably } = useAblyStore();
+
   const handleSendMessage = useCallback(async () => {
-    if (!ably || !user) return;
+    if (!user) return;
     const pendingMessages: ClientMessageInterface[] = [];
     const newMessage: ClientMessageInterface | null = createTextMessage(
       user,
@@ -79,7 +79,7 @@ export const useInputBarSend = ({
           await Promise.all(
             uploadFileMessages.map(async (msg) => {
               await sendUserMessage(msg);
-              await sendAblyMessage(ably, msg);
+              await sendAblyMessage(msg);
             })
           );
         }
@@ -87,7 +87,7 @@ export const useInputBarSend = ({
 
       if (newMessage) {
         await sendUserMessage(newMessage);
-        await sendAblyMessage(ably, newMessage);
+        await sendAblyMessage(newMessage);
       }
     } catch (error) {
       if (newMessage) {
@@ -103,7 +103,7 @@ export const useInputBarSend = ({
     setReply(null);
   }, [
     setCurrentMessage,
-    ably,
+
     setReply,
     setLastMessages,
     setMessageText,
@@ -126,6 +126,7 @@ export const useInputBarEdit = ({ messageText, setMessageText }: EditProps) => {
       ...edit,
       text: messageText,
       status: "pending",
+      is_edit: true,
     };
     setCurrentMessage((prev) =>
       prev.map((msg) => (msg.id === edit.id ? newMessage : msg))

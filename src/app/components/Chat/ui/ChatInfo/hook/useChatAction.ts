@@ -1,4 +1,9 @@
-import { deleteRoom, joinRoom, quitRoom } from "@/app/lib/api/room/roomApi";
+import {
+  createRoom,
+  deleteRoom,
+  joinRoom,
+  quitRoom,
+} from "@/app/lib/api/room/roomApi";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
 
@@ -35,12 +40,26 @@ export const useChatAction = () => {
     router.push("/chat");
     channel.publish("room_action", { action: "edit", newRoom: currentChat });
   }, [user, currentChat, channel, router, setRoom]);
+
   //新增用戶至房間
   const handleJoin = useCallback(
     async (roomMembers: string[]) => {
       try {
-        if (!channel || !currentChat) return;
-        const data = await joinRoom(currentChat, roomMembers);
+        if (!channel || !currentChat || !user) return;
+        const isPersonalRoom = currentChat.room_type === "personal";
+        const recipientMember = currentChat.room_members.find(
+          (rm) => rm.user_id !== user.id
+        );
+        const data =
+          isPersonalRoom && recipientMember
+            ? await createRoom(
+                user.id,
+                "",
+                [...roomMembers, recipientMember.user_id],
+                "group"
+              )
+            : await joinRoom(currentChat, roomMembers);
+
         if (!data) return;
         await channel.publish("room_action", {
           action: "join",
@@ -51,7 +70,7 @@ export const useChatAction = () => {
       } finally {
       }
     },
-    [channel, currentChat]
+    [channel, currentChat, user]
   );
   //刪除房間
   const handleDelete = useCallback(async () => {

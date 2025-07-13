@@ -213,7 +213,7 @@ export function WavesurferRecord({
           };
           await Promise.all([
             sendUserMessage(audioMessage),
-            sendAblyMessage(ably, audioMessage),
+            sendAblyMessage(audioMessage),
           ]);
         }
       } catch (error) {

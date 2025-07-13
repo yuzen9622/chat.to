@@ -124,8 +124,6 @@ export default function InputBar() {
     }
   }, []);
 
-  console.log("目前有幾個檔案：", messageFiles.length);
-
   return (
     <>
       {isRecording ? (

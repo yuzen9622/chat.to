@@ -28,19 +28,29 @@ export interface NotifyFriend {
 
 export type NotifyInterface = NotifyMessage | NotifyFriend;
 
-export interface ClientMessageInterface {
+export interface BaseMessage {
   id?: string;
   text: string;
   meta_data?: MetaData;
-  reply?: ClientMessageInterface;
   sender: string;
-  sender_info: PublicUserInfo;
   room: string;
   created_at: string;
   status: MessageStatus;
   is_read: Array<string>;
   reply_note?: NoteInterface;
   type: MessageType;
+  is_edit: boolean;
+}
+
+export interface ClientMessageInterface extends BaseMessage {
+  sender_info: PublicUserInfo;
+  reply?: ClientMessageInterface;
+  forward?: ClientMessageInterface;
+}
+
+export interface ServerMessageInterface extends BaseMessage {
+  reply?: string;
+  forward?: string;
 }
 
 export interface NoteInterface {
@@ -111,4 +121,9 @@ export interface SystemAlertInterface {
   severity: "success" | "info" | "error";
   variant: "standard" | "filled" | "outlined";
   text: string;
+}
+
+export interface Forward {
+  room_type: "personal" | "group";
+  room_id: string;
 }

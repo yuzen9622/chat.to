@@ -12,7 +12,6 @@ import { createReplyNoteMessage } from "@/app/lib/createMessage";
 import { useSession } from "next-auth/react";
 import { v4 as uuid } from "uuid";
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
-import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
 import { useAuthStore } from "@/app/store/AuthStore";
 
@@ -27,7 +26,7 @@ export default function NoteModal({
 }) {
   const [replyText, setReplyText] = useState("");
   const user = useSession()?.data?.user;
-  const { ably } = useAblyStore();
+
   const { rooms, setRoom } = useChatStore();
   const { friends } = useAuthStore();
 
@@ -63,16 +62,13 @@ export default function NoteModal({
       } else if (!isExist) {
         setRoom(room);
       }
-      if (message && ably) {
-        await Promise.all([
-          sendUserMessage(message),
-          sendAblyMessage(ably, message),
-        ]);
+      if (message) {
+        await Promise.all([sendUserMessage(message), sendAblyMessage(message)]);
       }
       setLoading(false);
       setIsOpen(false);
     },
-    [user, ably, note, replyText, setRoom, rooms, friends, setIsOpen]
+    [user, note, replyText, setRoom, rooms, friends, setIsOpen]
   );
 
   return (

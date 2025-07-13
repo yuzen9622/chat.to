@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import Message from "./ChatMessage";
+import Message from "./ChatMessage/index";
 
 import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
 import InputBar from "./InputBar/index";

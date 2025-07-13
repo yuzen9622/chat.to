@@ -85,13 +85,13 @@ export function CreateRoomModal({
 
                   roomImg?.imgFile
                 );
-                if (channel && newRoom) {
-                  await channel.publish("room_action", {
-                    action: "create",
-                    newRoom: newRoom,
-                    newRoomMembers: [...roomMembers, userId],
-                  });
-                }
+                if (!channel || !newRoom) return;
+
+                await channel.publish("room_action", {
+                  action: "create",
+                  newRoom: newRoom,
+                  newRoomMembers: [...roomMembers, userId],
+                });
                 handleSnackOpen("創建房間成功");
                 setIsLoading(false);
                 setIsOpen(false);

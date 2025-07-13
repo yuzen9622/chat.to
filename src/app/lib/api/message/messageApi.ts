@@ -1,5 +1,5 @@
 import { useChatStore } from "@/app/store/ChatStore";
-import { ClientMessageInterface } from "@/types/type";
+import { ClientMessageInterface, Forward } from "@/types/type";
 
 export const readMessage = async (roomId: string, userId: string | null) => {
   if (!roomId || !userId) return;
@@ -93,6 +93,27 @@ export const deleteMessage = async (messageId: string) => {
   } catch (error) {
     console.log(error);
     return false;
+  }
+};
+
+export const forwardMessage = async (
+  targets: Forward[],
+  message: ClientMessageInterface
+): Promise<ClientMessageInterface[]> => {
+  try {
+    const res = await fetch("/api/messages/forward", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, targets }),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      throw data.error;
+    }
+    return data.messages as ClientMessageInterface[];
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 

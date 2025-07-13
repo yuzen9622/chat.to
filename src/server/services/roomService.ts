@@ -99,6 +99,7 @@ export const InsertPersonalRoom = async (
     .insert([{ id: roomId, room_type: "personal" }])
     .select("*")
     .single();
+
   if (error) throw error;
   return data;
 };
