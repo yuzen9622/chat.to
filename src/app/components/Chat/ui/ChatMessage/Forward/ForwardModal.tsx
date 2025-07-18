@@ -3,7 +3,7 @@ import { ClientMessageInterface, Forward } from "@/types/type";
 import { Grow, Modal } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import ForwardRoomItem from "./ForwardRoomItem";
-import { ForwardIcon } from "lucide-react";
+import { Ellipsis, ForwardIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { useSession } from "next-auth/react";
 import { forwardMessage } from "@/app/lib/api/message/messageApi";
@@ -17,6 +17,7 @@ export default function ForwardModal({
 }) {
   const [open, setOpen] = useState(false);
   const [targets, setTarget] = useState<Forward[]>([]);
+  const [loading, setLoading] = useState(false);
   const { rooms } = useChatStore();
   const [text, setText] = useState("");
   const user = useSession()?.data?.user;
@@ -29,6 +30,7 @@ export default function ForwardModal({
 
   const handleForward = useCallback(async () => {
     try {
+      setLoading(true);
       const forwardMsg = createForwardMessage(user!, message, text);
 
       const forwards = await forwardMessage(targets, forwardMsg);
@@ -37,6 +39,9 @@ export default function ForwardModal({
       );
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
+      setOpen(false);
     }
   }, [targets, message, text, user]);
 
@@ -86,7 +91,12 @@ export default function ForwardModal({
                   onClick={handleForward}
                   className="p-2 px-3 text-sm text-white bg-blue-500 rounded-3xl w-fit hover:bg-blue-600 animate-in zoom-in-50"
                 >
-                  轉發 ({targets.length})
+                  {" "}
+                  {loading ? (
+                    <Ellipsis className=" animate-pulse" />
+                  ) : (
+                    ` 轉發 (${targets.length})`
+                  )}
                 </button>
               </div>
             )}

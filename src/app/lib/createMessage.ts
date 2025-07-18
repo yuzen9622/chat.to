@@ -103,7 +103,7 @@ export const createForwardMessage = (
     created_at: new Date().toISOString(),
     type: "text",
     is_edit: false,
-    forward,
+    forward: forward.forward || forward,
   };
   return newMessage;
 };

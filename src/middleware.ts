@@ -11,7 +11,7 @@ export default withAuth(
     const token = await getToken({ req });
     console.log(url.pathname);
     if (url.pathname.startsWith("/api") && !token) {
-      return NextResponse.json({ error: "Unauthcation" }, { status: 401 });
+      return NextResponse.json({ error: "No Authentication" }, { status: 401 });
     }
     if (isLoginPage && token) {
       console.log(url.pathname, token);

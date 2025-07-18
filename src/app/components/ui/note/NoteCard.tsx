@@ -22,12 +22,12 @@ export default function NoteCard({
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const { friendNote, userNote } = useAuthStore();
+  const { userNote } = useAuthStore();
 
   const note = useMemo(() => {
     if (isOwn) return userNote;
-    return friendNote?.find((fn) => fn.user_id === user.id);
-  }, [user, friendNote, userNote, isOwn]);
+    return user.note;
+  }, [user, userNote, isOwn]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();

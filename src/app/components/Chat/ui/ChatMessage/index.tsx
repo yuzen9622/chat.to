@@ -92,7 +92,6 @@ const MessageItem = memo(function MessageItem({
             alt={messageUser.name || "user"}
           />
         )}
-
         <div
           className={twMerge(
             "text-end w-full    flex flex-col gap-1 ",
