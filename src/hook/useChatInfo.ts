@@ -17,7 +17,7 @@ export const useChatInfo = (
 
   const displayName = useMemo(() => {
     if (!currentChat) return null;
-    if (currentChat.room_type) {
+    if (currentChat.room_type==='group') {
       const users = currentChat.room_members.map((rm) => rm.user.name);
       return currentChat.room_name === ""
         ? users.join(",")

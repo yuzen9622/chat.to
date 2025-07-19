@@ -2,15 +2,12 @@
 import React, { useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
-
 import NoteCard from "../../ui/note/NoteCard";
 import { useAuthStore } from "../../../store/AuthStore";
-
+import { useSession } from "next-auth/react";
+import moment from "moment";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useSession } from "next-auth/react";
-
-import moment from "moment";
 export default function FriendNote() {
   const { friends, friendNote } = useAuthStore();
 
