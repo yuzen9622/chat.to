@@ -43,8 +43,9 @@ export const selectUserFriendRequest = async (
 ): Promise<FriendRequestInterface[]> => {
   const { data, error } = await supabase
     .from("friends_requests")
-    .select("*")
-    .eq("status", "pending")
+    .select(
+      "*,receiver_info:receiver_id(id,name,image),sender_info:sender_id(id,name,image)"
+    )
     .or(`receiver_id.eq.${userId},sender_id.eq.${userId}`);
 
   if (error) throw error;
@@ -59,7 +60,9 @@ export const updateFriendRequest = async (
     .from("friends_requests")
     .update({ status: status })
     .eq("id", requestId)
-    .select("*")
+    .select(
+      "*,receiver_info:receiver_id(id,name,image),sender_info:sender_id(id,name,image)"
+    )
     .single();
   if (error) throw error;
   return data;

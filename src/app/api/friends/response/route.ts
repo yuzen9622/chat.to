@@ -1,6 +1,9 @@
 import { updateFriendRequest } from "@/server/services/friendRequestService";
 import { InsertFriend } from "@/server/services/friendService";
-import { findPrivateRoom } from "@/server/services/roomService";
+import {
+  findPrivateRoom,
+  InsertPersonalRoom,
+} from "@/server/services/roomService";
 import { getToken } from "next-auth/jwt";
 
 import { NextRequest, NextResponse } from "next/server";
@@ -20,6 +23,7 @@ export async function POST(request: NextRequest) {
     const room = await findPrivateRoom(data.sender_id, data.receiver_id);
 
     const roomId = room ? room.room_id : v4uuid();
+    await InsertPersonalRoom(roomId);
 
     const friendData = [
       {
