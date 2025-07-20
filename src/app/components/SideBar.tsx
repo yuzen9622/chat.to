@@ -40,7 +40,8 @@ export default function SideBar() {
   return (
     <div
       className={twMerge(
-        " h-full  xl:w-72 max-sm:w-full min-w-16  z-50 transition-all border-r dark:border-none bg-transparent dark:bg-transparent "
+        " h-full  max-sm:w-full min-w-16  z-50 transition-all border-r dark:border-none bg-transparent dark:bg-transparent ",
+        pathName.startsWith("/chat") ? "" : "xl:w-72 "
       )}
       ref={sidebarRef}
     >
@@ -57,8 +58,8 @@ export default function SideBar() {
             />
             <span
               className={twMerge(
-                "hidden xl:block text-blue-500 text-xl",
-                pathName.startsWith("/chat") && "hidden sm:hidden"
+                "hidden text-blue-500 text-xl",
+                pathName.startsWith("/chat") ? "hidden sm:hidden" : " xl:block"
               )}
             >
               Chat.to
@@ -80,11 +81,16 @@ export default function SideBar() {
                   alt="user"
                   width={35}
                   height={35}
-                  className=" rounded-2xl w-9 h-9 aspect-square"
+                  className="rounded-full w-9 h-9 aspect-square"
                   src={session?.user.image || "/user.png"}
                 />
               </div>
-              <div className="flex flex-col max-xl:hidden">
+              <div
+                className={twMerge(
+                  "flex flex-col max-xl:hidden",
+                  pathName.startsWith("/chat") ? "hidden" : ""
+                )}
+              >
                 <span className="font-bold text-stone-800 dark:text-white ">
                   {session?.user.name}
                 </span>

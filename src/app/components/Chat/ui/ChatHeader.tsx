@@ -16,8 +16,7 @@ import { startStream } from "@/app/lib/util";
 import { useRouter } from "next/navigation";
 
 export default function ChatHeader() {
-  const { currentChat, sidebarOpen, setChatInfoOpen, chatInfoOpen } =
-    useChatStore();
+  const { currentChat, setChatInfoOpen, chatInfoOpen } = useChatStore();
   const { onlineUsers, channel } = useAblyStore();
   const { startCall, setCallStatus, callStatus, callType } = useCallStore();
 
@@ -54,11 +53,12 @@ export default function ChatHeader() {
 
   if (!currentChat) return null;
   return (
-    <header className="box-border sticky top-0 flex items-center justify-between w-full p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
-      <span className="flex items-center gap-2 w-fit">
+    <header className="box-border sticky top-0 flex items-center justify-between w-full gap-4 p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
+      <span className="flex items-center w-full max-w-full gap-2 overflow-hidden">
+        {/* 返回按鈕 */}
         <Link
           href={"/chat"}
-          className="text-center rounded-md sm:hidden hover:dark:bg-white/10"
+          className="text-center rounded-md sm:hidden hover:dark:bg-white/10 shrink-0"
         >
           <ChevronLeft
             className="dark:text-white text-stone-800"
@@ -66,42 +66,46 @@ export default function ChatHeader() {
           />
         </Link>
 
-        <span className="flex items-center">
-          <button
-            onClick={() => setChatInfoOpen(!sidebarOpen)}
-            onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
-            type="button"
-          >
+        {/* 標題區塊 */}
+        <button
+          type="button"
+          className="flex items-center flex-1 min-w-0 overflow-hidden"
+          onClick={() => setChatInfoOpen(true)}
+          onTouchEnd={() => setChatInfoOpen(true)}
+        >
+          {/* 頭像 */}
+          <div className="min-w-fit min-h-fit shrink-0">
             {currentChat.room_type === "personal" ? (
               <BadgeAvatar user={recipientUser!} width={40} height={40} />
             ) : (
               <BadgeAvatar room={currentChat} width={40} height={40} />
             )}
-          </button>
-          <span
-            className="flex flex-col pl-2 cursor-pointer"
-            onClick={() => setChatInfoOpen(!sidebarOpen)}
-            onTouchEnd={() => setChatInfoOpen(!sidebarOpen)}
-          >
-            <span className="flex space-x-1 text-lg font-medium text-stone-900 dark:text-white active:text-white/70">
-              <p className="truncate ">{displayName}</p>
+          </div>
 
+          {/* 名稱與狀態 */}
+          <div className="flex flex-col flex-1 min-w-0 pl-2 overflow-hidden">
+            <div className="flex items-center min-w-0 space-x-1 overflow-hidden">
+              <p className="flex-1 min-w-0 text-lg font-medium truncate text-stone-900 dark:text-white active:text-white/70">
+                {displayName}
+              </p>
               {currentChat.room_type === "group" && (
-                <p className="flex-shrink-0 ">
+                <p className="flex-shrink-0 text-lg font-medium text-stone-900 dark:text-white">
                   ({currentChat.room_members.length})
                 </p>
               )}
-            </span>
+            </div>
+
             {onlineUsers.some((item) =>
               currentChat?.room_members.some(
                 (user) =>
                   user.user_id === item.clientId && user.user_id !== userId
               )
             ) && <span className="text-xs text-green-400">目前在線上</span>}
-          </span>
-        </span>
+          </div>
+        </button>
       </span>
-      <span className="space-x-3 ">
+
+      <div className="flex items-center flex-shrink-0 space-x-3 w-fit">
         <button
           className={twMerge(
             callStatus !== "disconnect" &&
@@ -124,11 +128,11 @@ export default function ChatHeader() {
         </button>
         <button
           onClick={() => setChatInfoOpen(true)}
-          className={twMerge(chatInfoOpen && "hidden")}
+          className={twMerge("max-sm:hidden", chatInfoOpen && "hidden")}
         >
           <Info className="text-gray-400 hover:dark:text-white hover:text-stone-800 " />
         </button>
-      </span>
+      </div>
     </header>
   );
 }

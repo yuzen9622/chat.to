@@ -37,8 +37,8 @@ export default function BarList() {
         <House size={30} />
         <span
           className={twMerge(
-            "hidden xl:block ",
-            pathName.startsWith("/chat") && "hidden sm:hidden"
+            "hidden  ",
+            pathName.startsWith("/chat") ? "hidden " : "xl:block"
           )}
         >
           Home
@@ -48,8 +48,8 @@ export default function BarList() {
         <MessageCircleMore size={30} />
         <span
           className={twMerge(
-            "hidden xl:block",
-            pathName.startsWith("/chat") && "hidden sm:hidden"
+            "hidden  sm:hidden",
+            pathName.startsWith("/chat") ? "hidden " : "xl:block"
           )}
         >
           Chats
@@ -59,8 +59,8 @@ export default function BarList() {
         <Handshake size={30} />
         <span
           className={twMerge(
-            "hidden xl:block",
-            pathName.startsWith("/chat") && "hidden sm:hidden"
+            "hidden ",
+            pathName.startsWith("/chat") ? "hidden " : "xl:block"
           )}
         >
           Friends

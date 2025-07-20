@@ -14,23 +14,47 @@ export default function MarkDownText({
     <Markdown
       components={{
         h1: (props) => {
-          return <h1 className="text-2xl truncate" {...props} />;
+          return (
+            <h1
+              className={twMerge(
+                "text-2xl text-wrap",
+                style === "inline" && " text-nowrap truncate"
+              )}
+              {...props}
+            />
+          );
         },
         h2: (props) => {
-          return <h2 className="text-xl truncate" {...props} />;
+          return (
+            <h2
+              className={twMerge(
+                "text-xl text-wrap",
+                style === "inline" && " text-nowrap truncate"
+              )}
+              {...props}
+            />
+          );
         },
         a: (props) => {
           const { children, ...rest } = props;
           return style === "inline" ? (
             <>{children}</>
           ) : (
-            <a className="text-white underline truncate" {...rest}>
+            <a className="text-white underline text-wrap " {...rest}>
               {children}
             </a>
           );
         },
         p: (props) => {
-          return <p className="truncate " {...props} />;
+          return (
+            <p
+              className={twMerge(
+                "text-wrap",
+                style === "inline" && " text-nowrap truncate"
+              )}
+              {...props}
+            />
+          );
         },
         code: (props) => {
           const { children, className, ...rest } = props;

@@ -24,6 +24,7 @@ export default function BadgeAvatar({
     <div className="relative w-fit h-fit">
       <div
         className={twMerge(
+          "w-fit h-fit",
           onlineUsers.some(
             (item) =>
               room?.room_members.some(
@@ -37,7 +38,7 @@ export default function BadgeAvatar({
         <Image
           className={twMerge(
             "border-2 border-transparent   object-cover rounded-full bg-white/10 aspect-square",
-            `min-w-[${width}] min-h-[${height}]`
+            `min-w-[${width}px] min-h-[${height}px]`
           )}
           src={
             user
