@@ -23,7 +23,9 @@ export async function POST(request: NextRequest) {
     const room = await findPrivateRoom(data.sender_id, data.receiver_id);
 
     const roomId = room ? room.room_id : v4uuid();
-    await InsertPersonalRoom(roomId);
+    if (!room?.room_id) {
+      await InsertPersonalRoom(roomId);
+    }
 
     const friendData = [
       {
