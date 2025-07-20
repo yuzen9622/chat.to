@@ -69,7 +69,7 @@ export default function ChatHeader() {
         {/* 標題區塊 */}
         <button
           type="button"
-          className="flex items-center flex-1 min-w-0 overflow-hidden"
+          className="flex items-center min-w-0 overflow-hidden"
           onClick={() => setChatInfoOpen(true)}
           onTouchEnd={() => setChatInfoOpen(true)}
         >
@@ -83,9 +83,9 @@ export default function ChatHeader() {
           </div>
 
           {/* 名稱與狀態 */}
-          <div className="flex flex-col flex-1 min-w-0 pl-2 overflow-hidden">
+          <div className="flex flex-col min-w-0 pl-2 overflow-hidden">
             <div className="flex items-center min-w-0 space-x-1 overflow-hidden">
-              <p className="min-w-0 text-lg font-medium truncate  text-start text-stone-900 dark:text-white active:text-white/70">
+              <p className="min-w-0 text-lg font-medium truncate text-start text-stone-900 dark:text-white active:text-white/70">
                 {displayName}
               </p>
               {currentChat.room_type === "group" && (
@@ -100,7 +100,11 @@ export default function ChatHeader() {
                 (user) =>
                   user.user_id === item.clientId && user.user_id !== userId
               )
-            ) && <span className="text-xs text-green-400">目前在線上</span>}
+            ) && (
+              <span className="text-xs text-green-400 text-start">
+                目前在線上
+              </span>
+            )}
           </div>
         </button>
       </span>
