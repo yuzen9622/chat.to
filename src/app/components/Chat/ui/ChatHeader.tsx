@@ -85,7 +85,7 @@ export default function ChatHeader() {
           {/* 名稱與狀態 */}
           <div className="flex flex-col flex-1 min-w-0 pl-2 overflow-hidden">
             <div className="flex items-center min-w-0 space-x-1 overflow-hidden">
-              <p className="flex-1 min-w-0 text-lg font-medium truncate text-stone-900 dark:text-white active:text-white/70">
+              <p className="min-w-0 text-lg font-medium truncate  text-start text-stone-900 dark:text-white active:text-white/70">
                 {displayName}
               </p>
               {currentChat.room_type === "group" && (
