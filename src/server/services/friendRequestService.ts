@@ -46,7 +46,9 @@ export const selectUserFriendRequest = async (
     .select(
       "*,receiver_info:receiver_id(id,name,image),sender_info:sender_id(id,name,image)"
     )
-    .or(`receiver_id.eq.${userId},sender_id.eq.${userId}`);
+    .or(`receiver_id.eq.${userId},sender_id.eq.${userId}`)
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
   return data;

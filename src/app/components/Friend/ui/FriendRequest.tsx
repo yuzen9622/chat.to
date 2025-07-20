@@ -19,10 +19,10 @@ export default function FriendRequest() {
     getFriendRequests();
   }, [userId, setFriendRequest]);
   return (
-    <div className="relative w-full mx-1 dark:text-white">
+    <div className="relative flex flex-col w-full mx-1 dark:text-white">
       <FriendSearch />
       <p>朋友請求管理</p>
-      <span className="w-full">
+      <span className="flex flex-col w-full overflow-auto">
         {friendRequests ? (
           friendRequests.length === 0 ? (
             <p className="w-full font-bold text-center ">暫無朋友請求</p>
