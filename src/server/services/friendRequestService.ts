@@ -14,7 +14,7 @@ export const removeFriendRequest = async (userId: string, friendId: string) => {
 
 export const deleteFriendRequestById = async (requestId: string) => {
   const { error } = await supabase
-    .from("friend_request")
+    .from("friends_request")
     .delete()
     .eq("id", requestId);
   if (error) throw error;

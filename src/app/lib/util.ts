@@ -196,7 +196,14 @@ export function createPeer(
   channel: RealtimeChannel
 ) {
   const pc = new RTCPeerConnection({
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      {
+        urls: "turn:192.158.29.39:3478?transport=udp",
+        credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+        username: "28224511:1379330808",
+      },
+    ],
   });
   const { addRemoteStream, localStream, callRoom } = useCallStore.getState();
   localStream?.getTracks().forEach((track) => pc.addTrack(track, localStream));

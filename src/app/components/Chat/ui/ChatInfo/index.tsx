@@ -44,8 +44,8 @@ export default function ChatInfo() {
                   user.user_id === item.clientId && user.user_id !== userId
               )
             ) && <span className="text-xs text-green-400">目前在線上</span>}
-            <span className="flex items-center justify-center max-w-full text-lg dark:text-white">
-              <p className="w-10/12 truncate">{displayName}</p>
+            <span className="flex items-center justify-center w-10/12 max-w-full text-lg dark:text-white">
+              <p className="truncate w-12/12">{displayName}</p>
               {currentChat.room_type === "group" && (
                 <p className="flex-shrink-0 ml-1">
                   ({currentChat.room_members.length})

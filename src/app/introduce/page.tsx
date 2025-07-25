@@ -84,9 +84,6 @@ export default function HomePage() {
               <ExternalLink className="w-4 h-4 mr-2" />
               立即體驗
             </Link>
-            <button className="px-6 py-3 text-lg font-medium text-gray-700 transition-colors border border-gray-300 rounded-md hover:border-gray-400 hover:text-gray-900">
-              了解更多
-            </button>
           </div>
         </div>
       </section>

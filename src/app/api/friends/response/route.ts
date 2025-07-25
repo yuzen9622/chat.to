@@ -15,15 +15,15 @@ export async function POST(request: NextRequest) {
   try {
     const { id, status } = await request.json();
     const data = await updateFriendRequest(id, status);
-
     if (status !== "accepted") {
       return NextResponse.json({}, { status: 200 });
     }
 
     const room = await findPrivateRoom(data.sender_id, data.receiver_id);
+    console.log(room);
 
     const roomId = room ? room.room_id : v4uuid();
-    if (!room?.room_id) {
+    if (!room) {
       await InsertPersonalRoom(roomId);
     }
 
@@ -39,8 +39,9 @@ export async function POST(request: NextRequest) {
         personal_room_id: roomId,
       },
     ];
-
+    console.log(friendData);
     const friends = await InsertFriend(friendData);
+    console.log(friends);
 
     return NextResponse.json(friends, { status: 200 });
   } catch (error) {

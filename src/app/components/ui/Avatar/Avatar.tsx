@@ -40,6 +40,7 @@ export default function BadgeAvatar({
             "border-2 border-transparent   object-cover rounded-full bg-white/10 aspect-square",
             `min-w-[${width}px] min-h-[${height}px]`
           )}
+          unoptimized
           src={
             user
               ? user.image || "/user.png"

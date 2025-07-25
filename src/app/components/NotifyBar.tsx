@@ -76,25 +76,25 @@ export default function NotifyBar() {
         >
           <div className="flex flex-row w-full p-2">
             {room && (
-              <>
+              <span className=" min-h-fit min-w-fit">
                 {room.room_type == "personal" ? (
                   <BadgeAvatar width={45} height={45} user={sender} />
                 ) : (
                   <BadgeAvatar width={45} height={45} room={room} />
                 )}
-              </>
+              </span>
             )}
-            <div className="flex flex-col w-full px-2">
-              <span className="flex justify-between text-sm font-semibold dark:text-white ">
-                <p className="text-base">
+            <div className="flex flex-col flex-1 px-2 overflow-hidden">
+              <div className="flex items-center justify-between flex-1 gap-3 overflow-hidden text-sm font-semibold dark:text-white ">
+                <p className="text-base truncate">
                   {room && room.room_type === "group"
                     ? room.room_name
                     : sender?.name}
                 </p>
-                <p className="text-xs text-gray-500/70 dark:text-white/70">
+                <p className="text-xs text-gray-500/70 text-nowrap dark:text-white/70">
                   {moment(newNotify.data.created_at).calendar()}
                 </p>
-              </span>
+              </div>
               <p className="text-sm truncate dark:text-white/80">
                 {room &&
                   room.room_type === "group" &&
