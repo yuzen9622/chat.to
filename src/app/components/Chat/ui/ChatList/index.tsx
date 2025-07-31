@@ -1,14 +1,17 @@
-import FriendNote from "@/app/components/Friend/ui/FriendNote";
-import { SquarePen } from "lucide-react";
-import ChatButton from "../ChatButton";
-import { CreateRoomModal } from "./CreateModal";
-import { LoadingList } from "./Loading";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { ClientMessageInterface, RoomInterface } from "@/types/type";
-import { fetchUserRooms } from "@/app/lib/api/room/roomApi";
-import { useChatStore } from "@/app/store/ChatStore";
-import { fetchUsersNotify } from "@/app/lib/api/notify/notifyApi";
+import { SquarePen } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+
+import FriendNote from '@/app/components/Friend/ui/FriendNote';
+import { fetchUsersNotify } from '@/app/lib/api/notify/notifyApi';
+import { fetchUserRooms } from '@/app/lib/api/room/roomApi';
+import { useChatStore } from '@/app/store/ChatStore';
+
+import ChatButton from '../ChatButton';
+import { CreateRoomModal } from './CreateModal';
+import { LoadingList } from './Loading';
+
+import type { ClientMessageInterface, RoomInterface } from "@/types/type";
 
 export default function ChatList() {
   const userId = useSession()?.data?.userId;

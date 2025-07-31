@@ -1,15 +1,13 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import BarList from "./BarList";
-import { twMerge } from "tailwind-merge";
-import { useChatStore } from "../store/ChatStore";
-
-import { usePathname } from "next/navigation";
-
-import { useSession } from "next-auth/react";
-import ListItem from "./ui/ListItem";
+import { useChatStore } from '../store/ChatStore';
+import BarList from './BarList';
+import ListItem from './ui/ListItem';
 
 export default function SideBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);

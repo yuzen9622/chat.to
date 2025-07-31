@@ -1,9 +1,9 @@
 "use client";
-import React, { useCallback, useState } from "react";
-import { GitHub, Google } from "@mui/icons-material";
-import { signIn } from "next-auth/react";
+import { Ellipsis } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { useCallback, useState } from 'react';
 
-import { Ellipsis } from "lucide-react";
+import { GitHub, Google } from '@mui/icons-material';
 
 export default function ThirdPartLogin() {
   const [loginStatus, setLoginStatus] = useState({

@@ -1,9 +1,10 @@
-import { ClientMessageInterface } from "@/types/type";
-import React, { useCallback } from "react";
-import AudioMessage from "./AudioMessage";
-import FileMessage from "./FileMessage";
-import MediaMessage from "./MediaMessage";
-import TextMessage from "./TextMessage";
+import type { ClientMessageInterface } from "@/types/type";
+import { useCallback } from 'react';
+
+import AudioMessage from './AudioMessage';
+import FileMessage from './FileMessage';
+import MediaMessage from './MediaMessage';
+import TextMessage from './TextMessage';
 
 export default function Message({
   message,

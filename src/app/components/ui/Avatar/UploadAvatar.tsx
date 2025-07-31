@@ -1,6 +1,6 @@
-import React from "react";
-import Image from "next/image";
-import { Camera, Trash } from "lucide-react";
+import { Camera, Trash } from 'lucide-react';
+import Image from 'next/image';
+
 type UploadAvatarProps = {
   src: string | undefined;
 

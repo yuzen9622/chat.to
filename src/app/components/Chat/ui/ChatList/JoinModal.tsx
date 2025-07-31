@@ -1,11 +1,11 @@
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useChatStore } from "@/app/store/ChatStore";
-import { useSnackBar } from "@/hook/useSnackBar";
-import { Grow, Modal } from "@mui/material";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis } from 'lucide-react';
+import { Fragment, useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { Fragment, useCallback, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { useSnackBar } from '@/hook/useSnackBar';
+import { Grow, Modal } from '@mui/material';
 
 export function JoinModal() {
   const [open, setOpen] = useState(false);

@@ -1,8 +1,10 @@
-import React, { LinkHTMLAttributes } from "react";
-import Link from "next/link";
-import { twMerge } from "tailwind-merge";
-import { usePathname, useRouter } from "next/navigation";
-import { useChatStore } from "../../store/ChatStore";
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
+
+import { useChatStore } from '../../store/ChatStore';
+
+import type { LinkHTMLAttributes } from "react";
 type LinkProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ListItem({
   children,
@@ -42,7 +44,7 @@ export default function ListItem({
     >
       {children}
 
-      {notify != void 0 && notify > 0 && (
+      {notify !== void 0 && notify > 0 && (
         <div className="absolute top-0 right-0 flex items-center justify-center flex-shrink-0 px-1.5 text-xs text-white bg-red-500 rounded-full ">
           {notify}
         </div>

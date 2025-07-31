@@ -1,15 +1,17 @@
 "use client";
-import { Modal } from "@mui/material";
-import React, { useCallback, useState } from "react";
-import { X } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { CircularProgress } from "@mui/material";
-import { twMerge } from "tailwind-merge";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { uploadFile } from "@/app/lib/util";
-import Input from "./Input";
-import UploadAvatar from "./Avatar/UploadAvatar";
-import { useAuthStore } from "@/app/store/AuthStore";
+import { X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import { uploadFile } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useAuthStore } from '@/app/store/AuthStore';
+import { CircularProgress, Modal } from '@mui/material';
+
+import UploadAvatar from './Avatar/UploadAvatar';
+import Input from './Input';
+
 export default function EditProfileBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, update } = useSession();

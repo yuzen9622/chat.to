@@ -1,20 +1,17 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { CircularProgress } from "@mui/material";
-import { twMerge } from "tailwind-merge";
-import Image from "next/image";
-import {
-  formatSize,
-  getFileIcon,
-  handleDownload,
-  messageType,
-} from "../../../../lib/util";
-import { ClientMessageInterface } from "../../../../../types/type";
+import type { LucideIcon } from "lucide-react";
+import moment from 'moment';
+import Image from 'next/image';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import { twMerge } from 'tailwind-merge';
 
-import { useChatStore } from "../../../../store/ChatStore";
-import { LucideIcon } from "lucide-react";
-import PreviewMediaModal from "../../../ui/Modal/PreviewMediaModal";
-import { PhotoProvider, PhotoView } from "react-photo-view";
-import moment from "moment";
+import { CircularProgress } from '@mui/material';
+
+import { formatSize, getFileIcon, handleDownload, messageType } from '../../../../lib/util';
+import { useChatStore } from '../../../../store/ChatStore';
+import PreviewMediaModal from '../../../ui/Modal/PreviewMediaModal';
+
+import type { ClientMessageInterface } from "../../../../../types/type";
 type Type = "media" | "url" | "file";
 
 export default function InfoMedia() {
@@ -48,7 +45,7 @@ export default function InfoMedia() {
       if (res.ok) {
         const data: ClientMessageInterface[] = await res.json();
         const filterData = data.filter((msg) => {
-          if (messageType(msg.meta_data!) === "audio") return null;
+          if (messageType(msg.meta_data ?? null) === "audio") return null;
           return msg;
         });
         setFilterMessages(filterData);
@@ -61,7 +58,7 @@ export default function InfoMedia() {
   }, [filterType, currentChat]);
 
   const handlePreview = useCallback((message: ClientMessageInterface) => {
-    const mediaType = messageType(message.meta_data!);
+    const mediaType = messageType(message.meta_data ?? null);
     if (!mediaType || !message.meta_data) return;
     setIsOpen(true);
     setPreviewMedia({
@@ -81,7 +78,7 @@ export default function InfoMedia() {
       <PreviewMediaModal
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        media={previewMedia!}
+        media={previewMedia ?? void 0}
       />
 
       <div className="flex flex-col items-center w-full h-full overflow-hidden ">
@@ -125,7 +122,6 @@ export default function InfoMedia() {
           >
             {filterMessages.map((message) => {
               if (filterType === "file") {
-                if (message.type === "media") return null;
                 const Icon: LucideIcon = getFileIcon(message.text);
                 return (
                   <button
@@ -175,32 +171,28 @@ export default function InfoMedia() {
                     </span>
                   </button>
                 );
-              } else if (filterType === "media") {
-                const mediaType = messageType(message.meta_data!);
+              } else if (filterType === "media" && message.meta_data) {
+                const mediaType = messageType(message.meta_data);
                 return (
                   <Fragment key={message.id}>
-                    {message.meta_data && (
-                      <>
-                        {mediaType === "image" ? (
-                          <PhotoProvider>
-                            <PhotoView src={message?.meta_data.url}>
-                              <Image
-                                src={message?.meta_data.url}
-                                alt={message.text}
-                                width={50}
-                                height={50}
-                                className="object-cover w-full aspect-square"
-                              />
-                            </PhotoView>
-                          </PhotoProvider>
-                        ) : (
-                          <video
+                    {mediaType === "image" ? (
+                      <PhotoProvider>
+                        <PhotoView src={message?.meta_data.url}>
+                          <Image
                             src={message?.meta_data.url}
-                            onClick={() => handlePreview(message)}
+                            alt={message.text}
+                            width={50}
+                            height={50}
                             className="object-cover w-full aspect-square"
                           />
-                        )}
-                      </>
+                        </PhotoView>
+                      </PhotoProvider>
+                    ) : (
+                      <video
+                        src={message?.meta_data.url}
+                        onClick={() => handlePreview(message)}
+                        className="object-cover w-full aspect-square"
+                      />
                     )}
                   </Fragment>
                 );

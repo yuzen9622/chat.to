@@ -1,14 +1,15 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Snackbar } from "@mui/material";
-import { useChatStore } from "../store/ChatStore";
-import { RoomInterface } from "../../types/type";
+import moment from 'moment';
+import { redirect } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { replyText } from "@/app/lib/util";
-import { redirect } from "next/navigation";
-import moment from "moment";
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { replyText } from '@/app/lib/util';
+import { Snackbar } from '@mui/material';
 
+import { useChatStore } from '../store/ChatStore';
+
+import type { RoomInterface } from "../../types/type";
 export default function NotifyBar() {
   const [open, setOpen] = useState(false);
 
@@ -49,7 +50,7 @@ export default function NotifyBar() {
     }
 
     setOpen(true);
-  }, [newNotify, rooms, sender]);
+  }, [newNotify, rooms]);
 
   const handleClick = useCallback(() => {
     setOpen(false);
@@ -77,7 +78,7 @@ export default function NotifyBar() {
           <div className="flex flex-row w-full p-2">
             {room && (
               <span className=" min-h-fit min-w-fit">
-                {room.room_type == "personal" ? (
+                {room.room_type === "personal" ? (
                   <BadgeAvatar width={45} height={45} user={sender} />
                 ) : (
                   <BadgeAvatar width={45} height={45} room={room} />
@@ -96,11 +97,7 @@ export default function NotifyBar() {
                 </p>
               </div>
               <p className="text-sm truncate dark:text-white/80">
-                {room &&
-                  room.room_type === "group" &&
-                  sender &&
-                  sender.name + "："}
-
+                {room && room.room_type === "group" ? `${sender?.name}：` : ""}
                 {replyText(newNotify.data)}
               </p>
             </div>

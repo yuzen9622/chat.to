@@ -1,13 +1,14 @@
-import { Modal } from "@mui/material";
-import { UserPlus } from "lucide-react";
-import React, { useCallback, useState } from "react";
-import { useChatAction } from "./hook/useChatAction";
-import { useAuthStore } from "@/app/store/AuthStore";
+import { UserPlus } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { twMerge } from "tailwind-merge";
-import { RoomInterface } from "@/types/type";
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { useAuthStore } from '@/app/store/AuthStore';
+import { Modal } from '@mui/material';
 
+import { useChatAction } from './hook/useChatAction';
+
+import type { RoomInterface } from "@/types/type";
 export default function JoinUserModal({
   currentChat,
 }: {
@@ -20,11 +21,7 @@ export default function JoinUserModal({
   const { handleJoin } = useChatAction();
   const handleRoomMember = useCallback(
     (userId: string) => {
-      if (
-        currentChat &&
-        currentChat.room_members.some((rm) => rm.user_id === userId)
-      )
-        return;
+      if (currentChat?.room_members.some((rm) => rm.user_id === userId)) return;
       if (roomMembers.includes(userId)) {
         setRoomMembers((prev) => {
           return prev.filter((m) => m !== userId);
@@ -63,27 +60,26 @@ export default function JoinUserModal({
           <div className="w-full py-2 ">
             <p className="text-white">邀請好友</p>
             <div className="flex flex-col items-center w-full max-w-full gap-2 overflow-auto">
-              {friends &&
-                friends.map((friend) => {
-                  return (
-                    <button
-                      key={friend.id}
-                      disabled={currentChat.room_members.some(
-                        (rm) => rm.user_id === friend.user.id
-                      )}
-                      type="button"
-                      onClick={() => handleRoomMember(friend.user.id)}
-                      className={twMerge(
-                        " relative flex  items-center disabled:text-white/40  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
-                        roomMembers.includes(friend.user.id) &&
-                          "after:content-['✔'] after:text-xs after:absolute after:w-4 after:border-0 after:h-4 after:bottom-6 after:right-2 after:rounded-full after:animate-in after:zoom-in-0 after:bg-blue-500"
-                      )}
-                    >
-                      <BadgeAvatar width={55} height={55} user={friend.user} />
-                      <p className="truncate">{friend.user.name}</p>
-                    </button>
-                  );
-                })}
+              {friends?.map((friend) => {
+                return (
+                  <button
+                    key={friend.id}
+                    disabled={currentChat.room_members.some(
+                      (rm) => rm.user_id === friend.user.id
+                    )}
+                    type="button"
+                    onClick={() => handleRoomMember(friend.user.id)}
+                    className={twMerge(
+                      " relative flex  items-center disabled:text-white/40  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
+                      roomMembers.includes(friend.user.id) &&
+                        "after:content-['✔'] after:text-xs after:absolute after:w-4 after:border-0 after:h-4 after:bottom-6 after:right-2 after:rounded-full after:animate-in after:zoom-in-0 after:bg-blue-500"
+                    )}
+                  >
+                    <BadgeAvatar width={55} height={55} user={friend.user} />
+                    <p className="truncate">{friend.user.name}</p>
+                  </button>
+                );
+              })}
             </div>
             <button
               type="button"

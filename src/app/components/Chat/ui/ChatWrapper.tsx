@@ -1,16 +1,16 @@
 "use client"; // 表示這是一個 Client Component
-import { RoomInterface } from "../../../../types/type";
-import { ChannelProvider } from "ably/react";
-import ChatRoom from "./ChatRoom";
-import { useEffect } from "react";
-import { useChatStore } from "../../../store/ChatStore";
-import { useAblyStore } from "../../../store/AblyStore";
+import { ChannelProvider } from 'ably/react';
+import { useEffect } from 'react';
 
-import ChatInfo from "./ChatInfo/index";
-import { useSession } from "next-auth/react";
-import { clearReadMessage } from "../../../lib/util";
-import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
+import { fetchRoomMessage } from '@/app/lib/api/message/messageApi';
 
+import { clearReadMessage } from '../../../lib/util';
+import { useAblyStore } from '../../../store/AblyStore';
+import { useChatStore } from '../../../store/ChatStore';
+import ChatInfo from './ChatInfo/index';
+import ChatRoom from './ChatRoom';
+
+import type { RoomInterface } from "../../../../types/type";
 export default function ChatRoomWrapper({
   room,
   roomId,
@@ -27,7 +27,6 @@ export default function ChatRoomWrapper({
     setSidebarOpen,
   } = useChatStore();
   const { setRoomId } = useAblyStore();
-  const userId = useSession()?.data?.userId;
 
   useEffect(() => {
     if (!room) return;
@@ -59,7 +58,7 @@ export default function ChatRoomWrapper({
     return () => {
       setCurrentChat(null);
     };
-  }, [room, userId, setCurrentChat, setCurrentMessage, cachedMessages]);
+  }, [room, setCurrentChat, setCurrentMessage, cachedMessages]);
 
   useEffect(() => {
     setRoomId(roomId);
@@ -69,15 +68,7 @@ export default function ChatRoomWrapper({
     return () => {
       setRoomId("");
     };
-  }, [
-    roomId,
-    userId,
-    setRoomId,
-    setChatInfoOpen,
-    setSidebarOpen,
-    cachedMessages,
-    setCurrentMessage,
-  ]);
+  }, [roomId, setRoomId, setChatInfoOpen, setSidebarOpen]);
 
   return (
     <ChannelProvider channelName={roomId}>

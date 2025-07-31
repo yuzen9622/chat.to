@@ -1,13 +1,14 @@
 "use client";
-import React, { useMemo } from "react";
-import ListItem from "./ui/ListItem";
-import { House, Handshake, MessageCircleMore } from "lucide-react";
-import { useAuthStore } from "../store/AuthStore";
-import { useChatStore } from "../store/ChatStore";
-import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
-import { twMerge } from "tailwind-merge";
-import BadgeAvatar from "./ui/Avatar/Avatar";
+import { Handshake, House, MessageCircleMore } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import { useAuthStore } from '../store/AuthStore';
+import { useChatStore } from '../store/ChatStore';
+import BadgeAvatar from './ui/Avatar/Avatar';
+import ListItem from './ui/ListItem';
 
 export default function BarList() {
   const { friendRequests } = useAuthStore();
@@ -17,7 +18,7 @@ export default function BarList() {
   const roomNotifyCount = useMemo(() => {
     const isExist: string[] = [];
     notify.forEach((n) => {
-      if (n.is_read.includes(userId!)) return;
+      if (n.is_read.includes(userId ?? "")) return;
       if (!isExist.find((r) => r === n.room)) {
         isExist.push(n.room);
       }

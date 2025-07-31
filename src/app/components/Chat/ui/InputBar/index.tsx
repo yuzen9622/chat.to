@@ -1,29 +1,23 @@
 "use client";
-import React, {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
+import { Laugh, Pencil, Send } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { Send } from "lucide-react";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useChatStore } from "@/app/store/ChatStore";
+import { WavesurferRecord } from '@/app/components/ui/Audio';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useChatStore } from '@/app/store/ChatStore';
 
-import { SendBar } from "./SendBar";
-import { Laugh, Pencil } from "lucide-react";
-import EmojiPicker from "emoji-picker-react";
-import { Theme, EmojiStyle } from "emoji-picker-react";
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import { WavesurferRecord } from "@/app/components/ui/Audio";
-import Reply from "./Reply";
-import Edit from "./Edit";
-import FileContainer from "./FileContainer";
-import MediaActions from "./MediaActions";
-import { useInputBarTyping } from "./hook/useInputBarTyping";
-import { useInputBarEdit, useInputBarSend } from "./hook/useInputBar";
+import Edit from './Edit';
+import FileContainer from './FileContainer';
+import { useInputBarEdit, useInputBarSend } from './hook/useInputBar';
+import { useInputBarTyping } from './hook/useInputBarTyping';
+import MediaActions from './MediaActions';
+import Reply from './Reply';
+import { SendBar } from './SendBar';
+
+import type { FormEvent } from "react";
 export default function InputBar() {
   const [messageText, setMessageText] = useState("");
   const [messageFiles, setMessageFiles] = useState<File[]>([]);

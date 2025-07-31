@@ -1,13 +1,13 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import { UserInterface } from "../../../../types/type";
-import BadgeAvatar from "../Avatar/Avatar";
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
-import { useAuthStore } from "@/app/store/AuthStore";
-import { useRouter } from "next/navigation";
+import { useAuthStore } from '@/app/store/AuthStore';
 
-import NoteButton from "./NoteButton";
+import BadgeAvatar from '../Avatar/Avatar';
+import NoteButton from './NoteButton';
 
+import type { UserInterface } from "../../../../types/type";
 export default function NoteCard({
   user,
   isOwn,
@@ -25,14 +25,14 @@ export default function NoteCard({
   const { userNote } = useAuthStore();
 
   const note = useMemo(() => {
-    if (isOwn) return userNote;
-    return user.note;
+    if (isOwn) return userNote ?? void 0;
+    return user?.note ?? void 0;
   }, [user, userNote, isOwn]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!note && !isOwn) {
-      router.push(`/profile/${user.id}`);
+      router.push(`/profile/${user?.id}`);
     } else {
       if (!isOpen) setIsOpen((prev) => !prev);
     }
@@ -48,7 +48,7 @@ export default function NoteCard({
         <p className="text-xs truncate">{isOwn ? "你的便利貼" : user.name}</p>
         {(isOwn || note) && (
           <NoteButton
-            note={note!}
+            note={note}
             user={user}
             setIsOpen={setIsOpen}
             isOpen={isOpen}

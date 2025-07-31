@@ -1,23 +1,18 @@
-import { deleteMessage } from "@/app/lib/api/message/messageApi";
-import { Copy2ClipBoard, handleDownload, messageType } from "@/app/lib/util";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useChatStore } from "@/app/store/ChatStore";
-import { ClientMessageInterface } from "@/types/type";
-import { Popover } from "@mui/material";
-import {
-  Clipboard,
-  Download,
-  Ellipsis,
-  Pencil,
-  Reply,
-  Trash2,
-} from "lucide-react";
-import moment from "moment";
-import { useSession } from "next-auth/react";
-import React, { memo, useCallback } from "react";
-import { twMerge } from "tailwind-merge";
-import ForwardModal from "./Forward/ForwardModal";
+import { Clipboard, Download, Ellipsis, Pencil, Reply, Trash2 } from 'lucide-react';
+import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import React, { memo, useCallback } from 'react';
+import { twMerge } from 'tailwind-merge';
 
+import { deleteMessage } from '@/app/lib/api/message/messageApi';
+import { Copy2ClipBoard, handleDownload, messageType } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { Popover } from '@mui/material';
+
+import ForwardModal from './Forward/ForwardModal';
+
+import type { ClientMessageInterface } from "@/types/type";
 const SettingBar = memo(function SettingBar({
   message,
   isOwn,

@@ -1,32 +1,25 @@
 "use client";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
-import Message from "./ChatMessage/index";
+import type { InboundMessage } from "ably";
+import { ChevronDown } from 'lucide-react';
+import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { GroupedVirtuoso } from 'react-virtuoso';
+import { twMerge } from 'tailwind-merge';
 
-import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
-import InputBar from "./InputBar/index";
-import { useAblyRoom, useAblyStore } from "../../../store/AblyStore";
-import { useChatStore } from "../../../store/ChatStore";
-import { InboundMessage } from "ably";
-import { clearReadMessage } from "../../../lib/util";
-import { readMessage } from "@/app/lib/api/message/messageApi";
-import moment from "moment";
-import { ChevronDown } from "lucide-react";
+import ChatHeader from '@/app/components/Chat/ui/ChatHeader';
+import { fetchRoomMessage, readMessage } from '@/app/lib/api/message/messageApi';
+import { CircularProgress } from '@mui/material';
 
-import { useSession } from "next-auth/react";
-import { twMerge } from "tailwind-merge";
-import { VirtuosoHandle, GroupedVirtuoso } from "react-virtuoso";
+import { clearReadMessage } from '../../../lib/util';
+import { useAblyRoom, useAblyStore } from '../../../store/AblyStore';
+import { useChatStore } from '../../../store/ChatStore';
+import TypingBar from '../../ui/TypingBar';
+import Message from './ChatMessage/index';
+import InputBar from './InputBar/index';
 
-import { CircularProgress } from "@mui/material";
-import { ClientMessageInterface } from "../../../../types/type";
-import TypingBar from "../../ui/TypingBar";
-import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
-
+import type { VirtuosoHandle } from "react-virtuoso";
+import type { ClientMessageInterface } from "../../../../types/type";
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
 
@@ -182,7 +175,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
           prev.filter((msg) => msg.id !== newMessage.id)
         );
       } else {
-        readMessage(newMessage.room, userId!);
+        readMessage(newMessage.room, userId ?? null);
         clearReadMessage(newMessage.room);
         newMessage.status = "send";
         newMessage.is_read.push(userId);
@@ -201,7 +194,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
         setShouldScroll(false);
       }, 100);
     }
-  }, [, shouldScroll, currentMessage, scrollToBottom]);
+  }, [shouldScroll]);
 
   const dateContent = useCallback(
     (index: number) => {

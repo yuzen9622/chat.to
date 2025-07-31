@@ -1,8 +1,10 @@
-import { CloudUpload } from "lucide-react";
-import React, { useCallback } from "react";
-import { FileItem } from "./FileItem";
-import { useFile } from "@/hook/useFile";
-import { useAuthStore } from "@/app/store/AuthStore";
+import { CloudUpload } from 'lucide-react';
+import { useCallback } from 'react';
+
+import { useAuthStore } from '@/app/store/AuthStore';
+import { useFile } from '@/hook/useFile';
+
+import { FileItem } from './FileItem';
 
 export default function FileContainer({
   messageFiles,
@@ -49,8 +51,12 @@ export default function FileContainer({
         </button>
       </div>
 
-      {messageFiles.map((file, index) => (
-        <FileItem handleRemove={removeFile} file={file} key={index} />
+      {messageFiles.map((file) => (
+        <FileItem
+          handleRemove={removeFile}
+          file={file}
+          key={file.webkitRelativePath}
+        />
       ))}
     </div>
   );

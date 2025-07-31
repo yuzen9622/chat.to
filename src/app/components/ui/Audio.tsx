@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useWavesurfer } from "@wavesurfer/react";
-import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
-import { CirclePlay, Play, Pause, AudioLines, CircleX } from "lucide-react";
-import { twMerge } from "tailwind-merge";
-import { createFileMessage } from "@/app/lib/createMessage";
-import { useSession } from "next-auth/react";
-import { useChatStore } from "@/app/store/ChatStore";
-import { uploadFile } from "@/app/lib/util";
-import { sendUserMessage } from "@/app/lib/api/message/messageApi";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
-import { useAuthStore } from "@/app/store/AuthStore";
+import { AudioLines, CirclePlay, CircleX, Pause, Play } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
+
+import { sendAblyMessage } from '@/app/lib/ably/ablyMessage';
+import { sendUserMessage } from '@/app/lib/api/message/messageApi';
+import { createFileMessage } from '@/app/lib/createMessage';
+import { uploadFile } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useAuthStore } from '@/app/store/AuthStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { useWavesurfer } from '@wavesurfer/react';
+
 type AudioProps = {
   url: string;
   backgroundColor?: string;
@@ -184,7 +186,7 @@ export function WavesurferRecord({
       wavesurfer.setTime(0);
       setIsPaused(true);
     }
-  }, [recordRef, wavesurfer, setIsPaused]);
+  }, [wavesurfer]);
 
   const handlePlay = useCallback(() => {
     if (!wavesurfer) return;
@@ -197,10 +199,10 @@ export function WavesurferRecord({
       if (!user || !currentChat || !ably) return;
       try {
         const audioMessage = createFileMessage(
-          user!,
+          user,
           currentChat?.id,
           file,
-          reply!
+          reply ?? void 0
         );
         setCurrentMessage((prev) => [...prev, audioMessage]);
         const filesResponse = await uploadFile([file]);
@@ -292,7 +294,7 @@ export function WavesurferRecord({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleAudio, recordRef]);
+  }, [handleAudio]);
 
   return (
     <div

@@ -1,7 +1,6 @@
-import { useChatStore } from "@/app/store/ChatStore";
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
 
-import React from "react";
+import { useChatStore } from '@/app/store/ChatStore';
 
 export default function Edit({
   setMessageText,

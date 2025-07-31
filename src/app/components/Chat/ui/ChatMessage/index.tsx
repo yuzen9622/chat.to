@@ -1,17 +1,19 @@
-import UserPopbox from "@/app/components/ui/UserPopbox";
-import Image from "next/image";
-import { memo, useEffect, useRef } from "react";
-import { twMerge } from "tailwind-merge";
-import SettingBar from "./SettingBar";
-import { Send } from "lucide-react";
-import ReplyMessage from "./ReplyMessage";
-import ReplyNote from "./ReplyNote";
-import { useSession } from "next-auth/react";
-import { ClientMessageInterface } from "@/types/type";
-import Message from "./Message";
-import { usePopbox } from "@/hook/usePopbox";
-import ForwardMessage from "./ForwardMessage";
+import { Send } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { memo, useEffect, useRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
+import UserPopbox from '@/app/components/ui/UserPopbox';
+import { usePopbox } from '@/hook/usePopbox';
+
+import ForwardMessage from './ForwardMessage';
+import Message from './Message';
+import ReplyMessage from './ReplyMessage';
+import ReplyNote from './ReplyNote';
+import SettingBar from './SettingBar';
+
+import type { ClientMessageInterface } from "@/types/type";
 type MessageItemProps = {
   index: number;
   message: ClientMessageInterface;

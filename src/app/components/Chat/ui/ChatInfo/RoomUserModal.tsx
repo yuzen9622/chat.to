@@ -1,8 +1,11 @@
-import { Grow, Modal } from "@mui/material";
-import { Users } from "lucide-react";
-import { useMemo, useState } from "react";
-import RoomUserItem from "./RoomUserItem";
-import { RoomInterface } from "@/types/type";
+import { Users } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+import { Grow, Modal } from '@mui/material';
+
+import RoomUserItem from './RoomUserItem';
+
+import type { RoomInterface } from "@/types/type";
 
 export function RoomUserModal({ currentChat }: { currentChat: RoomInterface }) {
   const [open, setOpen] = useState(false);

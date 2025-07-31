@@ -1,8 +1,9 @@
-import WavesurferAudio from "@/app/components/ui/Audio";
-import { MetaData } from "@/types/type";
-import { useTheme } from "next-themes";
-import { memo } from "react";
+import { useTheme } from 'next-themes';
+import { memo } from 'react';
 
+import WavesurferAudio from '@/app/components/ui/Audio';
+
+import type { MetaData } from "@/types/type";
 const AudioMessage = memo(function AudioMessage({
   metaData,
   isOwn,

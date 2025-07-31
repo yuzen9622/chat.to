@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect } from "react";
-import { useAuthStore } from "../../../store/AuthStore";
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 
-import { Skeleton } from "@mui/material";
-import { fetchUserFriends } from "@/app/lib/api/friend/friendApi";
-import { useSession } from "next-auth/react";
-import FriendItem from "./FriendItem";
+import { fetchUserFriends } from '@/app/lib/api/friend/friendApi';
+import { Skeleton } from '@mui/material';
+
+import { useAuthStore } from '../../../store/AuthStore';
+import FriendItem from './FriendItem';
 
 export default function FriendList() {
   const { friends, setFriends } = useAuthStore();

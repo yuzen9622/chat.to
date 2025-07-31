@@ -1,9 +1,10 @@
-import { formatSize, getFileIcon, handleDownload } from "@/app/lib/util";
-import { ClientMessageInterface } from "@/types/type";
-import { LucideIcon } from "lucide-react";
-import { memo } from "react";
-import { twMerge } from "tailwind-merge";
+import { memo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
+import { formatSize, getFileIcon, handleDownload } from '@/app/lib/util';
+
+import type { ClientMessageInterface } from "@/types/type";
+import type { LucideIcon } from "lucide-react";
 const FileMessage = memo(function FileMessage({
   message,
   isOwn,

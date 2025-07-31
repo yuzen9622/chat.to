@@ -1,8 +1,9 @@
-import { ClientMessageInterface } from "@/types/type";
-import React from "react";
-import { twMerge } from "tailwind-merge";
-import { ForwardIcon } from "lucide-react";
-import Message from "./Message";
+import { ForwardIcon } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
+
+import Message from './Message';
+
+import type { ClientMessageInterface } from "@/types/type";
 
 export default function ForwardMessage({
   message,

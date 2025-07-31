@@ -1,13 +1,16 @@
 "use client";
-import React, { useMemo } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules";
-import NoteCard from "../../ui/note/NoteCard";
-import { useAuthStore } from "../../../store/AuthStore";
-import { useSession } from "next-auth/react";
-import moment from "moment";
-import "swiper/css";
-import "swiper/css/navigation";
+import 'swiper/css';
+import 'swiper/css/navigation';
+
+import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { useMemo } from 'react';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useAuthStore } from '../../../store/AuthStore';
+import NoteCard from '../../ui/note/NoteCard';
+
 export default function FriendNote() {
   const { friends, friendNote } = useAuthStore();
 
@@ -38,29 +41,28 @@ export default function FriendNote() {
 
   const user = useSession()?.data?.user;
   return (
-    <>
-      <Swiper
-        pagination={{
-          clickable: true,
-          dynamicBullets: true,
-        }}
-        navigation={true}
-        slidesPerView={"auto"}
-        spaceBetween={20}
-        slidesPerGroup={3}
-        modules={[Pagination, Navigation]}
-      >
+    <Swiper
+      pagination={{
+        clickable: true,
+        dynamicBullets: true,
+      }}
+      navigation={true}
+      slidesPerView={"auto"}
+      spaceBetween={20}
+      slidesPerGroup={3}
+      modules={[Pagination, Navigation]}
+    >
+      {user && (
         <SwiperSlide className="!w-fit">
-          <NoteCard isOwn={true} user={user!} />
+          <NoteCard isOwn={true} user={user} />
         </SwiperSlide>
+      )}
 
-        {sortedNote &&
-          sortedNote.map((friend) => (
-            <SwiperSlide key={friend.id} className="!w-fit">
-              <NoteCard key={friend.id} isOwn={false} user={friend.user} />
-            </SwiperSlide>
-          ))}
-      </Swiper>
-    </>
+      {sortedNote?.map((friend) => (
+        <SwiperSlide key={friend.id} className="!w-fit">
+          <NoteCard key={friend.id} isOwn={false} user={friend.user} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }

@@ -1,8 +1,10 @@
-import { ClientMessageInterface } from "@/types/type";
-import { useSession } from "next-auth/react";
-import { memo } from "react";
-import { twMerge } from "tailwind-merge";
-import Message from "./Message";
+import { useSession } from 'next-auth/react';
+import { memo } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import Message from './Message';
+
+import type { ClientMessageInterface } from "@/types/type";
 
 const ReplyMessage = memo(function ReplyMessage({
   message,

@@ -1,22 +1,25 @@
 "use client";
-import React from "react";
-import { useChatStore } from "../../../../store/ChatStore";
-import { useAblyStore } from "../../../../store/AblyStore";
-import { X } from "lucide-react";
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import { useChatInfo } from "@/hook/useChatInfo";
-import InfoMedia from "./InfoMedia";
-import { RoomUserModal } from "./RoomUserModal";
-import JoinUserModal from "./JoinUserModal";
-import OutModal from "./OutModal";
+
+import { X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { twMerge } from 'tailwind-merge';
+
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { useChatInfo } from '@/hook/useChatInfo';
+
+import { useAblyStore } from '../../../../store/AblyStore';
+import { useChatStore } from '../../../../store/ChatStore';
+import InfoMedia from './InfoMedia';
+import JoinUserModal from './JoinUserModal';
+import OutModal from './OutModal';
+import { RoomUserModal } from './RoomUserModal';
 
 export default function ChatInfo() {
   const { currentChat, chatInfoOpen, setChatInfoOpen } = useChatStore();
   const { onlineUsers } = useAblyStore();
   const userId = useSession()?.data?.userId;
-  const { recipientUser, displayName } = useChatInfo(currentChat!, userId!);
+
+  const { recipientUser, displayName } = useChatInfo(currentChat, userId ?? "");
   return (
     <div
       className={twMerge(
@@ -34,9 +37,9 @@ export default function ChatInfo() {
         <>
           <div className="flex flex-col items-center justify-center w-full gap-2 py-4 border-b dark:border-white/10">
             {currentChat.room_type === "personal" ? (
-              <BadgeAvatar width={80} height={80} user={recipientUser!} />
+              <BadgeAvatar width={80} height={80} user={recipientUser} />
             ) : (
-              <BadgeAvatar width={80} height={80} room={currentChat!} />
+              <BadgeAvatar width={80} height={80} room={currentChat} />
             )}
             {onlineUsers.some((item) =>
               currentChat?.room_members.some(

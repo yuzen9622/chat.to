@@ -1,5 +1,5 @@
-import React, { DetailsHTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
+import type { DetailsHTMLAttributes } from "react";
+import { twMerge } from 'tailwind-merge';
 
 type ButtonProps = DetailsHTMLAttributes<HTMLButtonElement>;
 

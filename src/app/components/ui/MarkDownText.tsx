@@ -1,7 +1,6 @@
-import React from "react";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { twMerge } from "tailwind-merge";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { twMerge } from 'tailwind-merge';
 
 export default function MarkDownText({
   text,

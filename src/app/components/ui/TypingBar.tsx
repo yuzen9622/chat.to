@@ -1,9 +1,11 @@
-import { TypingInterface } from "@/types/type";
-import React, { useMemo } from "react";
-import Image from "next/image";
-import { useChatStore } from "@/app/store/ChatStore";
-import { useSession } from "next-auth/react";
-import { twMerge } from "tailwind-merge";
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import { useChatStore } from '@/app/store/ChatStore';
+
+import type { TypingInterface } from "@/types/type";
 
 export default function TypingBar({
   typingUsers,
@@ -33,20 +35,19 @@ export default function TypingBar({
         <div className="flex items-center gap-1 ">
           {roomType && roomType === "group" && (
             <span className="relative flex">
-              {isTypingUsers &&
-                isTypingUsers.map((itu, index) => (
-                  <Image
-                    className={twMerge(
-                      " rounded-full   ring-2 ring-white dark:ring-neutral-800 aspect-square",
-                      `-translate-x-[${index + 2}px]`
-                    )}
-                    alt={itu.user.name}
-                    width={20}
-                    height={20}
-                    src={itu.user?.image || "/user.png"}
-                    key={index}
-                  />
-                ))}
+              {isTypingUsers?.map((itu, index) => (
+                <Image
+                  className={twMerge(
+                    " rounded-full   ring-2 ring-white dark:ring-neutral-800 aspect-square",
+                    `-translate-x-[${index + 2}px]`
+                  )}
+                  alt={itu.user.name}
+                  width={20}
+                  height={20}
+                  src={itu.user?.image || "/user.png"}
+                  key={itu.user.id}
+                />
+              ))}
             </span>
           )}
 

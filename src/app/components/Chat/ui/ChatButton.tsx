@@ -1,22 +1,23 @@
 "use client";
-import * as React from "react";
-import { useMemo } from "react";
-import BadgeAvatar from "../../ui/Avatar/Avatar";
-import { LinkHTMLAttributes } from "react";
-import { usePathname } from "next/navigation";
-import { RoomInterface } from "../../../../types/type";
-import { useChatInfo } from "@/hook/useChatInfo";
-import { useLastMessage } from "@/hook/useLastMessage";
-import { useRoomNotify } from "@/hook/useRoomNotify";
-import { messageType } from "../../../lib/util";
-import { TimeAgo } from "../../ui/TimeAgo";
-import { twMerge } from "tailwind-merge";
-import Link from "next/link";
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { useSession } from "next-auth/react";
-import TypingBar from "../../ui/TypingBar";
-import { useChatStore } from "@/app/store/ChatStore";
-import MarkDownText from "../../ui/MarkDownText";
+import { useChatStore } from '@/app/store/ChatStore';
+import { useChatInfo } from '@/hook/useChatInfo';
+import { useLastMessage } from '@/hook/useLastMessage';
+import { useRoomNotify } from '@/hook/useRoomNotify';
+
+import { messageType } from '../../../lib/util';
+import BadgeAvatar from '../../ui/Avatar/Avatar';
+import MarkDownText from '../../ui/MarkDownText';
+import { TimeAgo } from '../../ui/TimeAgo';
+import TypingBar from '../../ui/TypingBar';
+
+import type { LinkHTMLAttributes } from "react";
+import type { RoomInterface } from "../../../../types/type";
 type ButtonProps = LinkHTMLAttributes<HTMLAnchorElement>;
 export default function ChatButton({
   room,
@@ -31,7 +32,7 @@ export default function ChatButton({
 
   const userId = useSession()?.data?.userId;
   const { typingUsers } = useChatStore();
-  const { recipientUser, displayName } = useChatInfo(room, userId!);
+  const { recipientUser, displayName } = useChatInfo(room, userId ?? "");
 
   const messageContent = useMemo(() => {
     if (!lastMessage) return null;
@@ -45,7 +46,8 @@ export default function ChatButton({
       file: "傳送檔案",
       audio: "傳送語音",
     };
-    const msgType = messageType(lastMessage.meta_data!);
+    if (!lastMessage.meta_data) return lastMessage.text;
+    const msgType = messageType(lastMessage.meta_data);
 
     return msgType ? type[msgType] : lastMessage.text;
   }, [lastMessage]);
@@ -78,7 +80,7 @@ export default function ChatButton({
     >
       <div className="flex items-center w-full space-x-3">
         {room.room_type === "personal" ? (
-          <BadgeAvatar width={50} height={50} user={recipientUser!} />
+          <BadgeAvatar width={50} height={50} user={recipientUser} />
         ) : (
           <BadgeAvatar width={50} height={50} room={room} />
         )}
@@ -116,7 +118,7 @@ export default function ChatButton({
                 {lastMessage && lastMessage.id !== "" && (
                   <span className="flex-shrink-0">
                     ．
-                    <TimeAgo date={lastMessage.created_at!} />
+                    <TimeAgo date={lastMessage.created_at} />
                   </span>
                 )}
               </>

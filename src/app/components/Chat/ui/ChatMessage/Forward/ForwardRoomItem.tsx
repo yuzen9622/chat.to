@@ -1,10 +1,11 @@
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { useChatInfo } from "@/hook/useChatInfo";
-import { Forward, RoomInterface } from "@/types/type";
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { twMerge } from 'tailwind-merge';
 
-import React, { Dispatch, SetStateAction } from "react";
-import { twMerge } from "tailwind-merge";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { useChatInfo } from '@/hook/useChatInfo';
+
+import type { Dispatch, SetStateAction } from "react";
+import type { Forward, RoomInterface } from "@/types/type";
 
 export default function ForwardRoomItem({
   room,
@@ -16,7 +17,7 @@ export default function ForwardRoomItem({
   setTargets: Dispatch<SetStateAction<Forward[]>>;
 }) {
   const userId = useSession()?.data?.userId;
-  const { displayName, recipientUser } = useChatInfo(room, userId!);
+  const { displayName, recipientUser } = useChatInfo(room, userId ?? "");
   return (
     <button
       onClick={() =>
@@ -35,7 +36,7 @@ export default function ForwardRoomItem({
       {room.room_type === "group" ? (
         <BadgeAvatar room={room} />
       ) : (
-        <BadgeAvatar user={recipientUser!} />
+        <BadgeAvatar user={recipientUser} />
       )}
       <span>
         <p className="truncate text-start ">{displayName}</p>

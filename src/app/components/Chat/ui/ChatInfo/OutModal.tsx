@@ -1,6 +1,6 @@
-import React from "react";
-import { useChatAction } from "./hook/useChatAction";
-import { LogOut, Trash2Icon } from "lucide-react";
+import { LogOut, Trash2Icon } from 'lucide-react';
+
+import { useChatAction } from './hook/useChatAction';
 
 export default function OutModal({ isOwner }: { isOwner: boolean }) {
   const { handleDelete, handleQuit } = useChatAction();

@@ -1,10 +1,13 @@
-import PreviewMediaModal from "@/app/components/ui/Modal/PreviewMediaModal";
-import { messageType } from "@/app/lib/util";
-import { ClientMessageInterface } from "@/types/type";
-import Image from "next/image";
-import { memo, useCallback, useMemo, useState } from "react";
-import { PhotoProvider, PhotoView } from "react-photo-view";
-import "react-photo-view/dist/react-photo-view.css";
+import 'react-photo-view/dist/react-photo-view.css';
+
+import Image from 'next/image';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+
+import PreviewMediaModal from '@/app/components/ui/Modal/PreviewMediaModal';
+import { messageType } from '@/app/lib/util';
+
+import type { ClientMessageInterface } from "@/types/type";
 const MediaMessage = memo(function MediaMessage({
   message,
 }: {

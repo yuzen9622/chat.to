@@ -1,19 +1,19 @@
 "use client";
-import React, { useCallback } from "react";
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { Info, Phone, Video } from "lucide-react";
-import { useChatStore } from "@/app/store/ChatStore";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import { ChevronLeft, Info, Phone, Video } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { useAblyStore } from "@/app/store/AblyStore";
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import { useChatInfo } from "@/hook/useChatInfo";
-import { useCallStore } from "@/app/store/CallStore";
-import { CallType } from "@/types/type";
-import { startStream } from "@/app/lib/util";
-import { useRouter } from "next/navigation";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { startStream } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useCallStore } from '@/app/store/CallStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { useChatInfo } from '@/hook/useChatInfo';
+
+import type { CallType } from "@/types/type";
 
 export default function ChatHeader() {
   const { currentChat, setChatInfoOpen, chatInfoOpen } = useChatStore();
@@ -25,7 +25,7 @@ export default function ChatHeader() {
   const userId = useSession()?.data?.userId;
   const user = useSession()?.data?.user;
 
-  const { recipientUser, displayName } = useChatInfo(currentChat!, userId!);
+  const { recipientUser, displayName } = useChatInfo(currentChat, userId ?? "");
 
   const handleCall = useCallback(
     async (callType: CallType) => {
@@ -76,7 +76,7 @@ export default function ChatHeader() {
           {/* 頭像 */}
           <div className="min-w-fit min-h-fit shrink-0">
             {currentChat.room_type === "personal" ? (
-              <BadgeAvatar user={recipientUser!} width={40} height={40} />
+              <BadgeAvatar user={recipientUser} width={40} height={40} />
             ) : (
               <BadgeAvatar room={currentChat} width={40} height={40} />
             )}

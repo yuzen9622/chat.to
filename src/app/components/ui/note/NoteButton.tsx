@@ -1,21 +1,19 @@
 "use client";
-import { Grow, Modal } from "@mui/material";
-import { Ellipsis, X } from "lucide-react";
-import React, {
-  ChangeEvent,
-  Dispatch,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
-import Image from "next/image";
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import { NoteInterface, UserInterface } from "../../../../types/type";
-import { useAblyStore } from "../../../store/AblyStore";
-import NoteModal from "../Modal/NoteModal";
-import { useAuthStore } from "@/app/store/AuthStore";
-import { deleteNote, updateNote } from "@/app/lib/api/note/noteApi";
+import { Ellipsis, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useCallback, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import { deleteNote, updateNote } from '@/app/lib/api/note/noteApi';
+import { useAuthStore } from '@/app/store/AuthStore';
+import { Grow, Modal } from '@mui/material';
+
+import { useAblyStore } from '../../../store/AblyStore';
+import NoteModal from '../Modal/NoteModal';
+
+import type { ChangeEvent, Dispatch } from "react";
+import type { NoteInterface, UserInterface } from "../../../../types/type";
 
 export default function NoteButton({
   note,
@@ -25,7 +23,7 @@ export default function NoteButton({
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<React.SetStateAction<boolean>>;
-  note: NoteInterface | null;
+  note?: NoteInterface;
   user: UserInterface;
 }) {
   const [noteText, setNoteText] = useState("");

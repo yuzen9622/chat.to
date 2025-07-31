@@ -1,9 +1,10 @@
-import { Popover } from "@mui/material";
-import React from "react";
-import ProfileCard from "../Profile/ui/ProfileCard";
-import { UserInterface } from "@/types/type";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
+import { Popover } from '@mui/material';
+
+import ProfileCard from '../Profile/ui/ProfileCard';
+
+import type { UserInterface } from "@/types/type";
 export default function UserPopbox({
   user,
   anchorEl,

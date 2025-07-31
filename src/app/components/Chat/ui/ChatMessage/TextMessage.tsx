@@ -1,7 +1,9 @@
-import MarkDownText from "@/app/components/ui/MarkDownText";
-import { ClientMessageInterface } from "@/types/type";
-import { memo } from "react";
-import { twMerge } from "tailwind-merge";
+import { memo } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import MarkDownText from '@/app/components/ui/MarkDownText';
+
+import type { ClientMessageInterface } from "@/types/type";
 
 const TextMessage = memo(function TextMessage({
   message,

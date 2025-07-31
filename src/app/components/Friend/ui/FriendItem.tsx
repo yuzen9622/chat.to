@@ -1,16 +1,18 @@
-import { FriendInterface } from "@/types/type";
-import React from "react";
-import BadgeAvatar from "../../ui/Avatar/Avatar";
-import FriendButton from "./FriendButton";
+import { usePopbox } from '@/hook/usePopbox';
 
-import UserPopbox from "../../ui/UserPopbox";
-import { usePopbox } from "@/hook/usePopbox";
+import BadgeAvatar from '../../ui/Avatar/Avatar';
+import UserPopbox from '../../ui/UserPopbox';
+import FriendButton from './FriendButton';
+
+import type { FriendInterface } from "@/types/type";
+
 export default function FriendItem({ friend }: { friend: FriendInterface }) {
   const { anchorEl, handleClose, handleOpen } = usePopbox();
 
   return (
     <div className="flex items-center justify-between p-1 bg-gray-100 rounded-lg opacity-0 dark:bg-white/10 animate-slide-in">
       <button
+        type="button"
         onClick={handleOpen}
         className="flex items-center w-full gap-2 overflow-hidden cursor-pointer"
       >

@@ -1,17 +1,18 @@
 "use client";
-import React, { useCallback, useState } from "react";
-import { FriendInterface, RoomInterface } from "../../../../types/type";
-import { useChatStore } from "../../../store/ChatStore";
-import { getPersonalRoom } from "@/app/lib/api/room/roomApi";
-import { useRouter } from "next/navigation";
-import { useAblyStore } from "../../../store/AblyStore";
+import { Ellipsis, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { useAuthStore } from "../../../store/AuthStore";
+import { getPersonalRoom } from '@/app/lib/api/room/roomApi';
 
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import WarningButton from "../../ui/WarningButton";
-import { Ellipsis, Trash2 } from "lucide-react";
+import { useAblyStore } from '../../../store/AblyStore';
+import { useAuthStore } from '../../../store/AuthStore';
+import { useChatStore } from '../../../store/ChatStore';
+import WarningButton from '../../ui/WarningButton';
+
+import type { FriendInterface, RoomInterface } from "../../../../types/type";
 export default function FriendButton({ friend }: { friend: FriendInterface }) {
   const { rooms } = useChatStore();
   const { setFriends } = useAuthStore();
@@ -33,7 +34,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
       setIsLoading((prev) => ({ ...prev, create: true }));
       const newRoom: RoomInterface = await getPersonalRoom(
         friend.personal_room_id,
-        userId!,
+        userId ?? "",
         friend.friend_id
       );
       const roomMembers = newRoom.room_members.map((rm) => rm.user_id);
@@ -103,6 +104,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
   return (
     <div className="inline-flex gap-4 text-nowrap">
       <button
+        type="button"
         onClick={handleClick}
         disabled={isLoading.create}
         title="發送訊息"
@@ -111,9 +113,7 @@ export default function FriendButton({ friend }: { friend: FriendInterface }) {
         {isLoading.create ? (
           <Ellipsis className=" animate-pulse" />
         ) : (
-          <>
-            <p className="">發送訊息</p>
-          </>
+          <p>發送訊息</p>
         )}
       </button>
       <WarningButton

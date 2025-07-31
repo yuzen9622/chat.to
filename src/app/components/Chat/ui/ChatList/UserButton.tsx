@@ -1,9 +1,9 @@
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { FriendInterface } from "@/types/type";
-import { Check } from "lucide-react";
-import React from "react";
+import { Check } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
-import { twMerge } from "tailwind-merge";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+
+import type { FriendInterface } from "@/types/type";
 
 interface Props {
   friend: FriendInterface;

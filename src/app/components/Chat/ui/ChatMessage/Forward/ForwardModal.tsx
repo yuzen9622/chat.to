@@ -1,15 +1,17 @@
-import { useChatStore } from "@/app/store/ChatStore";
-import { ClientMessageInterface, Forward } from "@/types/type";
-import { Grow, Modal } from "@mui/material";
-import React, { useCallback, useMemo, useState } from "react";
-import ForwardRoomItem from "./ForwardRoomItem";
-import { Ellipsis, ForwardIcon } from "lucide-react";
-import { twMerge } from "tailwind-merge";
-import { useSession } from "next-auth/react";
-import { forwardMessage } from "@/app/lib/api/message/messageApi";
-import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
-import { createForwardMessage } from "@/app/lib/createMessage";
+import { Ellipsis, ForwardIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useCallback, useMemo, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
+import { sendAblyMessage } from '@/app/lib/ably/ablyMessage';
+import { forwardMessage } from '@/app/lib/api/message/messageApi';
+import { createForwardMessage } from '@/app/lib/createMessage';
+import { useChatStore } from '@/app/store/ChatStore';
+import { Grow, Modal } from '@mui/material';
+
+import ForwardRoomItem from './ForwardRoomItem';
+
+import type { ClientMessageInterface, Forward } from "@/types/type";
 export default function ForwardModal({
   message,
 }: {
@@ -31,7 +33,8 @@ export default function ForwardModal({
   const handleForward = useCallback(async () => {
     try {
       setLoading(true);
-      const forwardMsg = createForwardMessage(user!, message, text);
+      if (!user) return;
+      const forwardMsg = createForwardMessage(user, message, text);
 
       const forwards = await forwardMessage(targets, forwardMsg);
       await Promise.all(

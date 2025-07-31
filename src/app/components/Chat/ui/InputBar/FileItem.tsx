@@ -1,9 +1,11 @@
-import { formatSize, getFileIcon } from "@/app/lib/util";
-import { LucideIcon, X } from "lucide-react";
-import Image from "next/image";
-import React, { useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import { X } from 'lucide-react';
+import Image from 'next/image';
+import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
+import { formatSize, getFileIcon } from '@/app/lib/util';
+
+import type { LucideIcon } from "lucide-react";
 export function FileItem({
   file,
   handleRemove,
@@ -28,7 +30,7 @@ export function FileItem({
       {type === "video" && (
         <video className=" rounded-2xl max-w-24 max-h-24" src={url}></video>
       )}
-      {type !== "video" && type != "image" && (
+      {type !== "video" && type !== "image" && (
         <div
           title={file.name}
           className={twMerge(
