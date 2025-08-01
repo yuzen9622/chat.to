@@ -1,22 +1,25 @@
 "use client";
 import type { InboundMessage } from "ably";
-import { ChevronDown } from 'lucide-react';
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GroupedVirtuoso } from 'react-virtuoso';
-import { twMerge } from 'tailwind-merge';
+import { ChevronDown } from "lucide-react";
+import moment from "moment";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { GroupedVirtuoso } from "react-virtuoso";
+import { twMerge } from "tailwind-merge";
 
-import ChatHeader from '@/app/components/Chat/ui/ChatHeader';
-import { fetchRoomMessage, readMessage } from '@/app/lib/api/message/messageApi';
-import { CircularProgress } from '@mui/material';
+import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
+import {
+  fetchRoomMessage,
+  readMessage,
+} from "@/app/lib/api/message/messageApi";
+import { CircularProgress } from "@mui/material";
 
-import { clearReadMessage } from '../../../lib/util';
-import { useAblyRoom, useAblyStore } from '../../../store/AblyStore';
-import { useChatStore } from '../../../store/ChatStore';
-import TypingBar from '../../ui/TypingBar';
-import Message from './ChatMessage/index';
-import InputBar from './InputBar/index';
+import { clearReadMessage } from "../../../lib/util";
+import { useAblyRoom, useAblyStore } from "../../../store/AblyStore";
+import { useChatStore } from "../../../store/ChatStore";
+import TypingBar from "../../ui/TypingBar";
+import Message from "./ChatMessage/index";
+import InputBar from "./InputBar/index";
 
 import type { VirtuosoHandle } from "react-virtuoso";
 import type { ClientMessageInterface } from "../../../../types/type";
@@ -118,28 +121,31 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
     isLoading,
   ]);
 
-  const scrollToMessage = async (messageId: string) => {
-    if (!messageId) return;
-    let index = currentMessage.findIndex((v) => v.id === messageId);
-    const current = currentMessage;
+  const scrollToMessage = useCallback(
+    async (messageId: string) => {
+      if (!messageId) return;
+      let index = currentMessage.findIndex((v) => v.id === messageId);
+      const current = currentMessage;
 
-    findRef.current = messageId;
-    if (index !== -1) {
-      scrollRef.current?.scrollToIndex(index);
-    } else {
-      while (index === -1) {
-        const newMessages = await loadMoreMessages();
+      findRef.current = messageId;
+      if (index !== -1) {
+        scrollRef.current?.scrollToIndex(index);
+      } else {
+        while (index === -1) {
+          const newMessages = await loadMoreMessages();
 
-        if (newMessages) {
-          current.unshift(...newMessages);
-          index = current.findIndex((v) => v.id === messageId);
+          if (newMessages) {
+            current.unshift(...newMessages);
+            index = current.findIndex((v) => v.id === messageId);
+          }
         }
+        scrollRef.current?.scrollToIndex(index);
       }
-      scrollRef.current?.scrollToIndex(index);
-    }
-    findRef.current = "";
-    setTarget(messageId);
-  };
+      findRef.current = "";
+      setTarget(messageId);
+    },
+    [currentMessage, loadMoreMessages]
+  );
 
   const scrollToBottom = useCallback(() => {
     if (!scrollRef.current) return;
@@ -225,66 +231,70 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
                 " relative flex-1 p-2 overflow-y-hidden duration-200 fade-in animate-in  dark:border-none "
               )}
             >
-              <GroupedVirtuoso
-                increaseViewportBy={1500}
-                ref={scrollRef}
-                className="h-full overflow-x-hidden fade-in animate-in"
-                atBottomStateChange={(atBottom) => setDownBtnAppear(!atBottom)}
-                atTopStateChange={(atTop: boolean) => {
-                  if (atTop && !isLoading && !shouldScroll) {
-                    loadMoreMessages();
+              {flatMessages.length > 0 && (
+                <GroupedVirtuoso
+                  increaseViewportBy={1500}
+                  ref={scrollRef}
+                  className="h-full overflow-x-hidden fade-in animate-in"
+                  atBottomStateChange={(atBottom) =>
+                    setDownBtnAppear(!atBottom)
                   }
-                }}
-                onScroll={(e) => {
-                  if (
-                    e.currentTarget.scrollTop === 0 &&
-                    !isLoading &&
-                    !shouldScroll
-                  ) {
-                    loadMoreMessages();
+                  atTopStateChange={(atTop: boolean) => {
+                    if (atTop && !isLoading && !shouldScroll) {
+                      loadMoreMessages();
+                    }
+                  }}
+                  onScroll={(e) => {
+                    if (
+                      e.currentTarget.scrollTop === 0 &&
+                      !isLoading &&
+                      !shouldScroll
+                    ) {
+                      loadMoreMessages();
+                    }
+                  }}
+                  followOutput={(atBottom) => {
+                    const lastMessage = flatMessages[flatMessages.length - 1];
+                    if (
+                      lastMessage?.sender === userId &&
+                      atBottom &&
+                      !downBtnAppear
+                    ) {
+                      return true;
+                    }
+                    return false;
+                  }}
+                  initialTopMostItemIndex={
+                    flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
                   }
-                }}
-                followOutput={(atBottom) => {
-                  const lastMessage = flatMessages[flatMessages.length - 1];
-                  if (
-                    lastMessage?.sender === userId &&
-                    atBottom &&
-                    !downBtnAppear
-                  ) {
-                    return true;
-                  }
-                  return false;
-                }}
-                initialTopMostItemIndex={
-                  flatMessages.length - 1 > 0 ? flatMessages.length - 1 : 0
-                }
-                context={{ isLoading }}
-                groupContent={dateContent}
-                groupCounts={dateCounts}
-                itemContent={(index) => (
-                  <Message
-                    key={flatMessages[index].id}
-                    index={index}
-                    target={target}
-                    setTarget={setTarget}
-                    scrollToMessage={scrollToMessage}
-                    message={flatMessages[index]}
-                  />
-                )}
-                components={{
-                  Header: ({ context: { isLoading } }) => {
-                    return (
-                      <>
-                        {isLoading && (
-                          <span className="flex items-center justify-center w-full">
-                            <CircularProgress size={24} />
-                          </span>
-                        )}
-                      </>
-                    );
-                  },
-                }}
-              />
+                  context={{ isLoading }}
+                  groupContent={dateContent}
+                  groupCounts={dateCounts}
+                  itemContent={(index) => (
+                    <Message
+                      key={flatMessages[index].id}
+                      index={index}
+                      target={target}
+                      setTarget={setTarget}
+                      scrollToMessage={scrollToMessage}
+                      message={flatMessages[index]}
+                    />
+                  )}
+                  components={{
+                    Header: ({ context: { isLoading } }) => {
+                      return (
+                        <>
+                          {isLoading && (
+                            <span className="flex items-center justify-center w-full">
+                              <CircularProgress size={24} />
+                            </span>
+                          )}
+                        </>
+                      );
+                    },
+                  }}
+                />
+              )}
 
               {downBtnAppear && (
                 <button

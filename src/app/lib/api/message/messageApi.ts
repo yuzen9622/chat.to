@@ -120,7 +120,8 @@ export const forwardMessage = async (
 export const fetchRoomMessage = async (
   roomId: string,
   start: number,
-  end: number
+  end: number,
+  signal?: AbortSignal
 ): Promise<ClientMessageInterface[]> => {
   try {
     const response = await fetch(
@@ -130,6 +131,7 @@ export const fetchRoomMessage = async (
         headers: {
           "Content-Type": "application/json",
         },
+        signal,
       }
     );
     const data = await response.json();

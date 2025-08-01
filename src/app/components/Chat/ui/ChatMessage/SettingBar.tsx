@@ -1,16 +1,23 @@
-import { Clipboard, Download, Ellipsis, Pencil, Reply, Trash2 } from 'lucide-react';
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import React, { memo, useCallback } from 'react';
-import { twMerge } from 'tailwind-merge';
+import {
+  Clipboard,
+  Download,
+  Ellipsis,
+  Pencil,
+  Reply,
+  Trash2,
+} from "lucide-react";
+import moment from "moment";
+import { useSession } from "next-auth/react";
+import React, { memo, useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { deleteMessage } from '@/app/lib/api/message/messageApi';
-import { Copy2ClipBoard, handleDownload, messageType } from '@/app/lib/util';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useChatStore } from '@/app/store/ChatStore';
-import { Popover } from '@mui/material';
+import { deleteMessage } from "@/app/lib/api/message/messageApi";
+import { Copy2ClipBoard, handleDownload, messageType } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { Popover } from "@mui/material";
 
-import ForwardModal from './Forward/ForwardModal';
+import ForwardModal from "./Forward/ForwardModal";
 
 import type { ClientMessageInterface } from "@/types/type";
 const SettingBar = memo(function SettingBar({
@@ -67,13 +74,13 @@ const SettingBar = memo(function SettingBar({
   return (
     <div
       className={twMerge(
-        "flex    justify-end items-end   opacity-0 group-hover:opacity-100",
+        "flex    justify-end items-end    opacity-0 group-hover:opacity-100",
         isOwn ? " flex-row-reverse" : " flex-row"
       )}
     >
       <button
         className={twMerge(
-          "  p-1 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+          "  p-1 inline-flex active:scale-95 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
         )}
         onClick={handleReply}
       >
@@ -87,7 +94,7 @@ const SettingBar = memo(function SettingBar({
         aria-expanded={open ? "true" : undefined}
         data-hs-dropdown-toggle={`dropdown-menu-${message.id}`}
         className={twMerge(
-          "  p-2 inline-flex justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 "
+          "  p-2 inline-flex active:scale-95 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 "
         )}
         onClick={handleOpen}
       >
@@ -112,22 +119,21 @@ const SettingBar = memo(function SettingBar({
           },
         }}
       >
-        <div className="flex flex-col p-1 bg-white border rounded-md dark:bg-neutral-900">
+        <div className="flex flex-col w-32 p-1 bg-white border rounded-md dark:bg-neutral-900">
           <p className="text-xs text-center dark:text-white/50">
             {moment(message.created_at).format("a hh:mm")}
           </p>
           {!message.meta_data && (
             <button
               className={twMerge(
-                "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+                "w-full flex items-center justify-between gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
               )}
               onClick={async () => {
                 await Copy2ClipBoard(message.text);
                 handleClose();
               }}
             >
-              <Clipboard size={20} />
-              複製
+              複製 <Clipboard size={20} />
             </button>
           )}
           <ForwardModal message={message} />
@@ -135,21 +141,21 @@ const SettingBar = memo(function SettingBar({
           {message.meta_data && messageType(message.meta_data) !== "audio" && (
             <button
               className={twMerge(
-                "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+                "w-full justify-between flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
               )}
               onClick={() => {
                 handleDownload(message.meta_data?.url || "", message.text);
               }}
             >
-              <Download size={20} />
               下載
+              <Download size={20} />
             </button>
           )}
           {message.sender === userId && (
             <div>
               <button
                 className={twMerge(
-                  "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700",
+                  "w-full justify-between flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700",
                   (message.sender !== userId || message.meta_data) && "hidden"
                 )}
                 onClick={() => {
@@ -158,12 +164,12 @@ const SettingBar = memo(function SettingBar({
                   handleClose();
                 }}
               >
-                <Pencil size={20} />
-                編輯
+                編輯 <Pencil size={20} />
               </button>
+
               <button
                 className={twMerge(
-                  "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md hover:bg-gray-100 text-red-400 hover:dark:bg-neutral-700",
+                  "w-full justify-between flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md hover:bg-gray-100 text-red-400 hover:dark:bg-neutral-700",
                   message.sender !== userId && "hidden"
                 )}
                 onClick={() => {
@@ -171,8 +177,7 @@ const SettingBar = memo(function SettingBar({
                   handleClose();
                 }}
               >
-                <Trash2 size={20} />
-                刪除
+                刪除 <Trash2 size={20} />
               </button>
             </div>
           )}

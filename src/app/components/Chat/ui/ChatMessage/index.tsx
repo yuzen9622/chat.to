@@ -1,17 +1,17 @@
-import { Send } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { memo, useEffect, useRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { Send } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { memo, useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 
-import UserPopbox from '@/app/components/ui/UserPopbox';
-import { usePopbox } from '@/hook/usePopbox';
+import UserPopbox from "@/app/components/ui/UserPopbox";
+import { usePopbox } from "@/hook/usePopbox";
 
-import ForwardMessage from './ForwardMessage';
-import Message from './Message';
-import ReplyMessage from './ReplyMessage';
-import ReplyNote from './ReplyNote';
-import SettingBar from './SettingBar';
+import ForwardMessage from "./ForwardMessage";
+import Message from "./Message";
+import ReplyMessage from "./ReplyMessage";
+import ReplyNote from "./ReplyNote";
+import SettingBar from "./SettingBar";
 
 import type { ClientMessageInterface } from "@/types/type";
 type MessageItemProps = {
@@ -19,7 +19,6 @@ type MessageItemProps = {
   message: ClientMessageInterface;
   scrollToMessage: (messageId: string) => Promise<void>;
   target: string;
-
   setTarget: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -38,6 +37,7 @@ const MessageItem = memo(function MessageItem({
   const { anchorEl, handleClose, handleOpen } = usePopbox();
 
   useEffect(() => {
+    console.log("render:", message.id);
     if (!messageRef.current) return;
     const observer = new IntersectionObserver(
       (el) => {

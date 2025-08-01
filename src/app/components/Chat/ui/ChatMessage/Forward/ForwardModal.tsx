@@ -1,15 +1,15 @@
-import { Ellipsis, ForwardIcon } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useCallback, useMemo, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { Ellipsis, ForwardIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useCallback, useMemo, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { sendAblyMessage } from '@/app/lib/ably/ablyMessage';
-import { forwardMessage } from '@/app/lib/api/message/messageApi';
-import { createForwardMessage } from '@/app/lib/createMessage';
-import { useChatStore } from '@/app/store/ChatStore';
-import { Grow, Modal } from '@mui/material';
+import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
+import { forwardMessage } from "@/app/lib/api/message/messageApi";
+import { createForwardMessage } from "@/app/lib/createMessage";
+import { useChatStore } from "@/app/store/ChatStore";
+import { Grow, Modal } from "@mui/material";
 
-import ForwardRoomItem from './ForwardRoomItem';
+import ForwardRoomItem from "./ForwardRoomItem";
 
 import type { ClientMessageInterface, Forward } from "@/types/type";
 export default function ForwardModal({
@@ -54,11 +54,10 @@ export default function ForwardModal({
         type="button"
         onClick={() => setOpen(true)}
         className={twMerge(
-          "w-full flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
+          "w-full  justify-between flex items-center gap-x-3.5 py-1.5 px-2.5 text-sm rounded-md text-stone-700 hover:bg-gray-100 dark:text-neutral-300 hover:dark:bg-neutral-700"
         )}
       >
-        <ForwardIcon size={20} />
-        轉發
+        轉發 <ForwardIcon size={20} />
       </button>
       <Modal
         className="flex items-center justify-center w-full h-full "

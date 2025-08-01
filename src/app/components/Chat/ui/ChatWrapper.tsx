@@ -1,14 +1,14 @@
 "use client"; // 表示這是一個 Client Component
-import { ChannelProvider } from 'ably/react';
-import { useEffect } from 'react';
+import { ChannelProvider } from "ably/react";
+import { useEffect } from "react";
 
-import { fetchRoomMessage } from '@/app/lib/api/message/messageApi';
+import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
 
-import { clearReadMessage } from '../../../lib/util';
-import { useAblyStore } from '../../../store/AblyStore';
-import { useChatStore } from '../../../store/ChatStore';
-import ChatInfo from './ChatInfo/index';
-import ChatRoom from './ChatRoom';
+import { clearReadMessage } from "../../../lib/util";
+import { useAblyStore } from "../../../store/AblyStore";
+import { useChatStore } from "../../../store/ChatStore";
+import ChatInfo from "./ChatInfo/index";
+import ChatRoom from "./ChatRoom";
 
 import type { RoomInterface } from "../../../../types/type";
 export default function ChatRoomWrapper({
@@ -32,10 +32,10 @@ export default function ChatRoomWrapper({
     if (!room) return;
 
     setCurrentChat(room);
-
+    const controller = new AbortController();
     const getRoomMessages = async () => {
       try {
-        const data = await fetchRoomMessage(room.id, 0, 20);
+        const data = await fetchRoomMessage(room.id, 0, 20, controller.signal);
         setCurrentMessage(() => data);
       } catch (error) {
         console.log(error);
@@ -44,19 +44,16 @@ export default function ChatRoomWrapper({
     if (cachedMessages.get(room.id)) {
       const getCached = cachedMessages.get(room.id);
       if (getCached) {
-        setCurrentMessage((prev) => {
-          if (prev.length === 0) {
-            return getCached;
-          }
-          return prev;
-        });
+        setCurrentMessage((prev) => (prev.length === 0 ? getCached : prev));
       }
     }
-    getRoomMessages();
 
+    getRoomMessages();
     clearReadMessage(room.id);
+
     return () => {
       setCurrentChat(null);
+      controller.abort();
     };
   }, [room, setCurrentChat, setCurrentMessage, cachedMessages]);
 
