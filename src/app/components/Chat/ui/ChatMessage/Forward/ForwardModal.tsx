@@ -12,6 +12,7 @@ import { Grow, Modal } from "@mui/material";
 import ForwardRoomItem from "./ForwardRoomItem";
 
 import type { ClientMessageInterface, Forward } from "@/types/type";
+
 export default function ForwardModal({
   message,
 }: {
@@ -67,7 +68,7 @@ export default function ForwardModal({
         <Grow in={open}>
           <div className="flex flex-col w-11/12 max-w-lg gap-3 p-3 bg-white rounded-md h-4/5 dark:bg-stone-900">
             <h1 className="flex text-2xl">轉發</h1>
-            <div className="flex flex-col h-full gap-2 overflow-auto">
+            <div className="flex flex-col h-full gap-2 overflow-x-hidden overflow-y-auto">
               {targetRoom.map((room) => (
                 <ForwardRoomItem
                   key={room.id}
@@ -84,6 +85,7 @@ export default function ForwardModal({
                 <input
                   type="text"
                   value={text}
+                  placeholder="輸入文字 (可選)"
                   onChange={(e) => setText(e.target.value)}
                   className="flex-1 h-full px-3 py-2 bg-transparent rounded-md outline-none"
                 />

@@ -1,6 +1,11 @@
-import { ClientMessageInterface, ServerMessageInterface } from "@/types/type";
-import { supabase } from "../../app/lib/supabasedb";
 import { omit } from "lodash";
+
+import { supabase } from "../../app/lib/supabasedb";
+
+import type {
+  ClientMessageInterface,
+  ServerMessageInterface,
+} from "@/types/type";
 
 export const insertMessage = async (
   message: ServerMessageInterface
@@ -11,7 +16,7 @@ export const insertMessage = async (
     .from("messages")
     .insert([cleanedMessage])
     .select(
-      "*,reply(id,sender,sender_info:users(id,name,image),text,type,meta_data),sender_info:users(id,name,image),forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)"
+      "*,reply(id,sender,sender_info:users(id,name,image),text,type,meta_data,forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)),sender_info:users(id,name,image),forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)"
     )
     .limit(1)
     .maybeSingle();
@@ -28,7 +33,7 @@ export const selectMessages = async (
   const { data, error } = await supabase
     .from("messages")
     .select(
-      "*,reply(id,sender,sender_info:users(id,name,image),text,type,meta_data),sender_info:users(id,name,image),forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)"
+      "*,reply(id,sender,sender_info:users(id,name,image),text,type,meta_data,forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)),sender_info:users(id,name,image),forward(id,sender,sender_info:users(id,name,image),text,type,meta_data,created_at)"
     )
     .eq("room", roomId)
     .order("created_at", { ascending: false })

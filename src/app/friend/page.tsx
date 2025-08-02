@@ -1,8 +1,7 @@
-import React from "react";
-import FriendRequest from "@/app/components/Friend/ui/FriendRequest";
 import FriendList from "@/app/components/Friend/ui/FriendList";
+import FriendRequest from "@/app/components/Friend/ui/FriendRequest";
 
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "朋友",

@@ -1,8 +1,8 @@
-import { useSession } from 'next-auth/react';
-import { twMerge } from 'tailwind-merge';
+import { useSession } from "next-auth/react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { useChatInfo } from '@/hook/useChatInfo';
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import { useChatInfo } from "@/hook/useChatInfo";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { Forward, RoomInterface } from "@/types/type";
@@ -28,18 +28,23 @@ export default function ForwardRoomItem({
         })
       }
       className={twMerge(
-        " relative flex  hover:dark:bg-white/10 p-2 rounded-md items-center disabled:text-white/40  gap-2 w-full text-white  min-w-fit after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
+        " relative flex  hover:dark:bg-white/10  p-2 rounded-md  items-center disabled:text-white/40  gap-2 w-full max-w-full text-white   after:content-[''] after:text-xs after:absolute after:w-4 after:h-4 after:border after:bottom-6 after:right-2 after:rounded-full",
         isSelected &&
           "after:content-['✔'] after:text-xs after:absolute after:w-4 after:border-0 after:h-4 after:bottom-6 after:right-2 after:rounded-full after:animate-in after:zoom-in-0 after:bg-blue-500"
       )}
     >
-      {room.room_type === "group" ? (
-        <BadgeAvatar room={room} />
-      ) : (
-        <BadgeAvatar user={recipientUser} />
-      )}
-      <span>
-        <p className="truncate text-start ">{displayName}</p>
+      <div className="w-fit h-fit">
+        {room.room_type === "group" ? (
+          <BadgeAvatar room={room} />
+        ) : (
+          <BadgeAvatar user={recipientUser} />
+        )}
+      </div>
+
+      <span className="flex flex-col items-start w-10/12 gap-1 overflow-hidden">
+        <p className="w-full overflow-hidden truncate text-start">
+          {displayName}
+        </p>
         <p className="text-xs font-bold truncate w-fit dark:text-stone-500 text-stone-100 ">
           {room.room_type === "group" ? "群組聊天室" : "個人聊天室"}
         </p>

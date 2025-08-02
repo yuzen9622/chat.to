@@ -1,24 +1,24 @@
+import type { RealtimeChannel } from "ably";
 import {
-  ClientMessageInterface,
-  MetaData,
-  CallType,
-  ServerMessageInterface,
-} from "../../types/type";
+  ChartPie,
+  File,
+  FileArchive,
+  FileImage,
+  FileJson,
+  FileText,
+  LetterText,
+  Sheet,
+} from "lucide-react";
+
+import { useCallStore } from "../store/CallStore";
 import { useChatStore } from "../store/ChatStore";
 
-import {
-  File,
-  FileText,
-  FileArchive,
-  Sheet,
-  ChartPie,
-  LetterText,
-  FileJson,
-  FileImage,
-} from "lucide-react";
-import { useCallStore } from "../store/CallStore";
-import { RealtimeChannel } from "ably";
-
+import type {
+  CallType,
+  ClientMessageInterface,
+  MetaData,
+  ServerMessageInterface,
+} from "@/types/type";
 export async function uploadFile(
   files: File[]
 ): Promise<Array<{ url: string; public_id: string }> | null> {
@@ -70,10 +70,10 @@ export const messageType = (metaData: MetaData | null) => {
 };
 export const replyText = (reply: ClientMessageInterface) => {
   if (!reply) return "";
-  if (messageType(reply.meta_data!) === "audio") return "語音";
-  if (messageType(reply.meta_data!) === "image") return "圖片";
-  if (messageType(reply.meta_data!) === "file") return reply.text;
-  if (messageType(reply.meta_data!) === "video") return "影片";
+  if (messageType(reply.meta_data ?? null) === "audio") return "語音";
+  if (messageType(reply.meta_data ?? null) === "image") return "圖片";
+  if (messageType(reply.meta_data ?? null) === "file") return reply.text;
+  if (messageType(reply.meta_data ?? null) === "video") return "影片";
   return reply.text;
 };
 
@@ -154,13 +154,12 @@ export const isMobile = (userAgent: string): boolean => {
 };
 
 export const Copy2ClipBoard = async (text: string) => {
-  const type = "text/plain";
+  const mimeType = "text/plain";
   const clipboardItemData = {
-    [type]: new Blob([text], { type: "text/plain" }),
+    [mimeType]: new Blob([text], { type: mimeType }),
   };
-
   const clipboardItem = new ClipboardItem(clipboardItemData);
-  console.log(clipboardItemData);
+
   await navigator.clipboard.write([clipboardItem]);
 };
 

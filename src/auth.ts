@@ -1,16 +1,18 @@
+import bcrypt from "bcryptjs";
+import CredentialProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import CredentialProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
-import bcrypt from "bcryptjs";
+
 import { createClient } from "@supabase/supabase-js";
-import { NoteInterface } from "@/types/type";
+
+import type { NoteInterface } from "@/types/type";
+import type { NextAuthOptions } from "next-auth";
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_SECRET_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  process.env.NEXT_SECRET_ROLE_KEY ?? ""
 );
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET!,
+  secret: process.env.NEXTAUTH_SECRET ?? "",
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || "",
@@ -28,8 +30,9 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials) throw new Error("客戶端錯誤");
         const { email, password }: { email: string; password: string } =
-          credentials!;
+          credentials;
         if (!email || !password) {
           throw new Error("請輸入必填欄位");
         }
@@ -146,10 +149,10 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.userId = token.sub;
         session.user = {
-          id: token.sub!,
-          email: token.email!,
-          name: token.name!,
-          image: token.picture!,
+          id: token.sub ?? "",
+          email: token.email ?? "",
+          name: token.name ?? "",
+          image: token.picture ?? "",
           provider: token.provider,
           note: token.note,
         };

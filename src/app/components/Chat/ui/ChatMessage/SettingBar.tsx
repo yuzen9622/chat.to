@@ -80,7 +80,7 @@ const SettingBar = memo(function SettingBar({
     >
       <button
         className={twMerge(
-          "  p-1 inline-flex active:scale-95 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+          "  p-1 inline-flex active:scale-90 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
         )}
         onClick={handleReply}
       >
@@ -94,7 +94,7 @@ const SettingBar = memo(function SettingBar({
         aria-expanded={open ? "true" : undefined}
         data-hs-dropdown-toggle={`dropdown-menu-${message.id}`}
         className={twMerge(
-          "  p-2 inline-flex active:scale-95 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 "
+          "  p-2 inline-flex active:scale-90 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 "
         )}
         onClick={handleOpen}
       >

@@ -1,11 +1,12 @@
-import {
+import type {
   ClientMessageInterface,
   MetaData,
   NoteInterface,
   UserInterface,
 } from "@/types/type";
-import { fileType } from "./util";
 import { v4 as uuidv4 } from "uuid";
+
+import { fileType } from "./util";
 
 export const createTextMessage = (
   user: UserInterface,
