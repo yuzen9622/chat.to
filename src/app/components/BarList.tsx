@@ -1,14 +1,21 @@
 "use client";
-import { Handshake, House, MessageCircleMore } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import {
+  RiChat3Fill,
+  RiChat3Line,
+  RiHome5Fill,
+  RiHome5Line,
+  RiShakeHandsFill,
+  RiShakeHandsLine,
+} from "react-icons/ri";
+import { twMerge } from "tailwind-merge";
 
-import { useAuthStore } from '../store/AuthStore';
-import { useChatStore } from '../store/ChatStore';
-import BadgeAvatar from './ui/Avatar/Avatar';
-import ListItem from './ui/ListItem';
+import { useAuthStore } from "../store/AuthStore";
+import { useChatStore } from "../store/ChatStore";
+import BadgeAvatar from "./ui/Avatar/Avatar";
+import ListItem from "./ui/ListItem";
 
 export default function BarList() {
   const { friendRequests } = useAuthStore();
@@ -32,13 +39,19 @@ export default function BarList() {
   }, [friendRequests, userId]);
   const pathName = usePathname();
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathName === "/";
+    if (href === "/chat") return pathName.startsWith("/chat");
+    return pathName.includes(href);
+  };
   return (
     <>
       <ListItem href="/">
-        <House size={30} />
+        {isActive("/") ? <RiHome5Fill size={25} /> : <RiHome5Line size={25} />}
+
         <span
           className={twMerge(
-            "hidden  ",
+            "hidden   ",
             pathName.startsWith("/chat") ? "hidden " : "xl:block"
           )}
         >
@@ -46,7 +59,11 @@ export default function BarList() {
         </span>
       </ListItem>
       <ListItem href="/chat" notify={roomNotifyCount}>
-        <MessageCircleMore size={30} />
+        {isActive("/chat") ? (
+          <RiChat3Fill size={25} />
+        ) : (
+          <RiChat3Line size={25} />
+        )}
         <span
           className={twMerge(
             "hidden  sm:hidden",
@@ -57,7 +74,11 @@ export default function BarList() {
         </span>
       </ListItem>
       <ListItem href="/friend" notify={FriendRequestCount}>
-        <Handshake size={30} />
+        {isActive("/friend") ? (
+          <RiShakeHandsFill size={25} />
+        ) : (
+          <RiShakeHandsLine size={25} />
+        )}
         <span
           className={twMerge(
             "hidden ",
@@ -77,7 +98,7 @@ export default function BarList() {
           className="sm:hidden"
           // className="flex items-center justify-center w-full gap-2 p-2 rounded-md sm:hidden hover:bg-stone-900/5 hover:dark:bg-white/5"
         >
-          <BadgeAvatar width={30} height={30} user={session.user} />
+          <BadgeAvatar width={25} height={25} user={session.user} />
         </ListItem>
       )}
     </>

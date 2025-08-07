@@ -223,7 +223,7 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && isRended && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover border border-l dark:border-none sm:rounded-l-md dark:bg-neutral-800 max-h-dvh">
+        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover dark:border-none dark:bg-neutral-800 max-h-dvh">
           <div className="box-border relative flex flex-col flex-1 py-2 overflow-hidden max-h-dvh ">
             <ChatHeader />
             <main

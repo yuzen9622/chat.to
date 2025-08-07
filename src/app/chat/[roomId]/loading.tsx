@@ -1,8 +1,8 @@
-import React from "react";
 import { Skeleton } from "@mui/material";
+
 export default function Loading() {
   return (
-    <div className="flex flex-col flex-1 max-h-full m-2 overflow-y-hidden transition-all rounded-md ">
+    <div className="flex flex-col flex-1 max-h-full overflow-y-hidden transition-all sm:dark:bg-neutral-800">
       <header className="flex items-center justify-between w-full p-2 ">
         <span className="flex items-center w-fit">
           <Skeleton

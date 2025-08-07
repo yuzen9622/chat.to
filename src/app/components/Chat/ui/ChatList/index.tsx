@@ -1,15 +1,15 @@
-import { SquarePen } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { SquarePen } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-import FriendNote from '@/app/components/Friend/ui/FriendNote';
-import { fetchUsersNotify } from '@/app/lib/api/notify/notifyApi';
-import { fetchUserRooms } from '@/app/lib/api/room/roomApi';
-import { useChatStore } from '@/app/store/ChatStore';
+import FriendNote from "@/app/components/Friend/ui/FriendNote";
+import { fetchUsersNotify } from "@/app/lib/api/notify/notifyApi";
+import { fetchUserRooms } from "@/app/lib/api/room/roomApi";
+import { useChatStore } from "@/app/store/ChatStore";
 
-import ChatButton from '../ChatButton';
-import { CreateRoomModal } from './CreateModal';
-import { LoadingList } from './Loading';
+import ChatButton from "../ChatButton";
+import { CreateRoomModal } from "./CreateModal";
+import { LoadingList } from "./Loading";
 
 import type { ClientMessageInterface, RoomInterface } from "@/types/type";
 
@@ -54,7 +54,7 @@ export default function ChatList() {
   }, [userId, setRoom, setNotify, rooms, setLastMessages]);
 
   return (
-    <div className="flex flex-col h-full p-2 sm:rounded-lg sm:dark:bg-neutral-800 border-t-gray-500">
+    <div className="flex flex-col h-full p-2 sm:dark:bg-neutral-800 border-t-gray-500">
       <div>
         <FriendNote />
       </div>

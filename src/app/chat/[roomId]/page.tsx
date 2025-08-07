@@ -1,9 +1,11 @@
-import { getRoomById } from "@/server/services/roomService";
-import { redirect } from "next/navigation";
-import ChatRoomWrapper from "@/app/components/Chat/ui/ChatWrapper";
-import { RoomInterface } from "@/types/type";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+import ChatRoomWrapper from "@/app/components/Chat/ui/ChatWrapper";
 import { authOptions } from "@/auth";
+import { getRoomById } from "@/server/services/roomService";
+
+import type { RoomInterface } from "@/types/type";
 
 export const fetchCache = "force-no-store";
 export const dynamic = "force-dynamic";
@@ -34,7 +36,7 @@ export default async function Page({
 
   if (!data) return redirect("/chat");
 
-  const { room } = (await getRoomById(roomId, data.userId!)) as {
+  const { room } = (await getRoomById(roomId, data.userId ?? "")) as {
     room: RoomInterface | null;
   };
 
