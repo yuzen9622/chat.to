@@ -7,7 +7,7 @@ import ChatList from "../components/Chat/ui/ChatList/index";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   return (
-    <div className="flex w-full h-full overflow-hidden dark:my-2 dark:sm:rounded-l-md">
+    <div className="flex w-full h-full overflow-hidden sm:dark:my-2 dark:sm:rounded-l-md">
       {path.startsWith("/chat") && (
         <div
           className={twMerge(
