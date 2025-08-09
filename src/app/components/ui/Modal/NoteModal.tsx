@@ -1,19 +1,20 @@
 "use client";
-import React, { useCallback, useState } from "react";
-import Image from "next/image";
-import { Modal } from "@mui/material";
-import { NoteInterface } from "@/types/type";
-import { twMerge } from "tailwind-merge";
-import { Ellipsis, Send } from "lucide-react";
-import { Grow } from "@mui/material";
-import { getPersonalRoom } from "@/app/lib/api/room/roomApi";
-import { sendUserMessage } from "@/app/lib/api/message/messageApi";
-import { createReplyNoteMessage } from "@/app/lib/createMessage";
-import { useSession } from "next-auth/react";
-import { v4 as uuid } from "uuid";
-import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
-import { useChatStore } from "@/app/store/ChatStore";
-import { useAuthStore } from "@/app/store/AuthStore";
+import { Ellipsis, Send } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useCallback, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { v4 as uuid } from 'uuid';
+
+import { sendAblyMessage } from '@/app/lib/ably/ablyMessage';
+import { sendUserMessage } from '@/app/lib/api/message/messageApi';
+import { getPersonalRoom } from '@/app/lib/api/room/roomApi';
+import { createReplyNoteMessage } from '@/app/lib/createMessage';
+import { useAuthStore } from '@/app/store/AuthStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { Grow, Modal } from '@mui/material';
+
+import type { NoteInterface } from "@/types/type";
 
 export default function NoteModal({
   note,

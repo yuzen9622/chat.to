@@ -1,9 +1,11 @@
-import { useAuthStore } from "@/app/store/AuthStore";
-import { FriendInterface } from "@/types/type";
-import { InboundMessage } from "ably";
+import type { InboundMessage } from "ably";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
+import { useAuthStore } from "@/app/store/AuthStore";
+
+import type { FriendInterface } from "@/types/type";
 
 export const useFriendListener = () => {
   const { setFriendRequest, setFriends } = useAuthStore();

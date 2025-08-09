@@ -1,8 +1,10 @@
+import type { InboundMessage } from "ably";
+import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
 import { useAuthStore } from "@/app/store/AuthStore";
-import { NoteInterface } from "@/types/type";
-import { InboundMessage } from "ably";
-import { useEffect } from "react";
+
+import type { NoteInterface } from "@/types/type";
 
 export const useNoteListener = () => {
   const { setFriendNote, friends } = useAuthStore();

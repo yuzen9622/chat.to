@@ -1,4 +1,4 @@
-import { InboundMessage } from "ably";
+import type { InboundMessage } from "ably";
 
 type EventHandler = (message: InboundMessage) => void;
 

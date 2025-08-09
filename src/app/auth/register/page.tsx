@@ -1,13 +1,14 @@
 "use client";
-import React, { useCallback, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+
+import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
+import Input from "@/app/components/ui/Input";
+import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
 import { uploadFile } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
-import Input from "@/app/components/ui/Input";
-import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
 
 export default function RegisterPage() {
   const [registerForm, setRegister] = useState<{
@@ -146,7 +147,7 @@ export default function RegisterPage() {
               }
             />
           </span>
-          <span className="w-full">
+          <span className="w-full py-1">
             <label htmlFor="password">密碼</label>
             <Input
               value={registerForm.password}
@@ -160,7 +161,7 @@ export default function RegisterPage() {
             />
           </span>
           {error && <p className="py-1 text-sm text-red-600">*{error}</p>}
-          <span className="w-full">
+          <span className="w-full ">
             <button
               type="submit"
               disabled={isLoading}

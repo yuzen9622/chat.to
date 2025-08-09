@@ -1,14 +1,14 @@
+import type { InboundMessage, RealtimeChannel } from "ably";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
 import { createPeer } from "@/app/lib/util";
 import { useCallStore } from "@/app/store/CallStore";
 import { useChatStore } from "@/app/store/ChatStore";
 
-import { InboundMessage, RealtimeChannel } from "ably";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-
 export const useSignalListener = (channel: RealtimeChannel) => {
-  const { addRemoteStream, peerConnections, addPeer } = useCallStore();
+  const { peerConnections, addPeer } = useCallStore();
   const { rooms } = useChatStore();
   const user = useSession()?.data?.user;
 
@@ -57,5 +57,5 @@ export const useSignalListener = (channel: RealtimeChannel) => {
     ablyEventManager.subscribe("signal_action", handleCall);
 
     return () => ablyEventManager.unsubscribe("signal_action", handleCall);
-  }, [user, addRemoteStream, channel, peerConnections, rooms, addPeer]);
+  }, [user, channel, peerConnections, rooms, addPeer]);
 };

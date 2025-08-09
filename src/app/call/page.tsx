@@ -1,5 +1,3 @@
-import React from "react";
-
 import CallWrapper from "../components/Call/ui/CallWrapper";
 
 export default function Page() {

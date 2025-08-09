@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import * as Ably from "ably";
+import { Realtime } from "ably";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
 import { useAblyStore } from "../../store/AblyStore";
 
-let ablyInstance: Ably.Realtime;
+let ablyInstance: Realtime;
 
 export const getAblyClient = (clientId: string) => {
   if (!ablyInstance) {
-    ablyInstance = new Ably.Realtime({
+    ablyInstance = new Realtime({
       authUrl: "/api/ably-token",
       authHeaders: { "Content-Type": "application/json" },
       authParams: { clientId },
@@ -21,7 +22,7 @@ export const getAblyClient = (clientId: string) => {
 };
 
 export const useAbly = () => {
-  const [ablyClient, setAblyClient] = useState<Ably.Realtime | null>(null);
+  const [ablyClient, setAblyClient] = useState<Realtime | null>(null);
   const { data: session } = useSession();
   const userId = session?.userId;
   const { setAbly } = useAblyStore();

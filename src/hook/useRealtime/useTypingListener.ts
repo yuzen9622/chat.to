@@ -1,7 +1,8 @@
+import type { InboundMessage } from "ably";
+import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
 import { useChatStore } from "@/app/store/ChatStore";
-import { InboundMessage } from "ably";
-import { useEffect } from "react";
 
 export const useTypingListener = () => {
   const { setTypingUsers } = useChatStore();

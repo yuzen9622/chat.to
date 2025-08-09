@@ -1,4 +1,4 @@
-import {
+import type {
   CallStatus,
   CallType,
   RoomInterface,
@@ -8,6 +8,7 @@ import {
 import { create } from "zustand";
 
 import { useAblyStore } from "./AblyStore";
+
 type CallConfig = {
   isMicOn: boolean;
   isCameraOn: boolean;

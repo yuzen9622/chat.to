@@ -1,11 +1,14 @@
-import { useChatStore } from "@/app/store/ChatStore";
-import { InboundMessage } from "ably";
+import type { InboundMessage } from "ably";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
-import { RoomInterface, RoomMemberInterface } from "@/types/type";
+import { useChatStore } from "@/app/store/ChatStore";
+
+import type { RoomInterface, RoomMemberInterface } from "@/types/type";
+
 export const useRoomListener = () => {
-  const { setRoom, rooms, currentChat, setCurrentChat } = useChatStore();
+  const { setRoom, currentChat, setCurrentChat } = useChatStore();
   const userId = useSession()?.data?.userId;
   useEffect(() => {
     if (!ablyEventManager) return;
@@ -91,5 +94,5 @@ export const useRoomListener = () => {
     return () => {
       ablyEventManager.unsubscribe("room_action", handleRoomAction);
     };
-  }, [rooms, setRoom, userId, currentChat, setCurrentChat]);
+  }, [setRoom, userId, currentChat, setCurrentChat]);
 };

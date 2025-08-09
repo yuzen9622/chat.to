@@ -1,8 +1,10 @@
-import Modal from "@mui/material/Modal";
-import { Download, X } from "lucide-react";
-import { CldImage, CldVideoPlayer } from "next-cloudinary";
-import React, { useCallback } from "react";
-import "next-cloudinary/dist/cld-video-player.css";
+import 'next-cloudinary/dist/cld-video-player.css';
+
+import { Download, X } from 'lucide-react';
+import { CldImage, CldVideoPlayer } from 'next-cloudinary';
+import { useCallback } from 'react';
+
+import Modal from '@mui/material/Modal';
 
 type previewParams = {
   media?: { alt: string; url: string; type: string; public_id?: string };

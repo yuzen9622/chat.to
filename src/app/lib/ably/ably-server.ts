@@ -1,4 +1,4 @@
-import * as Ably from "ably";
+import { Realtime, Rest } from "ably";
 
-export const ably = new Ably.Rest(process.env.ABLY_API_KEY!);
-export const ablyRealtime = new Ably.Realtime(process.env.ABLY_API_KEY!);
+export const ably = new Rest(process.env.ABLY_API_KEY ?? "");
+export const ablyRealtime = new Realtime(process.env.ABLY_API_KEY ?? "");

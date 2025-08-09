@@ -138,11 +138,11 @@ export default function InputBar() {
               onSend(e);
             }
           }}
-          className={twMerge("z-20 w-full")}
+          className={twMerge("z-20 w-full sticky bottom-0")}
         >
           <div
             className={twMerge(
-              "sticky bottom-0 px-2 py-1 m-2 border border-t dark:border-none rounded-3xl transition-[border-radius] bg-white/10 backdrop-blur-3xl",
+              " px-2 py-1 m-2 border border-t dark:border-none rounded-3xl transition-[border-radius] bg-white/10 backdrop-blur-3xl",
               reply && "rounded-md",
               isDropIn && "  outline-dashed outline-blue-500"
             )}

@@ -1,13 +1,13 @@
 "use client";
-import Image from "next/image";
-import { useCallback, useState } from "react";
-import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
-import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-import { twMerge } from "tailwind-merge";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 import Input from "@/app/components/ui/Input";
+import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
 
 export default function LoginPage() {
   const [loginForm, setLoginForm] = useState<{
@@ -97,7 +97,7 @@ export default function LoginPage() {
           </span>
         </form>
 
-        <span className="inline-flex items-center">
+        <span className="inline-flex items-center py-1">
           <p className="font-medium ">還沒有帳戶? </p>
           <Link
             className="px-1 text-sm font-medium text-blue-500"

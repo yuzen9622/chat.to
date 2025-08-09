@@ -1,11 +1,11 @@
-import 'react-photo-view/dist/react-photo-view.css';
+import "react-photo-view/dist/react-photo-view.css";
 
-import Image from 'next/image';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { PhotoProvider, PhotoView } from 'react-photo-view';
+import Image from "next/image";
+import { memo, useCallback, useMemo, useState } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
-import PreviewMediaModal from '@/app/components/ui/Modal/PreviewMediaModal';
-import { messageType } from '@/app/lib/util';
+import PreviewMediaModal from "@/app/components/ui/Modal/PreviewMediaModal";
+import { messageType } from "@/app/lib/util";
 
 import type { ClientMessageInterface } from "@/types/type";
 const MediaMessage = memo(function MediaMessage({
@@ -58,7 +58,10 @@ const MediaMessage = memo(function MediaMessage({
       {metaData ? (
         <>
           {type === "image" && (
-            <PhotoProvider>
+            <PhotoProvider
+              maskOpacity={0.5}
+              maskClassName=" backdrop-blur-xs bg-black/90"
+            >
               <PhotoView src={metaData.url}>
                 <Image
                   width={300}

@@ -1,11 +1,14 @@
-import { useCallStore } from "@/app/store/CallStore";
-import { useChatStore } from "@/app/store/ChatStore";
-import { InboundMessage, RealtimeChannel } from "ably";
+import type { InboundMessage, RealtimeChannel } from "ably";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+
 import { ablyEventManager } from "@/app/lib/ably/ablyManager";
-import { RoomMemberInterface } from "@/types/type";
 import { createPeer, startStream } from "@/app/lib/util";
+import { useCallStore } from "@/app/store/CallStore";
+import { useChatStore } from "@/app/store/ChatStore";
+
+import type { RoomMemberInterface } from "@/types/type";
+
 export const useCallListener = (channel: RealtimeChannel) => {
   const {
     setCallStatus,
@@ -62,7 +65,7 @@ export const useCallListener = (channel: RealtimeChannel) => {
 
       if (
         action === "answer" &&
-        (callStatus == "waiting" ||
+        (callStatus === "waiting" ||
           callStatus === "connect" ||
           callStatus === "receiving")
       ) {

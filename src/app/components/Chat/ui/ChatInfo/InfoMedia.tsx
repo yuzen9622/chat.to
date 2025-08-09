@@ -1,15 +1,20 @@
 import type { LucideIcon } from "lucide-react";
-import moment from 'moment';
-import Image from 'next/image';
-import { Fragment, useCallback, useEffect, useState } from 'react';
-import { PhotoProvider, PhotoView } from 'react-photo-view';
-import { twMerge } from 'tailwind-merge';
+import moment from "moment";
+import Image from "next/image";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import { twMerge } from "tailwind-merge";
 
-import { CircularProgress } from '@mui/material';
+import { CircularProgress } from "@mui/material";
 
-import { formatSize, getFileIcon, handleDownload, messageType } from '../../../../lib/util';
-import { useChatStore } from '../../../../store/ChatStore';
-import PreviewMediaModal from '../../../ui/Modal/PreviewMediaModal';
+import {
+  formatSize,
+  getFileIcon,
+  handleDownload,
+  messageType,
+} from "../../../../lib/util";
+import { useChatStore } from "../../../../store/ChatStore";
+import PreviewMediaModal from "../../../ui/Modal/PreviewMediaModal";
 
 import type { ClientMessageInterface } from "../../../../../types/type";
 type Type = "media" | "url" | "file";
@@ -176,7 +181,10 @@ export default function InfoMedia() {
                 return (
                   <Fragment key={message.id}>
                     {mediaType === "image" ? (
-                      <PhotoProvider>
+                      <PhotoProvider
+                        maskOpacity={0.3}
+                        maskClassName=" backdrop-blur-sm bg-black/50"
+                      >
                         <PhotoView src={message?.meta_data.url}>
                           <Image
                             src={message?.meta_data.url}
