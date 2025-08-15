@@ -52,9 +52,9 @@
 
 ## 📌 TODO
 
-- [ ] Call/Video
-- [ ] Typing indicators
-- [ ] Markdown message
+- [x] Call/Video
+- [x] Typing indicators
+- [x] Markdown message
 - [ ] AI generate
 
 ---
@@ -62,6 +62,12 @@
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Issues
+
+If you encounter any problems or have feature requests,  
+please feel free to open an [issue](https://github.com/yuzen9622/chat.to/issues).  
+I will review it as soon as possible.
 
 # 繁體中文
 
@@ -109,9 +115,9 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 📌 開發中功能
 
-- [ ] 語音／視訊通話
+- [x] 語音／視訊通話
 - [x] 正在輸入指示
-- [ ] 支援 Markdown 格式訊息
+- [x] 支援 Markdown 格式訊息
 - [ ] AI 訊息產生器
 
 ---
@@ -119,3 +125,8 @@ This project is licensed under the [MIT License](LICENSE).
 ## 📄 授權條款
 
 本專案採用 [MIT License](LICENSE) 授權。
+
+## 意見與回報
+
+如果你在使用本專案時遇到問題，或有新的功能建議，  
+歡迎在 [Issues](https://github.com/yuzen9622/chat.to/issues) 區提出，我們會盡快回覆。
