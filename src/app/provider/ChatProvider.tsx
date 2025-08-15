@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
-import { AblyProvider, ChannelProvider } from "ably/react";
-import { CircularProgress } from "@mui/material";
-import { useAbly } from "../lib/ably/ably-client";
 
+import { AblyProvider, ChannelProvider } from "ably/react";
 import { useSession } from "next-auth/react";
+
+import { CircularProgress } from "@mui/material";
+
+import { useAbly } from "../lib/ably/ably-client";
 
 export default function ChatProvider({
   children,
@@ -24,7 +25,7 @@ export default function ChatProvider({
   }
 
   return (
-    <AblyProvider client={client!}>
+    <AblyProvider client={client}>
       <ChannelProvider channelName="chatta-chat-channel">
         {children}
       </ChannelProvider>

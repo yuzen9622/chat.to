@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { useEffect, useState } from 'react';
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 export function TimeAgo({ date }: { date: string }) {
   const [timeAgo, setTimeAgo] = useState(moment(date).fromNow(false));

@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
 import {
   editUserMessage,
@@ -7,9 +9,9 @@ import { createFileMessage, createTextMessage } from "@/app/lib/createMessage";
 import { uploadFile } from "@/app/lib/util";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
-import { ClientMessageInterface, UserInterface } from "@/types/type";
 
-import { Dispatch, SetStateAction, useCallback } from "react";
+import type { ClientMessageInterface, UserInterface } from "@/types/type";
+import type { Dispatch, SetStateAction } from "react";
 
 type sendProps = {
   user?: UserInterface;
@@ -44,7 +46,7 @@ export const useInputBarSend = ({
       user,
       roomId,
       messageText,
-      reply!
+      reply ?? void 0
     );
     if (newMessage) {
       pendingMessages.push(newMessage);
@@ -53,7 +55,7 @@ export const useInputBarSend = ({
     }
 
     const newFilesMessages: ClientMessageInterface[] = messageFiles.map(
-      (file) => createFileMessage(user!, roomId, file, reply!)
+      (file) => createFileMessage(user, roomId, file, reply ?? void 0)
     );
 
     newFilesMessages.forEach((msg) => {

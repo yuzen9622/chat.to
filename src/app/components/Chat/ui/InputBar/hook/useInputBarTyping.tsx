@@ -1,7 +1,10 @@
-import { TypingInterface, UserInterface } from "@/types/type";
-import { RealtimeChannel } from "ably";
-import { ChangeEvent, useCallback, useRef } from "react";
+import type { RealtimeChannel } from "ably";
 import _ from "lodash";
+import { useCallback, useMemo, useRef } from "react";
+
+import type { TypingInterface, UserInterface } from "@/types/type";
+
+import type { ChangeEvent } from "react";
 export const useInputBarTyping = ({
   user,
   channel,
@@ -12,20 +15,22 @@ export const useInputBarTyping = ({
   roomId: string;
 }) => {
   const isTyping = useRef(false);
-  const debouncedStopTyping = useCallback(
-    _.debounce(async () => {
-      if (!user || !channel || !isTyping.current) return;
+  const debouncedStopTyping = useMemo(() => {
+    return _.debounce(
+      async (channelArg: RealtimeChannel | null, userArg?: UserInterface) => {
+        if (!userArg || !channelArg || !isTyping.current) return;
 
-      const typingUser: TypingInterface = {
-        roomId: roomId,
-        user: user,
-        typing: false,
-      };
-      await channel.publish("typing_action", typingUser);
-      isTyping.current = false;
-    }, 500),
-    [channel, roomId, user]
-  );
+        const typingUser: TypingInterface = {
+          roomId,
+          user: userArg,
+          typing: false,
+        };
+        await channelArg.publish("typing_action", typingUser);
+        isTyping.current = false;
+      },
+      500
+    );
+  }, [roomId]);
 
   const handleChange = useCallback(
     async (
@@ -45,9 +50,9 @@ export const useInputBarTyping = ({
         await channel.publish("typing_action", typingUser);
       }
 
-      debouncedStopTyping();
+      debouncedStopTyping(channel, user);
     },
-    [channel, roomId, user, debouncedStopTyping]
+    [roomId, channel, user, debouncedStopTyping]
   );
   return { handleChange };
 };

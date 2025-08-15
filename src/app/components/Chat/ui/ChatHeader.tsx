@@ -1,17 +1,17 @@
 "use client";
-import { ChevronLeft, Info, Phone, Video } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { ChevronLeft, Info, Phone, Video } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { startStream } from '@/app/lib/util';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useCallStore } from '@/app/store/CallStore';
-import { useChatStore } from '@/app/store/ChatStore';
-import { useChatInfo } from '@/hook/useChatInfo';
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import { startStream } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useCallStore } from "@/app/store/CallStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useChatInfo } from "@/hook/useChatInfo";
 
 import type { CallType } from "@/types/type";
 

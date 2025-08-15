@@ -1,19 +1,20 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import { UserInterface } from "@/types/type";
-
-import Input from "@/app/components/ui/Input";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useSession } from "next-auth/react";
-import { useAuthStore } from "@/app/store/AuthStore";
-import { uploadFile } from "@/app/lib/util";
-import ProfileCard from "../ProfileCard";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Backdrop } from "@mui/material";
-import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
 import { Moon, Sun } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
-import { signOut } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
+import Input from "@/app/components/ui/Input";
+import { uploadFile } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { Backdrop, MenuItem, Select } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import ProfileCard from "../ProfileCard";
+
+import type { UserInterface } from "@/types/type";
 interface SettingsFormProps {
   user: UserInterface;
 }
@@ -29,7 +30,10 @@ export default function SettingsForm({ user }: SettingsFormProps) {
     imgUrl: string;
     imgFile: File;
   } | null>(null);
-  const { setSystemAlert, friends } = useAuthStore();
+
+  const lang = useMemo(() => ["zh-tw", "en", "zh-cn", "zh-hk", "ja"], []);
+
+  const { setSystemAlert, friends, timeLang, setTimeLang } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEditProfile = useCallback(async () => {
@@ -111,8 +115,8 @@ export default function SettingsForm({ user }: SettingsFormProps) {
         <h2 className="mb-4 text-lg font-semibold dark:text-white">預覽</h2>
         <ProfileCard
           user={editProfile}
-          note={editProfile.note!}
-          friends={friends!}
+          note={editProfile.note}
+          friends={friends ?? void 0}
           isPreview={true}
         />
       </section>
@@ -154,8 +158,8 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       </section>
 
       {/* 外觀設定 */}
-      <section className="p-6 bg-white rounded-xl dark:bg-neutral-800/50">
-        <h2 className="mb-4 text-lg font-semibold dark:text-white">外觀</h2>
+      <section className="p-6 space-y-4 bg-white rounded-xl dark:bg-neutral-800/50">
+        <h2 className="text-lg font-semibold dark:text-white">外觀</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isDark ? (
@@ -177,6 +181,20 @@ export default function SettingsForm({ user }: SettingsFormProps) {
               }`}
             />
           </button>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="dark:text-white">時間語言</span>
+          <Select
+            className="h-10 w-44"
+            value={timeLang ?? ""}
+            onChange={(e) => setTimeLang(e.target.value)}
+          >
+            {lang.map((lan) => (
+              <MenuItem key={lan} value={lan}>
+                {lan}
+              </MenuItem>
+            ))}
+          </Select>
         </div>
       </section>
       <section className="p-6 bg-white rounded-xl dark:bg-neutral-800/50">

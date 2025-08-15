@@ -1,39 +1,20 @@
 "use client";
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
 
-import { useChatStore } from '../store/ChatStore';
-import BarList from './BarList';
-import ListItem from './ui/ListItem';
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useRef } from "react";
+import { twMerge } from "tailwind-merge";
+
+import BarList from "./BarList";
+import ListItem from "./ui/ListItem";
 
 export default function SideBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { sidebarOpen, setSidebarOpen } = useChatStore();
+
   const { data: session } = useSession();
-  const [isRwd, setIsRwd] = useState(false);
 
   const pathName = usePathname();
-  useEffect(() => {
-    const observer = new ResizeObserver((el) => {
-      el.forEach((e) => {
-        if (e.contentRect.width >= 1024 && !sidebarOpen) {
-          setSidebarOpen(true);
-
-          setIsRwd(false);
-        } else if (e.contentRect.width < 1024 && sidebarOpen && !isRwd) {
-          setSidebarOpen(false);
-          setIsRwd(true);
-        }
-      });
-    });
-    observer.observe(document.body);
-    return () => {
-      observer.unobserve(document.body);
-    };
-  }, [setSidebarOpen, sidebarOpen, isRwd]);
 
   return (
     <div

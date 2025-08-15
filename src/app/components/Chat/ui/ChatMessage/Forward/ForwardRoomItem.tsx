@@ -42,10 +42,10 @@ export default function ForwardRoomItem({
       </div>
 
       <span className="flex flex-col items-start w-10/12 gap-1 overflow-hidden">
-        <p className="w-full overflow-hidden truncate text-start">
+        <p className="w-full overflow-hidden text-black truncate text-start dark:text-white">
           {displayName}
         </p>
-        <p className="text-xs font-bold truncate w-fit dark:text-stone-500 text-stone-100 ">
+        <p className="text-xs font-bold truncate w-fit dark:text-stone-500 text-stone-300 ">
           {room.room_type === "group" ? "群組聊天室" : "個人聊天室"}
         </p>
       </span>

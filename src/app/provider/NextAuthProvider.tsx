@@ -1,8 +1,8 @@
 "use client";
 import { useSession } from "next-auth/react";
-import React from "react";
-import ChatProvider from "./ChatProvider";
+
 import ClientLayout from "../components/layout/ClientLayout";
+import ChatProvider from "./ChatProvider";
 
 export default function NextAuthProvider({
   children,

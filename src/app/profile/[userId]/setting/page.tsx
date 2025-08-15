@@ -1,8 +1,9 @@
 "use client";
-import SettingsForm from "@/app/components/Profile/ui/setting/SettingForm";
-import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { notFound } from "next/navigation";
 import { use, useMemo } from "react";
+
+import SettingsForm from "@/app/components/Profile/ui/setting/SettingForm";
 
 export default function SettingsPage({
   params,
@@ -13,11 +14,11 @@ export default function SettingsPage({
   const { data: session } = useSession();
   const user = useMemo(() => {
     if (!session) return null;
-    const costumUser = session.user;
-    if (costumUser.note && session) {
-      costumUser.note.user = session.user;
+    const customUser = session.user;
+    if (customUser.note && session) {
+      customUser.note.user = session.user;
     }
-    return costumUser;
+    return customUser;
   }, [session]);
 
   if (!user || user.id !== userId) return notFound();

@@ -87,12 +87,10 @@ const SettingBar = memo(function SettingBar({
 
   const handleClose = () => {
     setAnchorEl(null);
-    // setOpen(false);
   };
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    // setOpen(true);
   };
 
   const handleReply = useCallback(() => {

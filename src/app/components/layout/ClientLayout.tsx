@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useRef } from "react";
 import { useChannel, usePresenceListener } from "ably/react";
-import { useAblyStore } from "../../store/AblyStore";
-import SideBar from "../SideBar";
-import { useAuthStore } from "../../store/AuthStore";
-import moment from "moment";
-import { usePathname } from "next/navigation";
-import { twMerge } from "tailwind-merge";
-import NotifyBar from "../NotifyBar";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 
 import { useRealtime } from "@/hook/useRealtime/index";
 
-moment.locale("zh-tw");
+import { useAblyStore } from "../../store/AblyStore";
+import { useAuthStore } from "../../store/AuthStore";
+import NotifyBar from "../NotifyBar";
+import SideBar from "../SideBar";
+
 export default function ClientLayout({
   children,
 }: {

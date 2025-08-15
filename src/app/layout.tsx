@@ -1,14 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 import { getServerSession } from "next-auth";
+import { Geist, Geist_Mono } from "next/font/google";
 import { twMerge } from "tailwind-merge";
 
-import SessionProvider from "./provider/SessionProvider";
 import { authOptions } from "@/auth";
-import NextAuthProvider from "./provider/NextAuthProvider";
-import { ThemeProvider } from "./provider/ThemeProvider";
+
 import { Toast } from "./components/Toast";
+import { MomentProvider } from "./provider/MomentProvider";
+import NextAuthProvider from "./provider/NextAuthProvider";
+import SessionProvider from "./provider/SessionProvider";
+import { ThemeProvider } from "./provider/ThemeProvider";
 
 export const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,9 +63,11 @@ export default async function RootLayout({
       >
         <Toast />
         <SessionProvider session={session}>
-          <NextAuthProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </NextAuthProvider>
+          <MomentProvider>
+            <NextAuthProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </NextAuthProvider>
+          </MomentProvider>
         </SessionProvider>
       </body>
     </html>

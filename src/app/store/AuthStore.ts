@@ -1,6 +1,17 @@
 "use client";
+import { isMobile } from "react-device-detect";
 import { create } from "zustand";
+
 import {
+  fetchFriendRequests,
+  fetchUserFriends,
+} from "../lib/api/friend/friendApi";
+import { fetchFriendNote } from "../lib/api/note/noteApi";
+import { fetchUsersNotify } from "../lib/api/notify/notifyApi";
+import { fetchUserRooms } from "../lib/api/room/roomApi";
+import { useChatStore } from "./ChatStore";
+
+import type {
   ClientMessageInterface,
   FriendInterface,
   FriendRequestInterface,
@@ -9,17 +20,8 @@ import {
   SystemAlertInterface,
 } from "../../types/type";
 
-import { fetchFriendNote } from "../lib/api/note/noteApi";
-import {
-  fetchFriendRequests,
-  fetchUserFriends,
-} from "../lib/api/friend/friendApi";
-import { fetchUserRooms } from "../lib/api/room/roomApi";
-import { fetchUsersNotify } from "../lib/api/notify/notifyApi";
-import { isMobile } from "react-device-detect";
-import { useChatStore } from "./ChatStore";
-
 interface AuthStore {
+  timeLang: string;
   friends: FriendInterface[] | null;
   friendRequests: FriendRequestInterface[] | null;
   friendNote: NoteInterface[] | null;
@@ -42,10 +44,12 @@ interface AuthStore {
     note: NoteInterface | ((prev: NoteInterface[]) => NoteInterface[])
   ) => void;
   setUserNote: (note: NoteInterface | null) => void;
+  setTimeLang: (lang: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
+  timeLang: "zh-tw",
   isInitialized: false,
   friends: null,
   friendRequests: null,
@@ -153,5 +157,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
       return { ...state, friendNote: [...state.friendNote, noteOrFn] };
     });
+  },
+  setTimeLang: (lang) => {
+    set({ timeLang: lang });
   },
 }));

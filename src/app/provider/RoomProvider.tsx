@@ -1,5 +1,5 @@
-import React from "react";
 import { ChannelProvider } from "ably/react";
+
 export default function RoomProvider({
   roomId,
   children,
