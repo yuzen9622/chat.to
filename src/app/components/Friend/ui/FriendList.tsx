@@ -1,12 +1,12 @@
 "use client";
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
-import { fetchUserFriends } from '@/app/lib/api/friend/friendApi';
-import { Skeleton } from '@mui/material';
+import { fetchUserFriends } from "@/app/lib/api/friend/friendApi";
+import { Skeleton } from "@mui/material";
 
-import { useAuthStore } from '../../../store/AuthStore';
-import FriendItem from './FriendItem';
+import { useAuthStore } from "../../../store/AuthStore";
+import FriendItem from "./FriendItem";
 
 export default function FriendList() {
   const { friends, setFriends } = useAuthStore();
@@ -35,10 +35,10 @@ export default function FriendList() {
           </span>
         </>
       ) : (
-        <div className="">
+        <div>
           <span>你的朋友</span>
-          <Skeleton height={90} animation="wave" />
-          <Skeleton height={90} animation="wave" />
+          <Skeleton height={80} animation="wave" />
+          <Skeleton height={80} animation="wave" />
         </div>
       )}
     </div>

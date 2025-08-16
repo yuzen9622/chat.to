@@ -100,6 +100,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         setLastMessages({ ...lm, isFetching: true });
       });
       const notifiesData = await fetchUsersNotify(user, inRooms);
+      const timeLan = localStorage.getItem("timeLang");
+      if (timeLan) set({ timeLang: timeLan });
       setNotify(() => notifiesData);
       set({ userNote: data[0] });
       set({ isMobile: isMobile });
@@ -159,6 +161,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     });
   },
   setTimeLang: (lang) => {
+    localStorage.setItem("timeLang", lang);
     set({ timeLang: lang });
   },
 }));

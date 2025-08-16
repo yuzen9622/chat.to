@@ -1,6 +1,6 @@
 // lib/ablyListener.ts
-import { RealtimeChannel } from "ably";
-import { ablyEventManager } from "./ablyManager";
+import type{ RealtimeChannel } from "ably";
+import { ablyEventManager } from './ablyManager';
 
 export function registerAblyListeners(channel: RealtimeChannel) {
   const events = [
