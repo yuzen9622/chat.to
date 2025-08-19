@@ -1,8 +1,8 @@
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { twMerge } from 'tailwind-merge';
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
-import { useAblyStore } from '@/app/store/AblyStore';
+import { useAblyStore } from "@/app/store/AblyStore";
 
 import type {
   PublicUserInfo,

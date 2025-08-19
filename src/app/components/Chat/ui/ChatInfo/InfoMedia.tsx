@@ -1,4 +1,6 @@
 import type { LucideIcon } from "lucide-react";
+import "react-photo-view/dist/react-photo-view.css";
+
 import moment from "moment";
 import Image from "next/image";
 import { Fragment, useCallback, useEffect, useState } from "react";

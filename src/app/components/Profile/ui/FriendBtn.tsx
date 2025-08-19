@@ -1,18 +1,17 @@
 "use client";
-import { useAuthStore } from "@/app/store/AuthStore";
-
-import React, { useCallback, useMemo, useState } from "react";
-
-import FriendButton from "../../Friend/ui/FriendButton";
+import { Ellipsis } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useCallback, useMemo, useState } from "react";
+
 import {
   responseFriendRequest,
   sendFriendRequest,
 } from "@/app/lib/api/friend/friendApi";
+import { useAuthStore } from "@/app/store/AuthStore";
 
-import { friendStatus } from "@/types/type";
-import { Ellipsis } from "lucide-react";
+import FriendButton from "../../Friend/ui/FriendButton";
 
+import type { friendStatus } from "@/types/type";
 export default function FriendBtn({ id }: { id: string }) {
   const { friends, friendRequests } = useAuthStore();
   const userId = useSession()?.data?.userId;
@@ -81,7 +80,7 @@ export default function FriendBtn({ id }: { id: string }) {
           <button
             onClick={async () => {
               setIsLoading(true);
-              await sendFriendRequest(id, userId!);
+              await sendFriendRequest(id, userId ?? "");
               setIsLoading(false);
             }}
             disabled={isLoading}

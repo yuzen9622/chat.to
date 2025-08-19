@@ -1,15 +1,21 @@
 "use client";
-import { FriendInterface, NoteInterface, UserInterface } from "@/types/type";
-import Image from "next/image";
-import React, { useState } from "react";
-import NoteButton from "../../ui/note/NoteButton";
+import "react-photo-view/dist/react-photo-view.css";
 
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+
+import NoteButton from "../../ui/note/NoteButton";
 import FriendBtn from "./FriendBtn";
 import FriendModal from "./FriendModal";
 
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-
+import type {
+  FriendInterface,
+  NoteInterface,
+  UserInterface,
+} from "@/types/type";
 export default function ProfileCard({
   user,
   note,
@@ -28,24 +34,32 @@ export default function ProfileCard({
     <section className="w-full max-w-2xl p-6 text-white shadow-lg shadow-blue-400/50 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 backdrop-blur-xl">
       <div className="flex flex-col items-center gap-6 sm:flex-row">
         <div className="relative flex flex-col items-center gap-4 dark:text-white">
-          <div className="relative ">
-            <Image
-              className="object-cover w-32 h-32 rounded-full ring-2 ring-blue-500 dark:ring-white"
-              src={user.image || "/user.png"}
-              width={128}
-              height={128}
-              priority
-              alt="avatar"
+          <PhotoProvider
+            bannerVisible={false}
+            maskOpacity={0.5}
+            maskClassName=" backdrop-blur-sm bg-black/50"
+          >
+            <PhotoView src={user.image || "/user.png"}>
+              <button>
+                <Image
+                  className="object-cover w-32 h-32 rounded-full ring-2 ring-blue-500 dark:ring-white"
+                  src={user.image || "/user.png"}
+                  width={128}
+                  height={128}
+                  priority
+                  alt="avatar"
+                />
+              </button>
+            </PhotoView>
+          </PhotoProvider>
+          {(isOwn || note) && (
+            <NoteButton
+              user={user}
+              note={note}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
-            {(isOwn || note) && (
-              <NoteButton
-                user={user}
-                note={note!}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-              />
-            )}
-          </div>
+          )}
 
           {isOwn && !isPreview && (
             <Link

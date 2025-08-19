@@ -1,12 +1,13 @@
 "use client";
-import { FriendInterface } from "@/types/type";
+import Link from "next/link";
+import { useState } from "react";
+
 import { Grow, Modal } from "@mui/material";
-import React, { useState } from "react";
 
 import BadgeAvatar from "../../ui/Avatar/Avatar";
 import FriendBtn from "./FriendBtn";
-import Link from "next/link";
 
+import type { FriendInterface } from "@/types/type";
 export default function FriendModal({
   friends,
 }: {
