@@ -1,7 +1,7 @@
-import { useTheme } from 'next-themes';
-import { memo } from 'react';
+import { useTheme } from "next-themes";
+import { memo } from "react";
 
-import WavesurferAudio from '@/app/components/ui/Audio';
+import WavesurferAudio from "@/app/components/ui/Audio";
 
 import type { MetaData } from "@/types/type";
 const AudioMessage = memo(function AudioMessage({
@@ -20,7 +20,7 @@ const AudioMessage = memo(function AudioMessage({
       isOwn={isOwn}
       isDark={isDark}
       backgroundColor={
-        isOwn ? "bg-blue-500" : isDark ? "bg-white/10" : "bg-gray-400/20"
+        isOwn ? "bg-blue-500" : isDark ? "bg-stone-900/90" : "bg-white"
       }
     />
   );

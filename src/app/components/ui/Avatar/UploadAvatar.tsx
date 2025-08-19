@@ -1,5 +1,8 @@
-import { Camera, Trash } from 'lucide-react';
-import Image from 'next/image';
+import { Camera, Trash } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useState } from "react";
+
+import CropModal from "../Modal/CropModal";
 
 type UploadAvatarProps = {
   src: string | undefined;
@@ -18,11 +21,17 @@ type UploadAvatarProps = {
 
 export default function UploadAvatar({
   src,
-
   setUserImage,
   userImage,
 }: UploadAvatarProps) {
-  const handleImageUpload = async () => {
+  const [open, setOpen] = useState(false);
+  const [originImg, setOriginImg] = useState<string | null>(null);
+
+  const handleImageUpload = useCallback(async () => {
+    if (userImage) {
+      setOpen(true);
+      return;
+    }
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -32,18 +41,28 @@ export default function UploadAvatar({
       if (target.files) {
         const file = target.files[0];
         const url = URL.createObjectURL(file);
+        setOriginImg(url);
 
         setUserImage({ imgUrl: url, imgFile: file });
+        setOpen(true);
       }
     });
-  };
+  }, [userImage, setUserImage]);
+
   return (
     <div className="flex items-center justify-center ">
+      <CropModal
+        setOriginImg={setOriginImg}
+        open={open}
+        onClose={() => setOpen(false)}
+        setImageData={setUserImage}
+        originSrc={originImg || "/user.png"}
+      />
       <span className="relative">
         <Image
           width={80}
-          height={80}
           onClick={handleImageUpload}
+          height={80}
           className="object-cover w-20 h-20 rounded-full cursor-pointer"
           src={src || "/user.png"}
           alt="img"

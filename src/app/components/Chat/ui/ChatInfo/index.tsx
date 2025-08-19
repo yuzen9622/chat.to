@@ -1,18 +1,19 @@
 "use client";
 
-import { X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { twMerge } from 'tailwind-merge';
+import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { useChatInfo } from '@/hook/useChatInfo';
+import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import { useChatInfo } from "@/hook/useChatInfo";
 
-import { useAblyStore } from '../../../../store/AblyStore';
-import { useChatStore } from '../../../../store/ChatStore';
-import InfoMedia from './InfoMedia';
-import JoinUserModal from './JoinUserModal';
-import OutModal from './OutModal';
-import { RoomUserModal } from './RoomUserModal';
+import { useAblyStore } from "../../../../store/AblyStore";
+import { useChatStore } from "../../../../store/ChatStore";
+import InfoMedia from "./InfoMedia";
+import JoinUserModal from "./JoinUserModal";
+import OutModal from "./OutModal";
+import { RoomUserModal } from "./RoomUserModal";
+import SettingTable from "./SettingTable";
 
 export default function ChatInfo() {
   const { currentChat, chatInfoOpen, setChatInfoOpen } = useChatStore();
@@ -61,6 +62,7 @@ export default function ChatInfo() {
               <OutModal isOwner={currentChat.room_owner === userId} />
             </span>
           </div>
+          <SettingTable />
           <InfoMedia />
         </>
       )}

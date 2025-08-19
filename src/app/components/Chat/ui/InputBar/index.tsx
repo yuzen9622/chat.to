@@ -1,21 +1,21 @@
 "use client";
-import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
-import { Laugh, Pencil, Send } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
+import { Laugh, Pencil, Send } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { WavesurferRecord } from '@/app/components/ui/Audio';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useChatStore } from '@/app/store/ChatStore';
+import { WavesurferRecord } from "@/app/components/ui/Audio";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
 
-import Edit from './Edit';
-import FileContainer from './FileContainer';
-import { useInputBarEdit, useInputBarSend } from './hook/useInputBar';
-import { useInputBarTyping } from './hook/useInputBarTyping';
-import MediaActions from './MediaActions';
-import Reply from './Reply';
-import { SendBar } from './SendBar';
+import Edit from "./Edit";
+import FileContainer from "./FileContainer";
+import { useInputBarEdit, useInputBarSend } from "./hook/useInputBar";
+import { useInputBarTyping } from "./hook/useInputBarTyping";
+import MediaActions from "./MediaActions";
+import Reply from "./Reply";
+import { SendBar } from "./SendBar";
 
 import type { FormEvent } from "react";
 export default function InputBar() {
@@ -138,11 +138,11 @@ export default function InputBar() {
               onSend(e);
             }
           }}
-          className={twMerge("z-20 w-full sticky bottom-0")}
+          className={twMerge("z-20 w-full sticky bottom-2 bg-transparent ")}
         >
           <div
             className={twMerge(
-              " px-2 py-1 m-2 border border-t dark:border-none rounded-3xl transition-[border-radius] bg-white/10 backdrop-blur-3xl",
+              " px-2 py-1 mx-2 border border-t dark:border-none rounded-3xl bg-stone-100 transition-[border-radius] dark:bg-stone-900/70 backdrop-blur-3xl",
               reply && "rounded-md",
               isDropIn && "  outline-dashed outline-blue-500"
             )}

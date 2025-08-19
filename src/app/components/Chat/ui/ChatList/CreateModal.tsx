@@ -1,19 +1,19 @@
-import { Ellipsis } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { twMerge } from 'tailwind-merge';
+import { Ellipsis } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { useCallback, useState } from "react";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { twMerge } from "tailwind-merge";
 
-import UploadAvatar from '@/app/components/ui/Avatar/UploadAvatar';
-import { createRoom } from '@/app/lib/api/room/roomApi';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useAuthStore } from '@/app/store/AuthStore';
-import { useSnackBar } from '@/hook/useSnackBar';
-import { Grow, Modal } from '@mui/material';
+import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
+import { createRoom } from "@/app/lib/api/room/roomApi";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { useSnackBar } from "@/hook/useSnackBar";
+import { Grow, Modal } from "@mui/material";
 
-import UserButton from './UserButton';
+import UserButton from "./UserButton";
 
 export function CreateRoomModal({
   isOpen,
@@ -52,6 +52,7 @@ export function CreateRoomModal({
       onClose={() => {
         setIsOpen(false);
         setRoomMembers([]);
+        setRoomImg(null);
       }}
       className="flex items-center justify-center w-full h-full"
       aria-labelledby="modal-modal-title"

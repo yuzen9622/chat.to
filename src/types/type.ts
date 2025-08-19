@@ -10,6 +10,10 @@ export type MessageType = "text" | "media" | "file" | "audio";
 export type ProviderType = "google" | "github" | "credentials";
 export type CallStatus = "connect" | "disconnect" | "waiting" | "receiving";
 export type CallType = "voice" | "video";
+export type RoomTheme =
+  | { type: "color"; color: string }
+  | { type: "image"; image: { url: string; public_id: string } };
+
 export interface TypingInterface {
   roomId: string;
   typing: boolean;

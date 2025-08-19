@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { memo } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { formatSize, getFileIcon, handleDownload } from '@/app/lib/util';
+import { formatSize, getFileIcon, handleDownload } from "@/app/lib/util";
 
 import type { ClientMessageInterface } from "@/types/type";
 import type { LucideIcon } from "lucide-react";
@@ -20,7 +20,7 @@ const FileMessage = memo(function FileMessage({
       title={message.text}
       onClick={() => handleDownload(metaData.url, message.text)}
       className={twMerge(
-        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-gray-500/20 gap-x-1 dark:bg-stone-700/70",
+        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-white gap-x-1 dark:bg-stone-700/90",
         isOwn && "dark:bg-blue-500 bg-blue-500 text-white"
       )}
     >
