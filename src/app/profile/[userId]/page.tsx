@@ -50,7 +50,7 @@ export default async function Page({
       <ProfileCard
         user={user.data}
         note={user.data.user_note[0]}
-        friends={friends.data!}
+        friends={friends.data ?? void 0}
       />
 
       {/* 最近動態 */}

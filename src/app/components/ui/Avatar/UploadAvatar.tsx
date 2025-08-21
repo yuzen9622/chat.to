@@ -1,22 +1,16 @@
 import { Camera, Trash } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+
+import { useImageUpload } from "@/hook/useImageUpload";
 
 import CropModal from "../Modal/CropModal";
 
+import type { UserImageData } from "@/types/type";
 type UploadAvatarProps = {
   src: string | undefined;
 
-  setUserImage: React.Dispatch<
-    React.SetStateAction<{
-      imgUrl: string;
-      imgFile: File;
-    } | null>
-  >;
-  userImage: {
-    imgUrl: string;
-    imgFile: File;
-  } | null;
+  setUserImage: React.Dispatch<React.SetStateAction<UserImageData | null>>;
+  userImage: UserImageData | null;
 };
 
 export default function UploadAvatar({
@@ -24,38 +18,26 @@ export default function UploadAvatar({
   setUserImage,
   userImage,
 }: UploadAvatarProps) {
-  const [open, setOpen] = useState(false);
-  const [originImg, setOriginImg] = useState<string | null>(null);
+  const {
+    cropOpen,
+    handleCropClose,
+    handleImageUpload,
+    originImg,
+    setOriginImg,
+  } = useImageUpload();
 
-  const handleImageUpload = useCallback(async () => {
-    if (userImage) {
-      setOpen(true);
-      return;
-    }
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.click();
-    input.addEventListener("change", (e) => {
-      const target = e.target as HTMLInputElement;
-      if (target.files) {
-        const file = target.files[0];
-        const url = URL.createObjectURL(file);
-        setOriginImg(url);
-
-        setUserImage({ imgUrl: url, imgFile: file });
-        setOpen(true);
-      }
-    });
-  }, [userImage, setUserImage]);
+  const handleCrop = (imageData: UserImageData) => {
+    setUserImage(imageData);
+  };
 
   return (
     <div className="flex items-center justify-center ">
       <CropModal
         setOriginImg={setOriginImg}
-        open={open}
-        onClose={() => setOpen(false)}
+        open={cropOpen}
+        onClose={handleCropClose}
         setImageData={setUserImage}
+        onCrop={handleCrop}
         originSrc={originImg || "/user.png"}
       />
       <span className="relative">

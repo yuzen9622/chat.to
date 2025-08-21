@@ -1,7 +1,9 @@
-import { memo } from "react";
+"use client";
+import { memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { formatSize, getFileIcon, handleDownload } from "@/app/lib/util";
+import { useChatStore } from "@/app/store/ChatStore";
 
 import type { ClientMessageInterface } from "@/types/type";
 import type { LucideIcon } from "lucide-react";
@@ -12,6 +14,16 @@ const FileMessage = memo(function FileMessage({
   message: ClientMessageInterface;
   isOwn: boolean;
 }) {
+  const { currentChat } = useChatStore();
+  const theme = useMemo(() => {
+    if (!currentChat || !currentChat.room_theme)
+      return "bg-blue-500 text-white";
+
+    return currentChat.room_theme.type === "color"
+      ? `${currentChat.room_theme.ownColor} ${currentChat.room_theme.textColor}`
+      : "bg-blue-500 text-white";
+  }, [currentChat]);
+
   const metaData = message.meta_data;
   if (!metaData) return null;
   const Icon: LucideIcon = getFileIcon(message.text);
@@ -20,8 +32,9 @@ const FileMessage = memo(function FileMessage({
       title={message.text}
       onClick={() => handleDownload(metaData.url, message.text)}
       className={twMerge(
-        "flex items-center p-2 px-3 rounded-3xl dark:text-white bg-white gap-x-1 dark:bg-stone-700/90",
-        isOwn && "dark:bg-blue-500 bg-blue-500 text-white"
+        "flex items-center p-2 px-3 border text-black  dark:border-none rounded-3xl dark:text-white bg-white gap-x-1 dark:bg-stone-900/90",
+
+        isOwn && theme
       )}
     >
       <div className="flex flex-col items-center justify-center">

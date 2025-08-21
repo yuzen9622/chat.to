@@ -1,17 +1,17 @@
 "use client";
-import { ChevronLeft, Info, Phone, Video } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-import { twMerge } from "tailwind-merge";
+import { ChevronLeft, Info, Phone, Video } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { startStream } from "@/app/lib/util";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useCallStore } from "@/app/store/CallStore";
-import { useChatStore } from "@/app/store/ChatStore";
-import { useChatInfo } from "@/hook/useChatInfo";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { startStream } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useCallStore } from '@/app/store/CallStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { useChatInfo } from '@/hook/useChatInfo';
 
 import type { CallType } from "@/types/type";
 
@@ -53,7 +53,7 @@ export default function ChatHeader() {
 
   if (!currentChat) return null;
   return (
-    <header className="box-border sticky top-0 flex items-center justify-between w-full gap-4 p-2 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
+    <header className="box-border sticky top-0 z-30 flex items-center justify-between w-full gap-4 p-2 dark:bg-transparent">
       <span className="flex items-center w-full max-w-full gap-2 overflow-hidden">
         {/* 返回按鈕 */}
         <Link
@@ -85,11 +85,11 @@ export default function ChatHeader() {
           {/* 名稱與狀態 */}
           <div className="flex flex-col min-w-0 pl-2 overflow-hidden">
             <div className="flex items-center min-w-0 space-x-1 overflow-hidden">
-              <p className="min-w-0 text-lg font-medium truncate text-start text-stone-900 dark:text-white active:text-white/70">
+              <p className="min-w-0 text-lg font-medium truncate text-start active:text-white/70">
                 {displayName}
               </p>
               {currentChat.room_type === "group" && (
-                <p className="flex-shrink-0 text-lg font-medium text-stone-900 dark:text-white">
+                <p className="flex-shrink-0 text-lg font-medium ">
                   ({currentChat.room_members.length})
                 </p>
               )}

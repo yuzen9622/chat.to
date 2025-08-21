@@ -7,18 +7,18 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import { twMerge } from "tailwind-merge";
 
-import { CircularProgress } from "@mui/material";
-
+import PreviewMediaModal from "@/app/components/ui/Modal/PreviewMediaModal";
 import {
   formatSize,
   getFileIcon,
   handleDownload,
   messageType,
-} from "../../../../lib/util";
-import { useChatStore } from "../../../../store/ChatStore";
-import PreviewMediaModal from "../../../ui/Modal/PreviewMediaModal";
+} from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { CircularProgress } from "@mui/material";
 
-import type { ClientMessageInterface } from "../../../../../types/type";
+import type { ClientMessageInterface } from "@/types/type";
+
 type Type = "media" | "url" | "file";
 
 export default function InfoMedia() {
@@ -34,10 +34,8 @@ export default function InfoMedia() {
     type: string;
   } | null>(null);
 
-  const { currentChat } = useChatStore();
+  const { roomId } = useAblyStore();
   const handleFilterMessage = useCallback(async () => {
-    if (!currentChat) return;
-
     setIsLoading(true);
 
     try {
@@ -46,7 +44,7 @@ export default function InfoMedia() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           metaType: filterType,
-          roomId: currentChat?.id,
+          roomId: roomId,
         }),
       });
       if (res.ok) {
@@ -62,7 +60,7 @@ export default function InfoMedia() {
     } finally {
       setIsLoading(false);
     }
-  }, [filterType, currentChat]);
+  }, [filterType, roomId]);
 
   const handlePreview = useCallback((message: ClientMessageInterface) => {
     const mediaType = messageType(message.meta_data ?? null);

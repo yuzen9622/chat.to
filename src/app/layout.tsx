@@ -33,8 +33,8 @@ export const viewport: Viewport = {
 };
 export const metadata: Metadata = {
   title: {
-    template: "%s｜chat.to",
-    default: "主頁｜chat.to",
+    template: "%s",
+    default: "chat.to",
   },
   description: "The modern online chat app",
 

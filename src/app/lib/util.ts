@@ -17,6 +17,7 @@ import type {
   CallType,
   ClientMessageInterface,
   MetaData,
+  RoomInterface,
   ServerMessageInterface,
 } from "@/types/type";
 export async function uploadFile(
@@ -94,21 +95,14 @@ export const formatSize = (size: number) => {
   return `${size.toFixed(1)}${b}`;
 };
 
-export const roomSort = () => {
-  const { rooms, setRoom } = useChatStore.getState();
+export const roomSort = (rooms: RoomInterface[]) => {
   if (!rooms) return;
 
-  // rooms.sort(
-  //   (a, b) =>
-  //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  // );
-  setRoom((prev) => {
-    const newPrev = prev.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-    return newPrev;
-  });
+  rooms.sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  return rooms;
 };
 
 export const getFileIcon = (fileName: string) => {

@@ -1,24 +1,21 @@
-import "cropperjs/dist/cropper.css";
+import 'cropperjs/dist/cropper.css';
 
-import { createRef } from "react";
-import Cropper from "react-cropper";
+import { createRef } from 'react';
+import Cropper from 'react-cropper';
 
-import { Grow, Modal } from "@mui/material";
+import { Grow, Modal } from '@mui/material';
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ReactCropperElement } from "react-cropper";
+import type { UserImageData } from "@/types/type";
 type CropProps = {
   open: boolean;
-  setImageData: Dispatch<
-    SetStateAction<{
-      imgUrl: string;
-      imgFile: File;
-    } | null>
-  >;
+  setImageData: Dispatch<SetStateAction<UserImageData | null>>;
   originSrc: string;
   setOriginImg: Dispatch<SetStateAction<string | null>>;
   onClose: () => void;
   aspectRatio?: number;
+  onCrop: (imageData: UserImageData) => void;
 };
 
 export default function CropModal({
@@ -28,6 +25,7 @@ export default function CropModal({
   originSrc,
   setOriginImg,
   aspectRatio = 1,
+  onCrop,
 }: CropProps) {
   const cropperRef = createRef<ReactCropperElement>();
 
@@ -49,14 +47,16 @@ export default function CropModal({
   const handleCrop = async () => {
     const cropEl = cropperRef.current;
     if (!cropEl) return;
-    console.log(cropEl.cropper);
 
     const url = cropEl.cropper.getCroppedCanvas().toDataURL();
     const res = await fetch(url);
     const blob = await res.blob();
-
+    onCrop({
+      imgUrl: URL.createObjectURL(blob),
+      imgFile: new File([blob], url),
+    });
     setImageData((prev) => ({
-      imgUrl: url,
+      imgUrl: URL.createObjectURL(blob),
       imgFile: new File([blob], prev?.imgFile.name ?? ""),
     }));
     onClose();

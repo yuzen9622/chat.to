@@ -37,7 +37,6 @@ const MessageItem = memo(function MessageItem({
   const { anchorEl, handleClose, handleOpen } = usePopbox();
 
   useEffect(() => {
-    console.log("render:", message.id);
     if (!messageRef.current) return;
     const observer = new IntersectionObserver(
       (el) => {
@@ -96,24 +95,24 @@ const MessageItem = memo(function MessageItem({
         )}
         <div
           className={twMerge(
-            "text-end w-full    flex flex-col gap-1 ",
+            "text-end w-full  isolate   flex flex-col gap-1 ",
             isOwn && " justify-end items-end"
           )}
         >
           {!isOwn && !message.reply && !message.reply_note && (
-            <span className="text-xs w-fit dark:text-white/80">
+            <span className="text-xs w-fit mix-blend-multiply ">
               {messageUser.name}
             </span>
           )}
           <div
             className={twMerge(
-              "flex gap-1 relative  w-full",
+              "flex gap-1   w-full",
               isOwn ? "flex-row-reverse" : ""
             )}
           >
             <div
               className={twMerge(
-                "max-w-[80%] relative  space-y-2 flex flex-col  items-end",
+                "max-w-[80%] space-y-2 flex flex-col  items-end",
                 message.status === "deleting" && " hidden"
               )}
             >
@@ -124,8 +123,10 @@ const MessageItem = memo(function MessageItem({
                 <Message message={message} isOwn={isOwn} />
               )}
               {message.status === "pending" && (
-                <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">
-                  <Send size={12} />
+                <div className="relative ">
+                  <div className="absolute bottom-0 rounded-full -left-5 dark:text-blue-500">
+                    <Send size={12} />
+                  </div>
                 </div>
               )}
             </div>

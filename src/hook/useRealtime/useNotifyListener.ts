@@ -1,12 +1,11 @@
-import type{ InboundMessage } from "ably";
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import type { InboundMessage } from "ably";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
-import { ablyEventManager } from '@/app/lib/ably/ablyManager';
-import { useChatStore } from '@/app/store/ChatStore';
+import { ablyEventManager } from "@/app/lib/ably/ablyManager";
+import { useChatStore } from "@/app/store/ChatStore";
 
-import type{ ClientMessageInterface } from "@/types/type";
-
+import type { ClientMessageInterface } from "@/types/type";
 export const useNotifyListener = () => {
   const {
     rooms,

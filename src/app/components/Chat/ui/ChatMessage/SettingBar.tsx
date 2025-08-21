@@ -1,28 +1,21 @@
-import {
-  Clipboard,
-  Download,
-  Ellipsis,
-  Pencil,
-  Reply,
-  Trash2,
-} from "lucide-react";
-import moment from "moment";
-import { useSession } from "next-auth/react";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { Clipboard, Download, Ellipsis, Pencil, Reply, Trash2 } from 'lucide-react';
+import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { memo, useCallback, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-import { deleteMessage } from "@/app/lib/api/message/messageApi";
-import { Copy2ClipBoard, handleDownload, messageType } from "@/app/lib/util";
-import { useAblyStore } from "@/app/store/AblyStore";
-import { useChatStore } from "@/app/store/ChatStore";
-import { ClickAwayListener, Popper } from "@mui/material";
+import { deleteMessage } from '@/app/lib/api/message/messageApi';
+import { Copy2ClipBoard, handleDownload, messageType } from '@/app/lib/util';
+import { useAblyStore } from '@/app/store/AblyStore';
+import { useChatStore } from '@/app/store/ChatStore';
+import { useSnackBar } from '@/hook/useSnackBar';
+import { ClickAwayListener, Popper } from '@mui/material';
 
-import ForwardModal from "./Forward/ForwardModal";
+import ForwardModal from './Forward/ForwardModal';
 
 import type { PopperPlacementType } from "@mui/material";
 
 import type { ClientMessageInterface } from "@/types/type";
-
 const SettingBar = memo(function SettingBar({
   message,
   isOwn,
@@ -37,9 +30,8 @@ const SettingBar = memo(function SettingBar({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [place, setPlace] = useState(isOwn ? "end" : "start");
   const [xPlace, setXPlace] = useState("top");
+  const { handleSnackOpen } = useSnackBar();
   const open = Boolean(anchorEl);
-
-  // const [open, setOpen] = useState(false);
 
   const handleDelete = useCallback(async () => {
     if (!room || !channel || !message.id) return;
@@ -66,30 +58,27 @@ const SettingBar = memo(function SettingBar({
     }
   }, [room, channel, message, setCurrentMessage]);
 
-  useEffect(() => {
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     const rect = popperRef.current?.getBoundingClientRect();
     if (anchorEl && rect) {
       if (rect.right > window.innerWidth) {
         // 右邊超出
         setPlace("end");
-      } else if (rect.left < 0) {
+      } else if (rect.left < 70) {
         // 左邊超出
         setPlace("start");
       }
-      console.log(rect.top);
+
       if (rect.top < 70) {
         setXPlace("bottom");
       } else if (rect.bottom > window.innerHeight) {
         setXPlace("top");
       }
     }
-  }, [anchorEl]);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -99,7 +88,9 @@ const SettingBar = memo(function SettingBar({
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
-      <div className={twMerge("flex  relative   justify-end items-end ")}>
+      <div
+        className={twMerge("flex    relative  z-20  justify-end items-end ")}
+      >
         <div
           className={twMerge(
             "flex    opacity-0 group-hover:opacity-100 ",
@@ -109,7 +100,7 @@ const SettingBar = memo(function SettingBar({
         >
           <button
             className={twMerge(
-              "  p-1 inline-flex active:scale-90 transition-all justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
+              "  p-1 inline-flex active:scale-90 transition-all  justify-center items-center gap-2 rounded-md   text-stone-600 hover:bg-gray-100  dark:text-white/50 hover:dark:text-white/80 hover:dark:bg-white/10 focus:outline-none focus:dark:bg-white/10 hover:opacity-100"
             )}
             onClick={handleReply}
           >
@@ -135,16 +126,17 @@ const SettingBar = memo(function SettingBar({
           ref={popperRef}
           placement={`${xPlace}-${place}` as PopperPlacementType}
           anchorEl={anchorEl}
-          disablePortal={true}
           open={open}
+          container={document.getElementById("chatroom")}
           modifiers={[
-            { name: "preventOverflow", enabled: false },
+            { name: "flip", enabled: true },
             {
-              name: "flip",
-              enabled: false,
+              name: "preventOverflow",
+              enabled: true,
+              options: { boundary: "clippingParents" },
             },
           ]}
-          className="z-20 p-2"
+          className="z-10 p-2"
         >
           <div className="flex flex-col w-32 p-1 bg-white border rounded-md right-20 dark:bg-neutral-900">
             <p className="text-xs text-center dark:text-white/50">
@@ -157,6 +149,7 @@ const SettingBar = memo(function SettingBar({
                 )}
                 onClick={async () => {
                   await Copy2ClipBoard(message.text);
+                  handleSnackOpen("已複製");
                   handleClose();
                 }}
               >
@@ -202,6 +195,7 @@ const SettingBar = memo(function SettingBar({
                   )}
                   onClick={() => {
                     handleDelete();
+                    handleSnackOpen("已刪除");
                     handleClose();
                   }}
                 >

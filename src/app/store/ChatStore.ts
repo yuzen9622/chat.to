@@ -1,6 +1,9 @@
 "use client";
 import { create } from "zustand";
-import {
+
+import { roomSort } from "../lib/util";
+
+import type {
   ClientMessageInterface,
   NotifyInterface,
   RoomInterface,
@@ -63,7 +66,7 @@ interface ChatStore {
     notify:
       | NotifyInterface
       | null
-      | ((prev: NotifyInterface) => NotifyInterface)
+      | ((prev: NotifyInterface | null) => NotifyInterface)
   ) => void;
 }
 
@@ -236,13 +239,10 @@ export const useChatStore = create<ChatStore>((set) => ({
       if (room) {
         room.created_at = newLastMsgOrFn.created_at;
         const newRooms = state.rooms.map((r) => (r.id === room.id ? room : r));
-        // const sortRooms = newRooms.sort(
-        //   (a, b) =>
-        //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        // );
+        const sortRooms = roomSort(newRooms);
         return {
           ...state,
-          rooms: newRooms,
+          rooms: sortRooms,
           lastMessages: newLastMessages,
         };
       }
@@ -288,7 +288,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   setNewNotify: (notifyOrFn) => {
     set((state) => {
       if (typeof notifyOrFn === "function") {
-        const newNotify = notifyOrFn(state.newNotify!);
+        const newNotify = notifyOrFn(state.newNotify);
         return {
           ...state,
           newNotify: newNotify,

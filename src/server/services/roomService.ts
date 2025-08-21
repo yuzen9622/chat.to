@@ -1,4 +1,5 @@
-import { RoomInterface } from "@/types/type";
+import { RoomInterface, RoomTheme } from "@/types/type";
+
 import { supabase } from "../../app/lib/supabasedb";
 import { readMessage } from "./messageService";
 
@@ -148,4 +149,15 @@ export const getRoomById = async (
     console.log(error);
     return { room: null };
   }
+};
+
+export const updateRoomTheme = async (
+  roomId: string,
+  roomTheme: RoomTheme
+): Promise<void> => {
+  const { error } = await supabase
+    .from("rooms")
+    .update([{ room_theme: roomTheme }])
+    .eq("id", roomId);
+  if (error) throw error;
 };

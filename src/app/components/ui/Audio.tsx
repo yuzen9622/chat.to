@@ -1,17 +1,17 @@
-import { AudioLines, CirclePlay, CircleX, Pause, Play } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
-import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
+import { AudioLines, CirclePlay, CircleX, Pause, Play } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
 
-import { sendAblyMessage } from '@/app/lib/ably/ablyMessage';
-import { sendUserMessage } from '@/app/lib/api/message/messageApi';
-import { createFileMessage } from '@/app/lib/createMessage';
-import { uploadFile } from '@/app/lib/util';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useAuthStore } from '@/app/store/AuthStore';
-import { useChatStore } from '@/app/store/ChatStore';
-import { useWavesurfer } from '@wavesurfer/react';
+import { sendAblyMessage } from "@/app/lib/ably/ablyMessage";
+import { sendUserMessage } from "@/app/lib/api/message/messageApi";
+import { createFileMessage } from "@/app/lib/createMessage";
+import { uploadFile } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useWavesurfer } from "@wavesurfer/react";
 
 type AudioProps = {
   url: string;
@@ -91,8 +91,9 @@ export default function WavesurferAudio({
   return (
     <div
       className={twMerge(
-        "flex w-48  px-2 py-2 bg-blue-500 rounded-3xl",
-        backgroundColor && backgroundColor
+        "flex w-48  px-2 py-2 bg-blue-500 rounded-3xl   ",
+        backgroundColor && backgroundColor,
+        !isOwn && "border  dark:border-none"
       )}
     >
       <button type="button" onClick={handlePlayPause} className="px-1">

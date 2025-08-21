@@ -1,5 +1,6 @@
-import { useAuthStore } from "@/app/store/AuthStore";
-import { useCallback } from "react";
+import { useCallback } from 'react';
+
+import { useAuthStore } from '@/app/store/AuthStore';
 
 export const useSnackBar = () => {
   const { setSystemAlert } = useAuthStore();
@@ -8,7 +9,7 @@ export const useSnackBar = () => {
       setSystemAlert({
         text,
         severity: severity || "success",
-        variant: "filled",
+        variant: "standard",
         open: true,
       });
     },

@@ -4,6 +4,7 @@ export type MetaData = {
   url: string;
   size: number;
 };
+export type UserImageData = { imgFile: File; imgUrl: string };
 export type friendStatus = "accepted" | "declined" | "pending" | "canceled";
 export type MessageStatus = "send" | "pending" | "failed" | "deleting";
 export type MessageType = "text" | "media" | "file" | "audio";
@@ -11,8 +12,12 @@ export type ProviderType = "google" | "github" | "credentials";
 export type CallStatus = "connect" | "disconnect" | "waiting" | "receiving";
 export type CallType = "voice" | "video";
 export type RoomTheme =
-  | { type: "color"; color: string }
-  | { type: "image"; image: { url: string; public_id: string } };
+  | { type: "color"; bgColor: string; textColor: string; ownColor: string }
+  | {
+      type: "image";
+      image: { url: string; public_id: string };
+      bgImage: string;
+    };
 
 export interface TypingInterface {
   roomId: string;
@@ -100,6 +105,7 @@ export interface RoomInterface {
   room_img?: { url: string; public_id: "" };
   updated_at?: Date;
   room_owner?: string;
+  room_theme: RoomTheme | null;
 }
 
 export interface FriendInterface {

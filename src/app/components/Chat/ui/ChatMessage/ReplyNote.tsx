@@ -1,8 +1,8 @@
 import type { ClientMessageInterface } from "@/types/type";
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { memo } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { memo } from "react";
+import { twMerge } from "tailwind-merge";
 
 const ReplyNote = memo(function NoteMessage({
   message,
@@ -16,7 +16,7 @@ const ReplyNote = memo(function NoteMessage({
   return (
     <div className="flex flex-col">
       {message.reply_note && (
-        <span className={twMerge(" w-fit text-xs dark:text-white/50")}>
+        <span className={twMerge(" w-fit text-xs  ")}>
           已回復
           {userId === message.reply_note.user_id
             ? "你"
@@ -26,7 +26,7 @@ const ReplyNote = memo(function NoteMessage({
       )}
       <div
         className={twMerge(
-          "inline-block text-start my-2   bg-stone-900/10 dark:bg-white/10  max-w-48 p-2 rounded-2xl",
+          "inline-block text-start my-2   bg-white/90 dark:bg-stone-900/90  max-w-48 p-2 rounded-2xl",
           isOwn && "bg-blue-500  text-white"
         )}
       >

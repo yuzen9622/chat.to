@@ -1,9 +1,9 @@
-import { Users } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Users } from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { Grow, Modal } from '@mui/material';
+import { Grow, Modal } from "@mui/material";
 
-import RoomUserItem from './RoomUserItem';
+import RoomUserItem from "./RoomUserItem";
 
 import type { RoomInterface } from "@/types/type";
 
@@ -15,6 +15,7 @@ export function RoomUserModal({ currentChat }: { currentChat: RoomInterface }) {
     const roomMembers = currentChat.room_members;
     return roomMembers;
   }, [currentChat]);
+
   return (
     <>
       <button

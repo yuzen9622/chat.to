@@ -1,7 +1,8 @@
 import { useChatStore } from "@/app/store/ChatStore";
-import { uploadFile } from "../../util";
-import { RoomInterface } from "@/types/type";
 
+import { uploadFile } from "../../util";
+
+import type { RoomInterface, RoomTheme } from "@/types/type";
 export const fetchUserRooms = async () => {
   try {
     const response = await fetch(`/api/rooms`, {
@@ -31,7 +32,7 @@ export const createRoom = async (
   room_img?: File
 ): Promise<RoomInterface | null> => {
   try {
-    let roomImageInfo;
+    let roomImageInfo = {};
     if (!userId) return null;
     if (room_img) {
       const roomImage = await uploadFile([room_img]);
@@ -177,6 +178,28 @@ export const deleteRoom = async (
       throw new Error("Delete room failed");
     }
     return data.success;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateRoomTheme = async (
+  roomId: string,
+  roomTheme: RoomTheme | null
+) => {
+  try {
+    const res = await fetch("/api/rooms/theme", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomId,
+        roomTheme: roomTheme,
+      }),
+    });
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }

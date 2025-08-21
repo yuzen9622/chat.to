@@ -1,25 +1,22 @@
 "use client";
 import type { InboundMessage } from "ably";
-import { ChevronDown } from "lucide-react";
-import moment from "moment";
-import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { GroupedVirtuoso } from "react-virtuoso";
-import { twMerge } from "tailwind-merge";
+import { ChevronDown } from 'lucide-react';
+import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { GroupedVirtuoso } from 'react-virtuoso';
+import { twMerge } from 'tailwind-merge';
 
-import ChatHeader from "@/app/components/Chat/ui/ChatHeader";
-import {
-  fetchRoomMessage,
-  readMessage,
-} from "@/app/lib/api/message/messageApi";
-import { CircularProgress } from "@mui/material";
+import ChatHeader from '@/app/components/Chat/ui/ChatHeader';
+import { fetchRoomMessage, readMessage } from '@/app/lib/api/message/messageApi';
+import { CircularProgress } from '@mui/material';
 
-import { clearReadMessage } from "../../../lib/util";
-import { useAblyRoom, useAblyStore } from "../../../store/AblyStore";
-import { useChatStore } from "../../../store/ChatStore";
-import TypingBar from "../../ui/TypingBar";
-import Message from "./ChatMessage/index";
-import InputBar from "./InputBar/index";
+import { clearReadMessage } from '../../../lib/util';
+import { useAblyRoom, useAblyStore } from '../../../store/AblyStore';
+import { useChatStore } from '../../../store/ChatStore';
+import TypingBar from '../../ui/TypingBar';
+import Message from './ChatMessage/index';
+import InputBar from './InputBar/index';
 
 import type { VirtuosoHandle } from "react-virtuoso";
 import type { ClientMessageInterface } from "../../../../types/type";
@@ -209,9 +206,9 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
       return (
         <span
           key={date}
-          className="z-10 flex items-center justify-center w-full text-xs font-medium "
+          className="z-0 flex items-center justify-center w-full text-xs font-medium "
         >
-          <p className="p-1 px-2 rounded-3xl bg-gray-400/20 dark:text-white dark:bg-neutral-800/80 backdrop-blur-3xl">
+          <p className="p-1 px-2 bg-white rounded-3xl dark:text-white dark:bg-neutral-800/80 backdrop-blur-3xl">
             {date}
           </p>
         </span>
@@ -223,8 +220,29 @@ export default function ChatRoom({ roomId }: { roomId: string }) {
   return (
     <>
       {currentChat && currentChat.id === roomId && isRended && (
-        <div className="flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover dark:bg-neutral-800 dark:border-none max-h-dvh">
-          <div className="box-border relative flex flex-col flex-1 pb-2 overflow-hidden max-h-dvh ">
+        <div
+          className={twMerge(
+            "flex flex-col flex-1 overflow-y-hidden transition-all bg-center bg-no-repeat bg-cover dark:border-none max-h-dvh ",
+            currentChat.room_theme
+              ? currentChat.room_theme.type === "color"
+                ? `${
+                    currentChat.room_theme.bgColor +
+                    " " +
+                    currentChat.room_theme.textColor
+                  }`
+                : ""
+              : "dark:bg-neutral-800 "
+          )}
+          style={
+            currentChat.room_theme?.type === "image"
+              ? { backgroundImage: currentChat.room_theme.bgImage }
+              : {}
+          }
+        >
+          <div
+            id="chatroom"
+            className="box-border relative flex flex-col flex-1 pb-2 overflow-hidden max-h-dvh "
+          >
             <ChatHeader />
             <main
               className={twMerge(

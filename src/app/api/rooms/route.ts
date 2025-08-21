@@ -1,11 +1,14 @@
-import { NextResponse, NextRequest } from "next/server";
-import { supabase } from "@/app/lib/supabasedb";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
 import { getToken } from "next-auth/jwt";
-import { RoomInterface } from "@/types/type";
+import { NextResponse } from "next/server";
+
+import { supabase } from "@/app/lib/supabasedb";
+import { authOptions } from "@/auth";
 import { selectRoom, selectUserRooms } from "@/server/services/roomService";
 
+import type { NextRequest } from "next/server";
+
+import type { RoomInterface } from "@/types/type";
 export async function GET() {
   const session = await getServerSession(authOptions);
 

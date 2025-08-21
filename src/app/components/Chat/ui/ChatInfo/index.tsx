@@ -1,19 +1,19 @@
 "use client";
 
-import { X } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { twMerge } from "tailwind-merge";
+import { X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { twMerge } from 'tailwind-merge';
 
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
-import { useChatInfo } from "@/hook/useChatInfo";
+import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import { useChatInfo } from '@/hook/useChatInfo';
 
-import { useAblyStore } from "../../../../store/AblyStore";
-import { useChatStore } from "../../../../store/ChatStore";
-import InfoMedia from "./InfoMedia";
-import JoinUserModal from "./JoinUserModal";
-import OutModal from "./OutModal";
-import { RoomUserModal } from "./RoomUserModal";
-import SettingTable from "./SettingTable";
+import { useAblyStore } from '../../../../store/AblyStore';
+import { useChatStore } from '../../../../store/ChatStore';
+import InfoMedia from './InfoMedia';
+import JoinUserModal from './JoinUserModal';
+import OutModal from './OutModal';
+import { RoomUserModal } from './RoomUserModal';
+import SettingTable from './SettingTable';
 
 export default function ChatInfo() {
   const { currentChat, chatInfoOpen, setChatInfoOpen } = useChatStore();
@@ -24,7 +24,7 @@ export default function ChatInfo() {
   return (
     <div
       className={twMerge(
-        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-gray-white/20 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden   absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
+        "h-full overflow-hidden transition-all   animate-slide-in max-sm:w-full bg-white/90 backdrop-blur-xl border-l      dark:border-white/10 w-80 hidden   absolute top-0 right-0  z-30   dark:bg-stone-800/90 ",
         chatInfoOpen && "flex flex-col overflow-hidden"
       )}
     >
