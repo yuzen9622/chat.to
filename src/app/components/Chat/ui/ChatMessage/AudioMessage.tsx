@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes";
 import { memo, useMemo } from "react";
 
-import WavesurferAudio from "@/app/components/ui/Audio";
+import WavesurferAudio from "@/app/components/shared/Audio";
 import { useChatStore } from "@/app/store/ChatStore";
 
 import type { MetaData } from "@/types/type";

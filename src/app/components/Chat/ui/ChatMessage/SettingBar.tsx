@@ -1,17 +1,23 @@
-import { Clipboard, Download, Ellipsis, Pencil, Reply, Trash2 } from 'lucide-react';
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import { memo, useCallback, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import {
+  Clipboard,
+  Download,
+  Ellipsis,
+  Pencil,
+  Reply,
+  Trash2,
+} from "lucide-react";
+import moment from "moment";
+import { useSession } from "next-auth/react";
+import { memo, useCallback, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { deleteMessage } from '@/app/lib/api/message/messageApi';
-import { Copy2ClipBoard, handleDownload, messageType } from '@/app/lib/util';
-import { useAblyStore } from '@/app/store/AblyStore';
-import { useChatStore } from '@/app/store/ChatStore';
-import { useSnackBar } from '@/hook/useSnackBar';
-import { ClickAwayListener, Popper } from '@mui/material';
-
-import ForwardModal from './Forward/ForwardModal';
+import ForwardModal from "@/app/components/chat/ui/ChatMessage/Forward/ForwardModal";
+import { deleteMessage } from "@/app/lib/api/message/messageApi";
+import { Copy2ClipBoard, handleDownload, messageType } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useSnackBar } from "@/hook/useSnackBar";
+import { ClickAwayListener, Popper } from "@mui/material";
 
 import type { PopperPlacementType } from "@mui/material";
 

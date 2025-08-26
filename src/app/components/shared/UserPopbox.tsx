@@ -1,8 +1,8 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { Popover } from '@mui/material';
+import { Popover } from "@mui/material";
 
-import ProfileCard from '../Profile/ui/ProfileCard';
+import ProfileCard from "../profile/ProfileCard";
 
 import type { UserInterface } from "@/types/type";
 export default function UserPopbox({

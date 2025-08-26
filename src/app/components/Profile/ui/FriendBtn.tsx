@@ -3,13 +3,12 @@ import { Ellipsis } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useMemo, useState } from "react";
 
+import FriendButton from "@/app/components/friend/ui/FriendButton";
 import {
   responseFriendRequest,
   sendFriendRequest,
 } from "@/app/lib/api/friend/friendApi";
 import { useAuthStore } from "@/app/store/AuthStore";
-
-import FriendButton from "../../Friend/ui/FriendButton";
 
 import type { friendStatus } from "@/types/type";
 export default function FriendBtn({ id }: { id: string }) {

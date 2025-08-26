@@ -1,20 +1,19 @@
 "use client";
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { useChatStore } from '@/app/store/ChatStore';
-import { useChatInfo } from '@/hook/useChatInfo';
-import { useLastMessage } from '@/hook/useLastMessage';
-import { useRoomNotify } from '@/hook/useRoomNotify';
-
-import { messageType } from '../../../lib/util';
-import BadgeAvatar from '../../ui/Avatar/Avatar';
-import MarkDownText from '../../ui/MarkDownText';
-import { TimeAgo } from '../../ui/TimeAgo';
-import TypingBar from '../../ui/TypingBar';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import MarkDownText from "@/app/components/shared/MarkDownText";
+import { TimeAgo } from "@/app/components/shared/TimeAgo";
+import TypingBar from "@/app/components/shared/TypingBar";
+import { messageType } from "@/app/lib/util";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useChatInfo } from "@/hook/useChatInfo";
+import { useLastMessage } from "@/hook/useLastMessage";
+import { useRoomNotify } from "@/hook/useRoomNotify";
 
 import type { LinkHTMLAttributes } from "react";
 import type { RoomInterface } from "../../../../types/type";

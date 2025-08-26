@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
-import CallVideo from "./CallVideo";
-import { useCallStore } from "@/app/store/CallStore";
 import { Mic, MicOff, PhoneMissed, Video, VideoOff } from "lucide-react";
 import { useSession } from "next-auth/react";
+import React from "react";
+
+import CallVideo from "@/app/components/call/ui/CallVideo";
+import { useCallStore } from "@/app/store/CallStore";
+
 export default function CallWrapper() {
   const {
     localStream,

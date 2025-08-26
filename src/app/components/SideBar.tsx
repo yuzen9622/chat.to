@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-import BarList from "./BarList";
-import ListItem from "./ui/ListItem";
+import BarList from "@/app/components/BarList";
+import ListItem from "@/app/components/shared/ListItem";
 
 export default function SideBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);

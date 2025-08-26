@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from "@/app/components/ui/Avatar/Avatar";
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
 import { useChatInfo } from "@/hook/useChatInfo";
 
 import type { Dispatch, SetStateAction } from "react";

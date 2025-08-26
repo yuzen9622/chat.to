@@ -1,4 +1,4 @@
-import CallWrapper from "../components/Call/ui/CallWrapper";
+import CallWrapper from "../components/call/CallWrapper";
 
 export default function Page() {
   return (

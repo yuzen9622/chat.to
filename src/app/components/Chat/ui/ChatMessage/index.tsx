@@ -4,14 +4,13 @@ import Image from "next/image";
 import { memo, useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-import UserPopbox from "@/app/components/ui/UserPopbox";
+import ForwardMessage from "@/app/components/chat/ui/ChatMessage/ForwardMessage";
+import Message from "@/app/components/chat/ui/ChatMessage/Message";
+import ReplyMessage from "@/app/components/chat/ui/ChatMessage/ReplyMessage";
+import ReplyNote from "@/app/components/chat/ui/ChatMessage/ReplyNote";
+import SettingBar from "@/app/components/chat/ui/ChatMessage/SettingBar";
+import UserPopbox from "@/app/components/shared/UserPopbox";
 import { usePopbox } from "@/hook/usePopbox";
-
-import ForwardMessage from "./ForwardMessage";
-import Message from "./Message";
-import ReplyMessage from "./ReplyMessage";
-import ReplyNote from "./ReplyNote";
-import SettingBar from "./SettingBar";
 
 import type { ClientMessageInterface } from "@/types/type";
 type MessageItemProps = {

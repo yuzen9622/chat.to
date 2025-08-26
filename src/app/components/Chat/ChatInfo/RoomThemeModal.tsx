@@ -1,15 +1,15 @@
 "use client";
 
-import { BanIcon, ChevronRightIcon, Images, Palette } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { BanIcon, ChevronRightIcon, Images, Palette } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import CropModal from '@/app/components/ui/Modal/CropModal';
-import { updateRoomTheme } from '@/app/lib/api/room/roomApi';
-import { uploadFile } from '@/app/lib/util';
-import { useChatStore } from '@/app/store/ChatStore';
-import { useImageUpload } from '@/hook/useImageUpload';
-import { Grow, Modal } from '@mui/material';
+import CropModal from "@/app/components/shared/Modal/CropModal";
+import { updateRoomTheme } from "@/app/lib/api/room/roomApi";
+import { uploadFile } from "@/app/lib/util";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useImageUpload } from "@/hook/useImageUpload";
+import { Grow, Modal } from "@mui/material";
 
 import type { RoomTheme, UserImageData } from "@/types/type";
 const roomThemes: RoomTheme[] = [

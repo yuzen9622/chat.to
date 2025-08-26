@@ -1,8 +1,8 @@
-import { usePopbox } from '@/hook/usePopbox';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import UserPopbox from "@/app/components/shared/UserPopbox";
+import { usePopbox } from "@/hook/usePopbox";
 
-import BadgeAvatar from '../../ui/Avatar/Avatar';
-import UserPopbox from '../../ui/UserPopbox';
-import FriendButton from './FriendButton';
+import FriendButton from "./FriendButton";
 
 import type { FriendInterface } from "@/types/type";
 

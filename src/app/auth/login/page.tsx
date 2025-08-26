@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Input from "@/app/components/ui/Input";
-import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
+import Input from "@/app/components/shared/Input";
+import ThirdPartLogin from "@/app/components/shared/ThirdPartLogin";
 
 export default function LoginPage() {
   const [loginForm, setLoginForm] = useState<{

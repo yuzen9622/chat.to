@@ -51,8 +51,12 @@ export default function BadgeAvatar({
               : room?.room_img?.url || "/group.png"
           }
           width={width}
+          onError={(e) => {
+            const el = e.target as HTMLImageElement;
+            el.src = "/user.png";
+          }}
           height={height}
-          alt={room?.room_name || "user"}
+          alt={room?.room_name || user?.name || "avatar"}
         />
       </div>
     </div>

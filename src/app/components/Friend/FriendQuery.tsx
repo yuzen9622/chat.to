@@ -1,15 +1,15 @@
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { sendFriendRequest } from '@/app/lib/api/friend/friendApi';
-import { queryUsers } from '@/app/lib/api/user/userApi';
-import { Skeleton } from '@mui/material';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import { sendFriendRequest } from "@/app/lib/api/friend/friendApi";
+import { queryUsers } from "@/app/lib/api/user/userApi";
+import { Skeleton } from "@mui/material";
 
-import { useAuthStore } from '../../../store/AuthStore';
+import { useAuthStore } from "../../store/AuthStore";
 
-import type { UserInterface } from "../../../../types/type";
+import type { UserInterface } from "../../../types/type";
 function Loading() {
   return (
     <div className="absolute z-20 w-full bg-gray-100 dark:bg-neutral-700 backdrop-blur-2xl rounded-b-md ">

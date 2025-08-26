@@ -1,25 +1,27 @@
 "use client";
 import type { InboundMessage } from "ably";
-import { ChevronDown } from 'lucide-react';
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GroupedVirtuoso } from 'react-virtuoso';
-import { twMerge } from 'tailwind-merge';
+import { ChevronDown } from "lucide-react";
+import moment from "moment";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { GroupedVirtuoso } from "react-virtuoso";
+import { twMerge } from "tailwind-merge";
 
-import ChatHeader from '@/app/components/Chat/ui/ChatHeader';
-import { fetchRoomMessage, readMessage } from '@/app/lib/api/message/messageApi';
-import { CircularProgress } from '@mui/material';
-
-import { clearReadMessage } from '../../../lib/util';
-import { useAblyRoom, useAblyStore } from '../../../store/AblyStore';
-import { useChatStore } from '../../../store/ChatStore';
-import TypingBar from '../../ui/TypingBar';
-import Message from './ChatMessage/index';
-import InputBar from './InputBar/index';
+import ChatHeader from "@/app/components/chat/ui/ChatHeader";
+import Message from "@/app/components/chat/ui/ChatMessage/index";
+import InputBar from "@/app/components/chat/ui/InputBar/index";
+import TypingBar from "@/app/components/shared/TypingBar";
+import {
+  fetchRoomMessage,
+  readMessage,
+} from "@/app/lib/api/message/messageApi";
+import { clearReadMessage } from "@/app/lib/util";
+import { useAblyRoom, useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { CircularProgress } from "@mui/material";
 
 import type { VirtuosoHandle } from "react-virtuoso";
-import type { ClientMessageInterface } from "../../../../types/type";
+import type { ClientMessageInterface } from "../../../types/type";
 export default function ChatRoom({ roomId }: { roomId: string }) {
   const userId = useSession().data?.userId;
 

@@ -7,9 +7,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 
-import NoteButton from "../../ui/note/NoteButton";
-import FriendBtn from "./FriendBtn";
-import FriendModal from "./FriendModal";
+import NoteButton from "@/app/components/shared/NoteButton";
+
+import FriendBtn from "./ui/FriendBtn";
+import FriendModal from "./ui/FriendModal";
 
 import type {
   FriendInterface,

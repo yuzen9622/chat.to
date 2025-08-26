@@ -1,13 +1,13 @@
 "use client";
-import moment from 'moment';
-import { redirect } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import moment from "moment";
+import { redirect } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { replyText } from '@/app/lib/util';
-import { Snackbar } from '@mui/material';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import { replyText } from "@/app/lib/util";
+import { Snackbar } from "@mui/material";
 
-import { useChatStore } from '../store/ChatStore';
+import { useChatStore } from "../store/ChatStore";
 
 import type { RoomInterface } from "../../types/type";
 export default function NotifyBar() {

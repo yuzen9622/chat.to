@@ -1,9 +1,8 @@
 import { Users } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import RoomUserItem from "@/app/components/chat/ChatInfo/RoomUserItem";
 import { Grow, Modal } from "@mui/material";
-
-import RoomUserItem from "./RoomUserItem";
 
 import type { RoomInterface } from "@/types/type";
 

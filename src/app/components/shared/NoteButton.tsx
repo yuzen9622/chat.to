@@ -1,19 +1,19 @@
 "use client";
-import { Ellipsis, X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { useCallback, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { Ellipsis, X } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useCallback, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { deleteNote, updateNote } from '@/app/lib/api/note/noteApi';
-import { useAuthStore } from '@/app/store/AuthStore';
-import { Grow, Modal } from '@mui/material';
+import { deleteNote, updateNote } from "@/app/lib/api/note/noteApi";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { Grow, Modal } from "@mui/material";
 
-import { useAblyStore } from '../../../store/AblyStore';
-import NoteModal from '../Modal/NoteModal';
+import { useAblyStore } from "../../store/AblyStore";
+import NoteModal from "./Modal/NoteModal";
 
 import type { ChangeEvent, Dispatch } from "react";
-import type { NoteInterface, UserInterface } from "../../../../types/type";
+import type { NoteInterface, UserInterface } from "../../../types/type";
 
 export default function NoteButton({
   note,

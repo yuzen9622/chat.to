@@ -2,14 +2,13 @@ import { SquarePen } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-import FriendNote from "@/app/components/Friend/ui/FriendNote";
+import { CreateRoomModal } from "@/app/components/chat/ChatList/CreateModal";
+import { LoadingList } from "@/app/components/chat/ChatList/Loading";
+import ChatButton from "@/app/components/chat/ui/ChatButton";
+import NoteList from "@/app/components/shared/NoteList";
 import { fetchUsersNotify } from "@/app/lib/api/notify/notifyApi";
 import { fetchUserRooms } from "@/app/lib/api/room/roomApi";
 import { useChatStore } from "@/app/store/ChatStore";
-
-import ChatButton from "../ChatButton";
-import { CreateRoomModal } from "./CreateModal";
-import { LoadingList } from "./Loading";
 
 import type { ClientMessageInterface, RoomInterface } from "@/types/type";
 
@@ -67,7 +66,7 @@ export default function ChatList() {
         </button>
       </span>
       <div>
-        <FriendNote />
+        <NoteList />
       </div>
 
       <span className="py-1 text-lg font-semibold text-blue-400">Chats</span>

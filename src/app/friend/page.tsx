@@ -1,5 +1,5 @@
-import FriendList from "@/app/components/Friend/ui/FriendList";
-import FriendRequest from "@/app/components/Friend/ui/FriendRequest";
+import FriendList from "@/app/components/friend/FriendList";
+import FriendRequest from "@/app/components/friend/FriendRequest";
 
 import type { Metadata } from "next";
 

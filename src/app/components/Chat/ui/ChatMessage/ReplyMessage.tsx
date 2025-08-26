@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Message from "./Message";
+import Message from "@/app/components/chat/ui/ChatMessage/Message";
 
 import type { ClientMessageInterface } from "@/types/type";
 

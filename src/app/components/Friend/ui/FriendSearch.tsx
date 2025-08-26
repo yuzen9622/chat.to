@@ -1,7 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import FriendQuery from "@/app/components/Friend/ui/FriendQuery";
+
+import FriendQuery from "@/app/components/friend/FriendQuery";
+
 export default function FriendSearch() {
   const [searchValue, setSerchValue] = useState("");
   const [debouncedValue, setDebouncedValue] = useState("");

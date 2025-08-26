@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { notFound } from "next/navigation";
 import { use, useMemo } from "react";
 
-import SettingsForm from "@/app/components/Profile/ui/setting/SettingForm";
+import SettingsForm from "@/app/components/profile/ui/setting/SettingForm";
 
 export default function SettingsPage({
   params,

@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
 import { Grow, Modal } from "@mui/material";
 
-import BadgeAvatar from "../../ui/Avatar/Avatar";
 import FriendBtn from "./FriendBtn";
 
 import type { FriendInterface } from "@/types/type";

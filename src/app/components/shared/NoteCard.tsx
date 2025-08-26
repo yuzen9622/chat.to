@@ -1,13 +1,13 @@
 "use client";
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import { useAuthStore } from '@/app/store/AuthStore';
+import { useAuthStore } from "@/app/store/AuthStore";
 
-import BadgeAvatar from '../Avatar/Avatar';
-import NoteButton from './NoteButton';
+import BadgeAvatar from "./Avatar/Avatar";
+import NoteButton from "./NoteButton";
 
-import type { UserInterface } from "../../../../types/type";
+import type { UserInterface } from "../../../types/type";
 export default function NoteCard({
   user,
   isOwn,

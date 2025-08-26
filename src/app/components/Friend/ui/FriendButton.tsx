@@ -1,16 +1,15 @@
 "use client";
-import { Ellipsis, Trash2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { Ellipsis, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { getPersonalRoom } from '@/app/lib/api/room/roomApi';
-
-import { useAblyStore } from '../../../store/AblyStore';
-import { useAuthStore } from '../../../store/AuthStore';
-import { useChatStore } from '../../../store/ChatStore';
-import WarningButton from '../../ui/WarningButton';
+import WarningButton from "@/app/components/shared/WarningButton";
+import { getPersonalRoom } from "@/app/lib/api/room/roomApi";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { useChatStore } from "@/app/store/ChatStore";
 
 import type { FriendInterface, RoomInterface } from "../../../../types/type";
 export default function FriendButton({ friend }: { friend: FriendInterface }) {

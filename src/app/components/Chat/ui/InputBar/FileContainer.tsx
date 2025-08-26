@@ -1,10 +1,9 @@
-import { CloudUpload } from 'lucide-react';
-import { useCallback } from 'react';
+import { CloudUpload } from "lucide-react";
+import { useCallback } from "react";
 
-import { useAuthStore } from '@/app/store/AuthStore';
-import { useFile } from '@/hook/useFile';
-
-import { FileItem } from './FileItem';
+import { FileItem } from "@/app/components/chat/ui/InputBar/FileItem";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { useFile } from "@/hook/useFile";
 
 export default function FileContainer({
   messageFiles,

@@ -1,7 +1,7 @@
-import { Check } from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
+import { Check } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
 
 import type { FriendInterface } from "@/types/type";
 

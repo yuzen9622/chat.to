@@ -7,7 +7,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import { twMerge } from "tailwind-merge";
 
-import PreviewMediaModal from "@/app/components/ui/Modal/PreviewMediaModal";
+import PreviewMediaModal from "@/app/components/shared/Modal/PreviewMediaModal";
 import {
   formatSize,
   getFileIcon,

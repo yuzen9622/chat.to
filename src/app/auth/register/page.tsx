@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
-import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
-import Input from "@/app/components/ui/Input";
-import ThirdPartLogin from "@/app/components/ui/ThirdPartLogin";
+import UploadAvatar from "@/app/components/shared/Avatar/UploadAvatar";
+import Input from "@/app/components/shared/Input";
+import ThirdPartLogin from "@/app/components/shared/ThirdPartLogin";
 import { uploadFile } from "@/app/lib/util";
 import { useAuthStore } from "@/app/store/AuthStore";
 

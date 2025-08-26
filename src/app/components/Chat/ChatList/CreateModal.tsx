@@ -6,14 +6,13 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { twMerge } from "tailwind-merge";
 
-import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
+import UserButton from "@/app/components/chat/ChatList/UserButton";
+import UploadAvatar from "@/app/components/shared/Avatar/UploadAvatar";
 import { createRoom } from "@/app/lib/api/room/roomApi";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useSnackBar } from "@/hook/useSnackBar";
 import { Grow, Modal } from "@mui/material";
-
-import UserButton from "./UserButton";
 
 export function CreateRoomModal({
   isOpen,

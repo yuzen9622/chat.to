@@ -4,15 +4,15 @@ import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import UploadAvatar from "@/app/components/ui/Avatar/UploadAvatar";
-import Input from "@/app/components/ui/Input";
+import UploadAvatar from "@/app/components/shared/Avatar/UploadAvatar";
+import Input from "@/app/components/shared/Input";
 import { uploadFile } from "@/app/lib/util";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { Backdrop, MenuItem, Select } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import ProfileCard from "../ProfileCard";
+import ProfileCard from "../../ProfileCard";
 
 import type { UserInterface } from "@/types/type";
 interface SettingsFormProps {

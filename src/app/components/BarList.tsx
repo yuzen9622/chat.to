@@ -12,10 +12,10 @@ import {
 } from "react-icons/ri";
 import { twMerge } from "tailwind-merge";
 
-import { useAuthStore } from "../store/AuthStore";
-import { useChatStore } from "../store/ChatStore";
-import BadgeAvatar from "./ui/Avatar/Avatar";
-import ListItem from "./ui/ListItem";
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import ListItem from "@/app/components/shared/ListItem";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { useChatStore } from "@/app/store/ChatStore";
 
 export default function BarList() {
   const { friendRequests } = useAuthStore();

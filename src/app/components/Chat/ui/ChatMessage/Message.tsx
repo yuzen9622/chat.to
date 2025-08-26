@@ -1,10 +1,10 @@
 import type { ClientMessageInterface } from "@/types/type";
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import AudioMessage from './AudioMessage';
-import FileMessage from './FileMessage';
-import MediaMessage from './MediaMessage';
-import TextMessage from './TextMessage';
+import AudioMessage from "@/app/components/chat/ui/ChatMessage/AudioMessage";
+import FileMessage from "@/app/components/chat/ui/ChatMessage/FileMessage";
+import MediaMessage from "@/app/components/chat/ui/ChatMessage/MediaMessage";
+import TextMessage from "@/app/components/chat/ui/ChatMessage/TextMessage";
 
 export default function Message({
   message,

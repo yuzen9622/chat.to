@@ -1,4 +1,4 @@
-import RoomTheme from "./RoomThemeModal";
+import RoomTheme from "@/app/components/chat/ChatInfo/RoomThemeModal";
 
 export default function SettingTable() {
   return (

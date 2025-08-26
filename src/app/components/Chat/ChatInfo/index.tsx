@@ -1,19 +1,18 @@
 "use client";
 
-import { X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { twMerge } from 'tailwind-merge';
+import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { useChatInfo } from '@/hook/useChatInfo';
-
-import { useAblyStore } from '../../../../store/AblyStore';
-import { useChatStore } from '../../../../store/ChatStore';
-import InfoMedia from './InfoMedia';
-import JoinUserModal from './JoinUserModal';
-import OutModal from './OutModal';
-import { RoomUserModal } from './RoomUserModal';
-import SettingTable from './SettingTable';
+import InfoMedia from "@/app/components/chat/ChatInfo/InfoMedia";
+import JoinUserModal from "@/app/components/chat/ChatInfo/JoinUserModal";
+import OutModal from "@/app/components/chat/ChatInfo/OutModal";
+import { RoomUserModal } from "@/app/components/chat/ChatInfo/RoomUserModal";
+import SettingTable from "@/app/components/chat/ChatInfo/SettingTable";
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
+import { useChatInfo } from "@/hook/useChatInfo";
 
 export default function ChatInfo() {
   const { currentChat, chatInfoOpen, setChatInfoOpen } = useChatStore();

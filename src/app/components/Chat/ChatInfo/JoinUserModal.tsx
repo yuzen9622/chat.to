@@ -1,12 +1,11 @@
-import { UserPlus } from 'lucide-react';
-import { useCallback, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { UserPlus } from "lucide-react";
+import { useCallback, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import { useAuthStore } from '@/app/store/AuthStore';
-import { Modal } from '@mui/material';
-
-import { useChatAction } from './hook/useChatAction';
+import { useChatAction } from "@/app/components/chat/ChatInfo/hook/useChatAction";
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import { useAuthStore } from "@/app/store/AuthStore";
+import { Modal } from "@mui/material";
 
 import type { RoomInterface } from "@/types/type";
 export default function JoinUserModal({

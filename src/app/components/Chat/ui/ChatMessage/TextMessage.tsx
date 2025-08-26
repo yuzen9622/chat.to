@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import MarkDownText from "@/app/components/ui/MarkDownText";
+import MarkDownText from "@/app/components/shared/MarkDownText";
 import { useChatStore } from "@/app/store/ChatStore";
 
 import type { ClientMessageInterface } from "@/types/type";

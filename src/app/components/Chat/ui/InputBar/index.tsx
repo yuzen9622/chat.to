@@ -5,17 +5,19 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { WavesurferRecord } from "@/app/components/ui/Audio";
+import Edit from "@/app/components/chat/ui/InputBar/Edit";
+import FileContainer from "@/app/components/chat/ui/InputBar/FileContainer";
+import {
+  useInputBarEdit,
+  useInputBarSend,
+} from "@/app/components/chat/ui/InputBar/hook/useInputBar";
+import { useInputBarTyping } from "@/app/components/chat/ui/InputBar/hook/useInputBarTyping";
+import MediaActions from "@/app/components/chat/ui/InputBar/MediaActions";
+import Reply from "@/app/components/chat/ui/InputBar/Reply";
+import { SendBar } from "@/app/components/chat/ui/InputBar/SendBar";
+import { WavesurferRecord } from "@/app/components/shared/Audio";
 import { useAblyStore } from "@/app/store/AblyStore";
 import { useChatStore } from "@/app/store/ChatStore";
-
-import Edit from "./Edit";
-import FileContainer from "./FileContainer";
-import { useInputBarEdit, useInputBarSend } from "./hook/useInputBar";
-import { useInputBarTyping } from "./hook/useInputBarTyping";
-import MediaActions from "./MediaActions";
-import Reply from "./Reply";
-import { SendBar } from "./SendBar";
 
 import type { FormEvent } from "react";
 export default function InputBar() {

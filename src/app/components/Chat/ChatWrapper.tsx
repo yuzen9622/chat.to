@@ -2,15 +2,14 @@
 import { ChannelProvider } from "ably/react";
 import { useEffect } from "react";
 
+import ChatInfo from "@/app/components/chat/ChatInfo/index";
+import ChatRoom from "@/app/components/chat/ChatRoom";
 import { fetchRoomMessage } from "@/app/lib/api/message/messageApi";
+import { clearReadMessage } from "@/app/lib/util";
+import { useAblyStore } from "@/app/store/AblyStore";
+import { useChatStore } from "@/app/store/ChatStore";
 
-import { clearReadMessage } from "../../../lib/util";
-import { useAblyStore } from "../../../store/AblyStore";
-import { useChatStore } from "../../../store/ChatStore";
-import ChatInfo from "./ChatInfo/index";
-import ChatRoom from "./ChatRoom";
-
-import type { RoomInterface } from "../../../../types/type";
+import type { RoomInterface } from "@/types/type";
 export default function ChatRoomWrapper({
   room,
   roomId,

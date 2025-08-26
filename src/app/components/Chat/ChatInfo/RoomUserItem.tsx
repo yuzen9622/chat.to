@@ -1,9 +1,9 @@
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
+import moment from "moment";
+import { useSession } from "next-auth/react";
 
-import BadgeAvatar from '@/app/components/ui/Avatar/Avatar';
-import UserPopbox from '@/app/components/ui/UserPopbox';
-import { usePopbox } from '@/hook/usePopbox';
+import BadgeAvatar from "@/app/components/shared/Avatar/Avatar";
+import UserPopbox from "@/app/components/shared/UserPopbox";
+import { usePopbox } from "@/hook/usePopbox";
 
 import type { RoomMemberInterface } from "@/types/type";
 

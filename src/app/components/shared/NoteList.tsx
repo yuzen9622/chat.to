@@ -1,17 +1,17 @@
 "use client";
-import 'swiper/css';
-import 'swiper/css/navigation';
+import "swiper/css";
+import "swiper/css/navigation";
 
-import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import { useMemo } from 'react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import moment from "moment";
+import { useSession } from "next-auth/react";
+import { useMemo } from "react";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { useAuthStore } from '../../../store/AuthStore';
-import NoteCard from '../../ui/note/NoteCard';
+import { useAuthStore } from "../../store/AuthStore";
+import NoteCard from "./NoteCard";
 
-export default function FriendNote() {
+export default function NoteList() {
   const { friends, friendNote } = useAuthStore();
 
   const sortedNote = useMemo(() => {
