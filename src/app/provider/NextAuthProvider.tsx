@@ -1,25 +1,25 @@
 "use client";
 import { useSession } from "next-auth/react";
 
-import ClientLayout from "../components/layout/ClientLayout";
-import ChatProvider from "./ChatProvider";
+import ChatProvider from "@/app/provider/ChatProvider";
+import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function NextAuthProvider({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const session = useSession();
+	const session = useSession();
 
-  return (
-    <>
-      {session.status === "unauthenticated" ? (
-        <>{children}</>
-      ) : (
-        <ChatProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </ChatProvider>
-      )}
-    </>
-  );
+	return (
+		<>
+			{session.status === "unauthenticated" ? (
+				<>{children}</>
+			) : (
+				<ChatProvider>
+					<ClientLayout>{children}</ClientLayout>
+				</ChatProvider>
+			)}
+		</>
+	);
 }

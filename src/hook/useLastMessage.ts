@@ -2,14 +2,14 @@
 
 import { useMemo } from "react";
 
-import { useChatStore } from "@/app/store/ChatStore";
+import { useChatStore } from "@/store/ChatStore";
 
 export const useLastMessage = (roomId: string) => {
-  const { lastMessages } = useChatStore();
+	const { lastMessages } = useChatStore();
 
-  const cachedMessage = useMemo(() => {
-    return lastMessages[roomId];
-  }, [lastMessages, roomId]);
+	const cachedMessage = useMemo(() => {
+		return lastMessages[roomId];
+	}, [lastMessages, roomId]);
 
-  return cachedMessage;
+	return cachedMessage;
 };

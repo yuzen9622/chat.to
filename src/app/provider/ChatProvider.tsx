@@ -1,11 +1,9 @@
 "use client";
 
+import { CircularProgress } from "@mui/material";
 import { AblyProvider, ChannelProvider } from "ably/react";
 import { useSession } from "next-auth/react";
-
-import { CircularProgress } from "@mui/material";
-
-import { useAbly } from "../lib/ably/ably-client";
+import { useAbly } from "@/lib/ably/ably-client";
 
 export default function ChatProvider({
   children,

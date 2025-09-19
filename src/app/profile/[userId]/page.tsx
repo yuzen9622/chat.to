@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 
-import ProfileCard from "@/app/components/profile/ProfileCard";
-import { supabase } from "@/app/lib/supabasedb";
 import { authOptions } from "@/auth";
+import ProfileCard from "@/components/profile/ProfileCard";
+import { supabase } from "@/lib/supabasedb";
 
 export async function generateMetadata({
   params,

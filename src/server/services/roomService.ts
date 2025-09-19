@@ -1,6 +1,6 @@
+import { supabase } from "@/lib/supabasedb";
 import { RoomInterface, RoomTheme } from "@/types/type";
 
-import { supabase } from "../../app/lib/supabasedb";
 import { readMessage } from "./messageService";
 
 export const selectRoom = async (roomId: string): Promise<RoomInterface> => {

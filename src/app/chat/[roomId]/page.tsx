@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
-import ChatRoomWrapper from "@/app/components/chat/ChatWrapper";
 import { authOptions } from "@/auth";
+import ChatRoomWrapper from "@/components/chat/ChatWrapper";
 import { getRoomById } from "@/server/services/roomService";
 
 import type { RoomInterface } from "@/types/type";
@@ -47,7 +47,7 @@ export default async function Page({
     return redirect("/chat");
 
   return (
-    <div className="flex flex-row flex-1 h-full overflow-y-hidden transition-all  max-h-dvh">
+    <div className="flex flex-row flex-1 h-full overflow-y-hidden transition-all max-h-dvh">
       <ChatRoomWrapper room={room} roomId={roomId} />
     </div>
   );

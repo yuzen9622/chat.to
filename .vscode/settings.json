@@ -1,10 +1,15 @@
 {
-    "cSpell.words": [
-        "chatta",
-        "Popbox",
-        "supabase",
-        "supabasedb",
-        "Wavesurfer"
-    ],
-    "importSorter.generalConfiguration.sortOnBeforeSave": true
+	"cSpell.words": [
+		"chatta",
+		"fkey",
+		"NEXTAUTH",
+		"Popbox",
+		"supabase",
+		"supabasedb",
+		"Wavesurfer"
+	],
+	"editor.codeActionsOnSave": {
+		"source.organizeImports.biome": "explicit",
+		"source.fixAll.biome": "explicit"
+	}
 }

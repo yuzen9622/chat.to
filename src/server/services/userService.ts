@@ -1,5 +1,5 @@
+import { supabase } from "@/lib/supabasedb";
 import { ProviderType, UserInterface } from "@/types/type";
-import { supabase } from "../../app/lib/supabasedb";
 
 export const fetchUserInfo = async (userId: string): Promise<UserInterface> => {
   const { data, error } = await supabase
